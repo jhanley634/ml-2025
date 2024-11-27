@@ -22,18 +22,38 @@ def main() -> None:
     x["stamp"] = pd.to_datetime(x["Date"] + " " + x["Time"], format="%m/%d/%Y %H:%M:%S")
     x["Time"] = pd.to_timedelta(x["Time"])
     x = x.drop(columns=["Date"])
+    x = _extract_reference_features(x).drop(columns=['nmhc',"abs_humid"])
 
     x.info()
     print(x.describe())
     print(x.corr())
-    # plot_correlation(x)
+
+    sns.pairplot(x)
+    plt.show()
+
+    # _plot_correlation(x)
 
 
-def plot_correlation(x: pd.DataFrame) -> None:
+def _plot_correlation(x: pd.DataFrame) -> None:
     plt.figure(figsize=(10, 8))
     sns.heatmap(x.corr(), annot=True, fmt=".2f", cmap="coolwarm")
     plt.title("Correlation")
     plt.show()
+
+
+def _extract_reference_features(x: pd.DataFrame) -> pd.DataFrame:
+    new_names = {
+        "CO(GT)": "co",
+        "NMHC(GT)": "nmhc",  # non-methane hydrocarbons
+        "C6H6(GT)": "benzene",
+        "NOx(GT)": "nox",
+        "NO2(GT)": "no2",
+        "T": "temp",
+        "RH": "rel_humid",
+        "AH": "abs_humid",
+    }
+    x = x.rename(columns=new_names)
+    return x[list(new_names.values())]
 
 
 if __name__ == "__main__":
