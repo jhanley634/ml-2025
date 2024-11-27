@@ -1,4 +1,5 @@
 
+SHELL := bash
 ACTIVATE := source .venv/bin/activate
 
 all:
@@ -9,6 +10,7 @@ all:
 	uv venv --python=python3.13
 
 install: .venv
+	sort -o requirements.txt{,}
 	$(ACTIVATE) && uv pip compile --quiet requirements.txt -o requirements.lock
 	$(ACTIVATE) && uv pip install -r requirements.lock
 	$(ACTIVATE) && pre-commit install

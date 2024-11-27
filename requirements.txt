@@ -1,7 +1,12 @@
+matplotlib
 mypy
+pandas
+pandas-stubs
 pip
 pyright
 ruff
 scikit-learn
+seaborn
+types-seaborn
 ucimlrepo
 uv
