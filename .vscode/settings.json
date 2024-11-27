@@ -1,3 +1,6 @@
 {
-    "makefile.configureOnOpen": false
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "makefile.configureOnOpen": false,
+    "notebook.insertFinalNewline": true
 }

@@ -21,7 +21,11 @@ lint: ruff-check
 	$(ACTIVATE) && pyright .
 	$(ACTIVATE) && mypy $(STRICT) .
 
-clean:
-	rm -rf .venv
+CACHES := .mypy_cache/ .ruff_cache/
 
-.PHONY: clean
+clean-caches:
+	rm -rf $(CACHES)
+clean: clean-caches
+	rm -rf .venv/
+
+.PHONY: all install ruff-check lint clean-caches clean
