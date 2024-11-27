@@ -2,4 +2,6 @@ mypy
 pip
 pyright
 ruff
+scikit-learn
+ucimlrepo
 uv
