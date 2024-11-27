@@ -1,11 +1,16 @@
+black
+isort
 matplotlib
 mypy
+numpy
 pandas
 pandas-stubs
 pip
+pre-commit
 pyright
 ruff
 scikit-learn
+scipy
 seaborn
 types-seaborn
 ucimlrepo
