@@ -1,0 +1,5 @@
+mypy
+pip
+pyright
+ruff
+uv
