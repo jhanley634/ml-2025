@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from sklearn.preprocessing import StandardScaler
 from ucimlrepo import fetch_ucirepo
 
 
@@ -34,14 +35,18 @@ def main() -> None:
     x.info()
     print(x.describe())
     print(x.corr())
+    print()
+    print(x)
 
-    sns.pairplot(x)
-    plt.show()
+    scaler = StandardScaler()
+    x = pd.DataFrame(scaler.fit_transform(x), columns=x.columns)
 
-    # _plot_correlation(x)
+    _plot_correlation(x)
 
 
 def _plot_correlation(x: pd.DataFrame) -> None:
+    sns.pairplot(x)
+
     plt.figure(figsize=(10, 8))
     sns.heatmap(x.corr(), annot=True, fmt=".2f", cmap="coolwarm")
     plt.title("Correlation")
@@ -74,6 +79,10 @@ def _series_neg_is_nan(x: "pd.Series[float]", sentinel: int = -200) -> "pd.Serie
 
 def _df_neg_is_nan(x: pd.DataFrame) -> pd.DataFrame:
     return x.apply(_series_neg_is_nan)
+
+
+def _z_scale(x: pd.DataFrame) -> pd.DataFrame:
+    return (x - x.mean()) / x.std()
 
 
 if __name__ == "__main__":
