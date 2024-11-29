@@ -25,7 +25,7 @@ def main() -> None:
     x["Time"] = pd.to_timedelta(x["Time"]).dt.total_seconds()
     x = x.drop(columns=["Date"])
     x = _extract_reference_features(x)
-    x = x.drop(columns=["nmhc", "abs_humid"])
+    x = x.drop(columns=["abs_humid"])
     x = _df_neg_is_nan(x)
 
     for col in x.columns:
@@ -40,6 +40,7 @@ def main() -> None:
 
     scaler = StandardScaler()
     x = pd.DataFrame(scaler.fit_transform(x), columns=x.columns)
+    x.to_csv("/tmp/data.csv", index=False)
 
     _plot_correlation(x)
 
