@@ -6,9 +6,19 @@ FROM ubuntu:noble AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN make clean && \
+    rm -rf profile/.venv/ .venv/
+
 RUN apt-get update && \
     apt-get install -y \
+        build-essential \
+        clang \
+        curl \
+        file \
         git \
+        make \
+        python3-dev \
+        swig \
         sudo \
         vim && \
     apt-get clean
