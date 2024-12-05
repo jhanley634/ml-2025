@@ -35,7 +35,6 @@ def main() -> None:
     x.info()
     print(x.describe())
     print(x.corr())
-    print()
     print(x)
 
     scaler = StandardScaler()
