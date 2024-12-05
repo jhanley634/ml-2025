@@ -1,26 +1,26 @@
-# docker buildx build -t ml-2025 .
-# docker run -it ml-2025
+
+# make docker-build docker-run
 
 # Noble Numbat, 24.04 LTS
 FROM ubuntu:noble AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN make clean && \
-    rm -rf profile/.venv/ .venv/
-
 RUN apt-get update && \
     apt-get install -y \
         build-essential \
-        clang \
+        cmake \
         curl \
-        file \
+        g++ \
         git \
-        make \
-        python3-dev \
-        swig \
+        net-tools \
+        pkg-config \
+        python-is-python3 \
+        python3-pip \
+        python3-venv \
         sudo \
         vim && \
+    (curl -LsSf https://astral.sh/uv/install.sh | sh) && \
     apt-get clean
 
 WORKDIR /app

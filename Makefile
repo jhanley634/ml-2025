@@ -1,4 +1,5 @@
 
+PROJECT := ml-2025
 SHELL := bash
 ACTIVATE := source .venv/bin/activate
 
@@ -23,11 +24,15 @@ lint: ruff-check
 	$(ACTIVATE) && pyright .
 	$(ACTIVATE) && mypy $(STRICT) .
 
-CACHES := .mypy_cache/ .ruff_cache/
+docker-build: clean-caches
+	docker buildx build --tag $(PROJECT) .
+docker-run:
+	docker run -v .:/tmp/ml-2025 -p 8000:8000 -it $(PROJECT)
 
+CACHES := .mypy_cache/ .pyre/ .pytype/ .ruff_cache/ $(shell find [a-z]* -type d -name __pycache__)
 clean-caches:
 	rm -rf $(CACHES)
 clean: clean-caches
 	rm -rf .venv/
 
-.PHONY: all install ruff-check lint clean-caches clean
+.PHONY: all install ruff-check lint docker-build docker-run clean-caches clean
