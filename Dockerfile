@@ -11,6 +11,7 @@ RUN apt-get update && \
         build-essential \
         cmake \
         curl \
+        file \
         g++ \
         git \
         net-tools \
@@ -20,7 +21,6 @@ RUN apt-get update && \
         python3-venv \
         sudo \
         vim && \
-    (curl -LsSf https://astral.sh/uv/install.sh | sh) && \
     apt-get clean
 
 WORKDIR /app
@@ -32,4 +32,8 @@ RUN useradd --create-home ml && \
     echo "ml ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER ml
+RUN (curl -LsSf https://astral.sh/uv/install.sh | sh) && \
+    source ~/.bashrc && \
+    time make install
+
 ENTRYPOINT ["bash"]

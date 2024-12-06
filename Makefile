@@ -25,6 +25,7 @@ lint: ruff-check
 	$(ACTIVATE) && mypy $(STRICT) .
 
 docker-build: clean-caches
+	rm -rf .venv/
 	docker buildx build --tag $(PROJECT) .
 docker-run:
 	docker run -v .:/tmp/ml-2025 -p 8000:8000 -it $(PROJECT)
