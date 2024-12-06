@@ -33,7 +33,7 @@ RUN useradd --create-home ml && \
 
 USER ml
 RUN (curl -LsSf https://astral.sh/uv/install.sh | sh) && \
-    source ~/.bashrc && \
-    time make install
+    . ~/.bashrc && \
+    make install
 
 ENTRYPOINT ["bash"]
