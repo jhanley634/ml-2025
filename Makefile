@@ -16,7 +16,7 @@ install: .venv
 	$(ACTIVATE) && uv pip install -r requirements.lock
 	$(ACTIVATE) && pre-commit install
 
-STRICT = --strict --warn-unreachable --ignore-missing-imports
+STRICT = --strict --warn-unreachable --ignore-missing-imports --no-namespace-packages
 
 ruff-check:
 	$(ACTIVATE) && ruff check --fix && black .
@@ -30,7 +30,8 @@ docker-build: clean-caches
 docker-run:
 	docker run -v .:/tmp/ml-2025 -p 8000:8000 -it $(PROJECT)
 
-CACHES := .mypy_cache/ .pyre/ .pytype/ .ruff_cache/ $(shell find [a-z]* -type d -name __pycache__)
+PYCACHES := $(shell find [a-z]* -path './.venv' -prune -type d -name __pycache__)
+CACHES := .mypy_cache/ .pyre/ .pytype/ .ruff_cache/ $(PYCACHES)
 clean-caches:
 	rm -rf $(CACHES)
 clean: clean-caches
