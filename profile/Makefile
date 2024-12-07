@@ -9,7 +9,7 @@ profile: .venv
 
 install: .venv
 	sort -o requirements.txt{,}
-	$(ACTIVATE) && uv pip compile --quiet requirements.txt -o requirements.lock
+	$(ACTIVATE) && uv pip compile --upgrade --quiet requirements.txt -o requirements.lock
 	$(ACTIVATE) && uv pip install -r requirements.lock
 
 .venv:
