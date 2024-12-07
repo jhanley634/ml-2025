@@ -9,6 +9,20 @@ from ucimlrepo import fetch_ucirepo
 
 
 def main() -> None:
+    x = get_air_quality_dataset()
+    x.info()
+    print(x.describe())
+    print(x.corr())
+    print(x)
+
+    scaler = StandardScaler()
+    x = pd.DataFrame(scaler.fit_transform(x), columns=x.columns)
+    x.to_csv("/tmp/data.csv", index=False)
+
+    _plot_correlation(x)
+
+
+def get_air_quality_dataset() -> pd.DataFrame:
     air_quality = fetch_ucirepo(id=360)  # Italian pollution measurements
     assert air_quality.data
     assert air_quality.metadata
@@ -32,16 +46,7 @@ def main() -> None:
         if col != "stamp":
             x[col] = x[col].astype(float)
 
-    x.info()
-    print(x.describe())
-    print(x.corr())
-    print(x)
-
-    scaler = StandardScaler()
-    x = pd.DataFrame(scaler.fit_transform(x), columns=x.columns)
-    x.to_csv("/tmp/data.csv", index=False)
-
-    _plot_correlation(x)
+    return x
 
 
 def _plot_correlation(x: pd.DataFrame) -> None:
