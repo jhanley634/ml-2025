@@ -30,7 +30,7 @@ docker-build: clean-caches
 docker-run:
 	docker run -v .:/tmp/ml-2025 -p 8000:8000 -it $(PROJECT)
 
-PYCACHES := $(shell find [a-z]* -path './.venv' -prune -type d -name __pycache__)
+PYCACHES := $(shell find [a-z]* -path 'profile/.venv' -prune -type d -name __pycache__)
 CACHES := .mypy_cache/ .pyre/ .pytype/ .ruff_cache/ $(PYCACHES)
 clean-caches:
 	rm -rf $(CACHES)

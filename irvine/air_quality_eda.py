@@ -22,14 +22,15 @@ def main() -> None:
     _plot_correlation(x)
 
 
-def get_air_quality_dataset() -> pd.DataFrame:
+def get_air_quality_dataset(*, verbose: bool = False) -> pd.DataFrame:
     air_quality = fetch_ucirepo(id=360)  # Italian pollution measurements
     assert air_quality.data
     assert air_quality.metadata
     assert air_quality.metadata["name"] == "Air Quality"
     assert air_quality.metadata["characteristics"] == ["Multivariate", "Time-Series"]
-    vi = air_quality.metadata["additional_info"]["variable_info"]
-    print(vi, "\n")
+    if verbose:
+        vi = air_quality.metadata["additional_info"]["variable_info"]
+        print(vi, "\n")
 
     x = air_quality.data.features
     assert isinstance(x, pd.DataFrame)
