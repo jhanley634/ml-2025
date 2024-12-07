@@ -74,7 +74,9 @@ def _extract_pt08_features(x: pd.DataFrame) -> pd.DataFrame:
         "C6H6(GT)": "benzene",
     }
     x = x.rename(columns=new_names)
-    return x[list(new_names.values())]
+    x = x[list(new_names.values())]
+    assert isinstance(x, pd.DataFrame)
+    return x
 
 
 def _extract_reference_features(x: pd.DataFrame) -> pd.DataFrame:
