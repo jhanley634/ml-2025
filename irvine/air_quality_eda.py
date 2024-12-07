@@ -24,7 +24,7 @@ def main() -> None:
     x["stamp"] = pd.to_datetime(x["Date"] + " " + x["Time"], format="%m/%d/%Y %H:%M:%S")
     x["Time"] = pd.to_timedelta(x["Time"]).dt.total_seconds()
     x = x.drop(columns=["Date"])
-    x = _extract_reference_features(x)
+    x = _extract_pt08_features(x)
     x = x.drop(columns=["abs_humid"])
     x = _df_neg_is_nan(x)
 
@@ -53,16 +53,34 @@ def _plot_correlation(x: pd.DataFrame) -> None:
     plt.show()
 
 
-def _extract_reference_features(x: pd.DataFrame) -> pd.DataFrame:
+def _extract_pt08_features(x: pd.DataFrame) -> pd.DataFrame:
+    # These are five proposed sensors being studied,
+    # composed of materials such as tin oxide and tungsten oxide.
     new_names = {
-        "CO(GT)": "co",
-        "NMHC(GT)": "nmhc",  # non-methane hydrocarbons
-        "C6H6(GT)": "benzene",
-        "NOx(GT)": "nox",
-        "NO2(GT)": "no2",
         "T": "temp",
         "RH": "rel_humid",
         "AH": "abs_humid",
+        "PT08.S1(CO)": "co",
+        "PT08.S2(NMHC)": "nmhc",  # non-methane hydrocarbons
+        "PT08.S3(NOx)": "nox",
+        "PT08.S4(NO2)": "no2",
+        "PT08.S5(O3)": "o3",
+        "C6H6(GT)": "benzene",
+    }
+    x = x.rename(columns=new_names)
+    return x[list(new_names.values())]
+
+
+def _extract_reference_features(x: pd.DataFrame) -> pd.DataFrame:
+    new_names = {
+        "T": "temp",
+        "RH": "rel_humid",
+        "AH": "abs_humid",
+        "CO(GT)": "co",
+        "NMHC(GT)": "nmhc",
+        "NOx(GT)": "nox",
+        "NO2(GT)": "no2",
+        "C6H6(GT)": "benzene",
     }
     x = x.rename(columns=new_names)
     return x[list(new_names.values())]
