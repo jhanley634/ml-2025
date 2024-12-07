@@ -9,6 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y \
         build-essential \
+        clang \
         cmake \
         curl \
         file \
@@ -20,6 +21,7 @@ RUN apt-get update && \
         python3-pip \
         python3-venv \
         sudo \
+        swig \
         vim && \
     apt-get clean
 
@@ -33,7 +35,8 @@ RUN useradd --create-home ml && \
 
 USER ml
 RUN (curl -LsSf https://astral.sh/uv/install.sh | sh) && \
-    . ~/.bashrc && \
+    . $HOME/.bashrc && \
+    . $HOME/.local/bin/env && \
     make install
 
 ENTRYPOINT ["bash"]
