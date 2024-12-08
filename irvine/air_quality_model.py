@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-import numpy as np
 import pandas as pd
 import torch
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
@@ -20,11 +19,9 @@ class LSTM(nn.Module):  # type: ignore [misc]
         self.lstm = nn.LSTM(input_size, hidden_layer_size, batch_first=True)
         self.fc = nn.Linear(hidden_layer_size, 1)
 
-    def forward(self, x: None) -> Tensor:
+    def forward(self, x: Tensor) -> Tensor:
         lstm_out, _ = self.lstm(x)
         ret = self.fc(lstm_out[:, -1, :])  # Get the last LSTM output
-        typ = type(ret)
-        print(typ, type(x))
         assert isinstance(ret, Tensor)
         return ret
 
@@ -80,21 +77,17 @@ def main() -> None:
         lstm_model.train()
         optimizer.zero_grad()
 
-        # Forward pass
         assert isinstance(x_train_lstm, torch.Tensor)
         y_pred_lstm = lstm_model(x_train_lstm)
 
-        # Compute the loss
         loss = criterion(y_pred_lstm, y_train_tensor)
 
-        # Backward pass
         loss.backward()
         optimizer.step()
 
         if epoch % 2 == 0:
             print(f"Epoch [{epoch}/{num_epochs}], Loss: {loss.item():.4f}")
 
-    # Evaluating the LSTM model
     lstm_model.eval()
     with torch.no_grad():
         y_pred_lstm = lstm_model(x_test_lstm)

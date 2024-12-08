@@ -39,8 +39,8 @@ def get_air_quality_dataset(*, verbose: bool = False) -> pd.DataFrame:
     assert isinstance(x, pd.DataFrame)
     assert air_quality.data.targets is None
 
-    x["stamp"] = pd.to_datetime(x["Date"] + " " + x["Time"], format="%m/%d/%Y %H:%M:%S")
-    x["seconds"] = pd.to_timedelta(list(x["Time"])).total_seconds()
+    x["stamp"] = pd.to_datetime(x.Date + " " + x.Time, format="%m/%d/%Y %H:%M:%S")
+    x["Time"] = pd.to_timedelta(x.Time.values).to_numpy().astype("timedelta64[s]")
     x = x.drop(columns=["Date"])
     x = _extract_pt08_features(x)
     x = x.drop(columns=["abs_humid"])
