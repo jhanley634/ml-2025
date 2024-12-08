@@ -16,7 +16,7 @@ distlib==0.3.9
     # via virtualenv
 filelock==3.16.1
     # via virtualenv
-fonttools==4.55.0
+fonttools==4.55.2
     # via matplotlib
 identify==2.6.3
     # via pre-commit
@@ -26,7 +26,7 @@ joblib==1.4.2
     # via scikit-learn
 kiwisolver==1.4.7
     # via matplotlib
-matplotlib==3.9.2
+matplotlib==3.9.3
     # via
     #   -r requirements.txt
     #   seaborn
@@ -89,7 +89,7 @@ pytz==2024.2
     # via pandas
 pyyaml==6.0.2
     # via pre-commit
-ruff==0.8.0
+ruff==0.8.2
     # via -r requirements.txt
 scikit-learn==1.5.2
     # via -r requirements.txt
@@ -99,13 +99,13 @@ scipy==1.14.1
     #   scikit-learn
 seaborn==0.13.2
     # via -r requirements.txt
-six==1.16.0
+six==1.17.0
     # via python-dateutil
 threadpoolctl==3.5.0
     # via scikit-learn
 types-pytz==2024.2.0.20241003
     # via pandas-stubs
-types-seaborn==0.13.2.20241112
+types-seaborn==0.13.2.20241204
     # via -r requirements.txt
 typing-extensions==4.12.2
     # via
@@ -115,7 +115,7 @@ tzdata==2024.2
     # via pandas
 ucimlrepo==0.0.7
     # via -r requirements.txt
-uv==0.5.5
+uv==0.5.7
     # via -r requirements.txt
 virtualenv==20.28.0
     # via pre-commit

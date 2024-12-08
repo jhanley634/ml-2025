@@ -1,4 +1,7 @@
 #! /usr/bin/env python
+"""
+Exploratory data analysis for the air quality dataset.
+"""
 
 import matplotlib.pyplot as plt
 import numpy as np

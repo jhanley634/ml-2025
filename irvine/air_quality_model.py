@@ -7,20 +7,24 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
-from torch import nn, optim
+from torch import Tensor, float32, nn, optim, tensor
 
 from irvine.air_quality_eda import get_air_quality_dataset
 
 
-class LSTM(nn.Module):
+class LSTM(nn.Module):  # type: ignore [misc]
     def __init__(self, input_size: int, hidden_layer_size: int = 50) -> None:
         super().__init__()
         self.lstm = nn.LSTM(input_size, hidden_layer_size, batch_first=True)
         self.fc = nn.Linear(hidden_layer_size, 1)
 
-    def forward(self, x: int) -> int:
+    def forward(self, x: None) -> Tensor:
         lstm_out, _ = self.lstm(x)
-        return self.fc(lstm_out[:, -1, :])  # Get the last LSTM output
+        ret = self.fc(lstm_out[:, -1, :])  # Get the last LSTM output
+        typ = type(ret)
+        print(typ, type(x))
+        assert isinstance(ret, Tensor)
+        return ret
 
 
 def main() -> None:
@@ -51,13 +55,13 @@ def main() -> None:
         print(f"Features: {x.columns}")
         print("-" * 40)
 
-    x_train_lstm = torch.tensor(x_train_scaled, dtype=torch.float32).unsqueeze(
+    x_train_lstm = tensor(x_train_scaled, dtype=float32).unsqueeze(
         1,
     )
-    x_test_lstm = torch.tensor(x_test_scaled, dtype=torch.float32).unsqueeze(1)
+    x_test_lstm = tensor(x_test_scaled, dtype=float32).unsqueeze(1)
 
-    y_train_tensor = torch.tensor(y_train.values, dtype=torch.float32).view(-1, 1)
-    y_test_tensor = torch.tensor(y_test.values, dtype=torch.float32).view(-1, 1)
+    y_train_tensor = tensor(y_train.values, dtype=float32).view(-1, 1)
+    y_test_tensor = tensor(y_test.values, dtype=float32).view(-1, 1)
 
     input_size = x_train_lstm.shape[2]  # Number of features in the input
     lstm_model = LSTM(input_size=input_size)
@@ -73,6 +77,7 @@ def main() -> None:
         optimizer.zero_grad()
 
         # Forward pass
+        assert isinstance(x_train_lstm, torch.Tensor)
         y_pred_lstm = lstm_model(x_train_lstm)
 
         # Compute the loss
