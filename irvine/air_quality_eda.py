@@ -40,7 +40,7 @@ def get_air_quality_dataset(*, verbose: bool = False) -> pd.DataFrame:
     assert air_quality.data.targets is None
 
     x["stamp"] = pd.to_datetime(x["Date"] + " " + x["Time"], format="%m/%d/%Y %H:%M:%S")
-    x["Time"] = pd.to_timedelta(x["Time"]).dt.total_seconds()
+    x["seconds"] = pd.to_timedelta(list(x["Time"])).total_seconds()
     x = x.drop(columns=["Date"])
     x = _extract_pt08_features(x)
     x = x.drop(columns=["abs_humid"])
@@ -77,7 +77,7 @@ def _extract_pt08_features(x: pd.DataFrame) -> pd.DataFrame:
         "C6H6(GT)": "benzene",
     }
     x = x.rename(columns=new_names)
-    x = x[list(new_names.values())]
+    x = pd.DataFrame(x[list(new_names.values())])
     assert isinstance(x, pd.DataFrame)
     return x
 
@@ -94,20 +94,20 @@ def _extract_reference_features(x: pd.DataFrame) -> pd.DataFrame:
         "C6H6(GT)": "benzene",
     }
     x = x.rename(columns=new_names)
-    return x[list(new_names.values())]
+    return pd.DataFrame(x[list(new_names.values())])
 
 
-def _series_neg_is_nan(x: "pd.Series[float]", sentinel: int = -200) -> "pd.Series[float]":
+def _series_neg_is_nan(x: pd.Series, sentinel: int = -200) -> pd.Series:
     """In this dataset, it turns out -200 is used to represent missing values."""
 
     def to_nan(v: float) -> float:
         return v if v != sentinel else np.nan
 
-    return x.apply(to_nan)
+    return pd.Series(x.apply(to_nan))
 
 
 def _df_neg_is_nan(x: pd.DataFrame) -> pd.DataFrame:
-    return x.apply(_series_neg_is_nan)
+    return pd.DataFrame(x.apply(_series_neg_is_nan))
 
 
 def _z_scale(x: pd.DataFrame) -> pd.DataFrame:

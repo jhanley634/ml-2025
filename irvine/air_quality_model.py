@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+import numpy as np
+import pandas as pd
 import torch
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import LinearRegression
@@ -51,7 +53,7 @@ def main() -> None:
         rmse = mean_squared_error(y_test, y_pred)
         print(f"Model: {model_name}")
         print(f"RMSE: {rmse}")
-        print(f"R^2: {model.score(x_test_scaled, y_test)}")
+        print(f"R^2:  {model.score(x_test_scaled, y_test)}")
         print(f"Features: {x.columns}")
         print("-" * 40)
 
@@ -60,6 +62,8 @@ def main() -> None:
     )
     x_test_lstm = tensor(x_test_scaled, dtype=float32).unsqueeze(1)
 
+    assert isinstance(y_train, pd.Series)
+    assert isinstance(y_test, pd.Series)
     y_train_tensor = tensor(y_train.values, dtype=float32).view(-1, 1)
     y_test_tensor = tensor(y_test.values, dtype=float32).view(-1, 1)
 
@@ -94,7 +98,7 @@ def main() -> None:
     lstm_model.eval()
     with torch.no_grad():
         y_pred_lstm = lstm_model(x_test_lstm)
-        rmse_lstm = mean_squared_error(y_test_tensor, y_pred_lstm, squared=False)
+        rmse_lstm = mean_squared_error(y_test_tensor, y_pred_lstm)
         print("Model: LSTM")
         print(f"RMSE: {rmse_lstm}")
         print("-" * 40)
