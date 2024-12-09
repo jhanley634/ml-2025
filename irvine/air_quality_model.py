@@ -14,7 +14,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from torch import Tensor, float32, nn, optim, tensor
-from xgboost import XGBRegressor
 
 from irvine.air_quality_eda import get_air_quality_dataset
 
@@ -24,7 +23,6 @@ ModelType = TypeVar(
     HistGradientBoostingRegressor,
     LinearRegression,
     SVR,
-    XGBRegressor,
 )
 
 
@@ -56,7 +54,7 @@ def train_evaluate_sklearn_model(
     }
 
 
-def train_evaluate_lstm(
+def train_evaluate_lstm_model(
     x_train: Tensor,
     y_train: NDArray[np.float64],
     x_test: Tensor,
@@ -87,6 +85,12 @@ def train_evaluate_lstm(
 
 def main() -> None:
     df = get_air_quality_dataset().dropna(subset=["benzene"])
+    holdout_split = 1800
+    holdout = df.tail(holdout_split)
+    df = df.head(len(df) - holdout_split)
+    assert len(holdout) == holdout_split
+    assert len(df) == 7191
+
     y = df["benzene"]
     x = df.drop(columns=["benzene"])
 
@@ -103,7 +107,6 @@ def main() -> None:
         "RandomForestRegressor": RandomForestRegressor(),
         "SVR": SVR(),
         "LinearRegression": LinearRegression(),
-        "XGBRegressor": XGBRegressor(),
     }
 
     results = {}
@@ -120,13 +123,15 @@ def main() -> None:
     x_train_lstm = tensor(x_train_scaled, dtype=float32).unsqueeze(1)
     x_test_lstm = tensor(x_test_scaled, dtype=float32).unsqueeze(1)
 
-    results["LSTM"] = train_evaluate_lstm(x_train_lstm, y_train.to_numpy(), x_test_lstm, y_test)
+    results["LSTM"] = train_evaluate_lstm_model(
+        x_train_lstm, y_train.to_numpy(), x_test_lstm, y_test
+    )
 
     for name, metrics in results.items():
         print(f"Model: {name}")
-        print(f"RMSE: {metrics['rmse']}")
+        print(f"RMSE: {metrics['rmse']:.4f}")
         if metrics["r2"] is not None:
-            print(f"R^2: {metrics['r2']}")
+            print(f"R^2:  {metrics['r2']:.4f}")
         print("-" * 40)
 
 
