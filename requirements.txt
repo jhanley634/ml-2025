@@ -17,4 +17,5 @@ torchvision
 types-seaborn
 ucimlrepo
 uv
+xgboost
 ydata-profiling

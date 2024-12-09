@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 from collections.abc import Iterable
+from typing import TypeVar
 
 import numpy as np
 import pandas as pd
@@ -13,8 +14,18 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from torch import Tensor, float32, nn, optim, tensor
+from xgboost import XGBRegressor
 
 from irvine.air_quality_eda import get_air_quality_dataset
+
+ModelType = TypeVar(
+    "ModelType",
+    ForestRegressor,
+    HistGradientBoostingRegressor,
+    LinearRegression,
+    SVR,
+    XGBRegressor,
+)
 
 
 class LSTM(nn.Module):
@@ -31,7 +42,7 @@ class LSTM(nn.Module):
 
 
 def train_evaluate_sklearn_model(
-    model: ForestRegressor | HistGradientBoostingRegressor | LinearRegression | SVR,
+    model: ModelType,
     x_train: Tensor,
     y_train: Iterable[float],
     x_test: NDArray[np.float64],
@@ -85,10 +96,11 @@ def main() -> None:
     assert isinstance(x_test_scaled, np.ndarray)
 
     models = {
-        "HistGradientBoosting": HistGradientBoostingRegressor(),
-        "RandomForest": RandomForestRegressor(),
+        "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
+        "RandomForestRegressor": RandomForestRegressor(),
         "SVR": SVR(),
         "LinearRegression": LinearRegression(),
+        "XGBRegressor": XGBRegressor(),
     }
 
     results = {}
