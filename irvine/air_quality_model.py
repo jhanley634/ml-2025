@@ -55,12 +55,13 @@ def train_evaluate_lstm(
     model = LSTM(input_size=x_train.shape[2])
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
+    y_train_tensor = Tensor(y_train).unsqueeze(-1)  # Adds a dimension to make it [7192, 1]
 
     for _epoch in range(epochs):
         model.train()
         optimizer.zero_grad()
         y_pred = model(x_train)
-        loss = criterion(y_pred, Tensor(y_train))
+        loss = criterion(y_pred, y_train_tensor)
         loss.backward()
         optimizer.step()
 
