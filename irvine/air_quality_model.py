@@ -5,6 +5,7 @@ from typing import TypeVar
 import numpy as np
 import pandas as pd
 import torch
+from beartype import beartype
 from numpy.typing import NDArray
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.ensemble._forest import ForestRegressor
@@ -26,6 +27,7 @@ ModelType = TypeVar(
 )
 
 
+@beartype
 class LSTM(nn.Module):
     def __init__(self, input_size: int, hidden_layer_size: int = 50) -> None:
         super().__init__()
@@ -39,9 +41,10 @@ class LSTM(nn.Module):
         return ret
 
 
+@beartype
 def train_evaluate_sklearn_model(
     model: ModelType,
-    x_train: Tensor,
+    x_train: NDArray[np.float64],
     y_train: Iterable[float],
     x_test: NDArray[np.float64],
     y_test: Iterable[float],
@@ -56,6 +59,7 @@ def train_evaluate_sklearn_model(
     }
 
 
+@beartype
 def train_evaluate_lstm_model(
     x_train: Tensor,
     y_train: NDArray[np.float64],
@@ -85,6 +89,7 @@ def train_evaluate_lstm_model(
         }
 
 
+@beartype
 def main() -> None:
     df = get_air_quality_dataset().dropna(subset=["benzene"])
     holdout_split = 1800
@@ -108,8 +113,9 @@ def main() -> None:
     create_models(x_train_scaled, y_train.to_numpy(), x_test_scl, pd.Series(y_test).to_numpy())
 
 
+@beartype
 def create_models(
-    x_train_scaled: Tensor,
+    x_train_scaled: NDArray[np.float64],
     y_train: NDArray[np.float64],
     x_test_scaled: NDArray[np.float64],
     y_test: NDArray[np.float64],
@@ -144,6 +150,7 @@ def create_models(
     report(results)
 
 
+@beartype
 def report(results: dict[str, dict[str, float]]) -> None:
     for name, metrics in results.items():
         print(f"Model: {name}")
