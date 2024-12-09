@@ -13,7 +13,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
-from torch import Tensor, float32, nn, optim, tensor
+from torch import Tensor, nn, optim
 from tqdm import tqdm
 
 from irvine.air_quality_eda import get_air_quality_dataset
@@ -74,11 +74,10 @@ def train_evaluate_lstm_model(
     epochs: int = 300
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.04)
-    x_train_tensor = tensor(x_train, dtype=float32).unsqueeze(1)
-    x_test_tensor = tensor(x_test, dtype=float32).unsqueeze(1)
+    x_train_tensor = Tensor(x_train).unsqueeze(1)
+    x_test_tensor = Tensor(x_test).unsqueeze(1)
     y_train_tensor = Tensor(y_train).unsqueeze(-1)  # Adds a dimension to make it [7192, 1]
 
-    # model.xavier_uniform_(model.lstm.weight_ih_l0)
     for name, param in model.lstm.named_parameters():
         if "weight" in name:
             torch.nn.init.xavier_uniform_(param)
