@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from torch import Tensor, float32, nn, optim, tensor
+from tqdm import tqdm
 
 from irvine.air_quality_eda import get_air_quality_dataset
 
@@ -70,14 +71,21 @@ def train_evaluate_lstm_model(
     x_test: NDArray[np.float64],
     y_test: Iterable[float],
 ) -> dict[str, float]:
-    epochs: int = 10
+    epochs: int = 300
     criterion = nn.MSELoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=0.04)
     x_train_tensor = tensor(x_train, dtype=float32).unsqueeze(1)
     x_test_tensor = tensor(x_test, dtype=float32).unsqueeze(1)
     y_train_tensor = Tensor(y_train).unsqueeze(-1)  # Adds a dimension to make it [7192, 1]
 
-    for _epoch in range(epochs):
+    # model.xavier_uniform_(model.lstm.weight_ih_l0)
+    for name, param in model.lstm.named_parameters():
+        if "weight" in name:
+            torch.nn.init.xavier_uniform_(param)
+        elif "bias" in name:
+            torch.nn.init.zeros_(param)
+
+    for _ in tqdm(range(epochs), leave=False):
         model.train()
         optimizer.zero_grad()
         y_pred = model(x_train_tensor)
@@ -140,7 +148,7 @@ def create_models(
             model,
             x_train,
             y_train,
-            x_test.astype(np.float64),
+            x_test,
             y_test,
         )
 

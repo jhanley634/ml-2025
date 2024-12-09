@@ -15,6 +15,7 @@ scipy
 seaborn
 setuptools
 torchvision
+tqdm
 types-seaborn
 ucimlrepo
 uv
