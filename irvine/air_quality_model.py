@@ -8,7 +8,6 @@ import torch
 from beartype import beartype
 from numpy.typing import NDArray
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
-from sklearn.ensemble._forest import ForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
@@ -17,14 +16,6 @@ from sklearn.svm import SVR
 from torch import Tensor, float32, nn, optim, tensor
 
 from irvine.air_quality_eda import get_air_quality_dataset
-
-ModelType = TypeVar(
-    "ModelType",
-    ForestRegressor,
-    HistGradientBoostingRegressor,
-    LinearRegression,
-    SVR,
-)
 
 
 @beartype
@@ -39,6 +30,16 @@ class LSTM(nn.Module):
         ret = self.fc(lstm_out[:, -1, :])  # Get the last LSTM output
         assert isinstance(ret, Tensor)
         return ret
+
+
+ModelType = TypeVar(
+    "ModelType",
+    HistGradientBoostingRegressor,
+    LSTM,
+    LinearRegression,
+    RandomForestRegressor,
+    SVR,
+)
 
 
 @beartype
@@ -126,10 +127,10 @@ def create_models(
 ) -> None:
     models = {
         "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
+        "LSTM": LSTM(input_size=x_train.shape[1]),
+        "LinearRegression": LinearRegression(),
         "RandomForestRegressor": RandomForestRegressor(),
         "SVR": SVR(),
-        "LinearRegression": LinearRegression(),
-        "LSTM": LSTM(input_size=x_train.shape[1]),
     }
 
     results = {}
