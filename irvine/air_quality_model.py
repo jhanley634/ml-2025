@@ -45,10 +45,12 @@ class LSTM(nn.Module):
 def train_evaluate_sklearn_model(
     model: ModelType,
     x_train: NDArray[np.float64],
-    y_train: Iterable[float],
+    y_train: NDArray[np.float64],
     x_test: NDArray[np.float64],
     y_test: Iterable[float],
 ) -> dict[str, float]:
+    if isinstance(model, LSTM):
+        return train_evaluate_lstm_model(model, x_train, y_train, x_test, y_test)
 
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
@@ -61,28 +63,30 @@ def train_evaluate_sklearn_model(
 
 @beartype
 def train_evaluate_lstm_model(
-    x_train: Tensor,
+    model: LSTM,
+    x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
-    x_test: Tensor,
+    x_test: NDArray[np.float64],
     y_test: Iterable[float],
-    epochs: int = 10,
 ) -> dict[str, float]:
-    model = LSTM(input_size=x_train.shape[2])
+    epochs: int = 10
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
+    x_train_tensor = tensor(x_train, dtype=float32).unsqueeze(1)
+    x_test_tensor = tensor(x_test, dtype=float32).unsqueeze(1)
     y_train_tensor = Tensor(y_train).unsqueeze(-1)  # Adds a dimension to make it [7192, 1]
 
     for _epoch in range(epochs):
         model.train()
         optimizer.zero_grad()
-        y_pred = model(x_train)
+        y_pred = model(x_train_tensor)
         loss = criterion(y_pred, y_train_tensor)
         loss.backward()
         optimizer.step()
 
     model.eval()
     with torch.no_grad():
-        y_pred = model(x_test)
+        y_pred = model(x_test_tensor)
         return {
             "rmse": float(mean_squared_error(y_test, y_pred)),
             "r2": 0.0,
@@ -115,9 +119,9 @@ def main() -> None:
 
 @beartype
 def create_models(
-    x_train_scaled: NDArray[np.float64],
+    x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
-    x_test_scaled: NDArray[np.float64],
+    x_test: NDArray[np.float64],
     y_test: NDArray[np.float64],
 ) -> None:
     models = {
@@ -125,6 +129,7 @@ def create_models(
         "RandomForestRegressor": RandomForestRegressor(),
         "SVR": SVR(),
         "LinearRegression": LinearRegression(),
+        "LSTM": LSTM(input_size=x_train.shape[1]),
     }
 
     results = {}
@@ -132,21 +137,12 @@ def create_models(
         print(name)
         results[name] = train_evaluate_sklearn_model(
             model,
-            x_train_scaled,
+            x_train,
             y_train,
-            x_test_scaled.astype(np.float64),
+            x_test.astype(np.float64),
             y_test,
         )
 
-    x_train_lstm = tensor(x_train_scaled, dtype=float32).unsqueeze(1)
-    x_test_lstm = tensor(x_test_scaled, dtype=float32).unsqueeze(1)
-
-    results["LSTM"] = train_evaluate_lstm_model(
-        x_train_lstm,
-        y_train,
-        x_test_lstm,
-        y_test,
-    )
     report(results)
 
 
