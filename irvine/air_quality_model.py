@@ -124,9 +124,15 @@ def main() -> None:
     x_test_lstm = tensor(x_test_scaled, dtype=float32).unsqueeze(1)
 
     results["LSTM"] = train_evaluate_lstm_model(
-        x_train_lstm, y_train.to_numpy(), x_test_lstm, y_test
+        x_train_lstm,
+        y_train.to_numpy(),
+        x_test_lstm,
+        y_test,
     )
+    report(results)
 
+
+def report(results: dict[str, dict[str, float]]) -> None:
     for name, metrics in results.items():
         print(f"Model: {name}")
         print(f"RMSE: {metrics['rmse']:.4f}")
