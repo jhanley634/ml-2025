@@ -5,8 +5,10 @@ from typing import TypeVar
 import numpy as np
 import pandas as pd
 import torch
+import yaml
 from beartype import beartype
 from numpy.typing import NDArray
+from scipy.stats import loguniform, uniform
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import ElasticNet, LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -42,6 +44,7 @@ ModelType = TypeVar(
     LSTM,
     LinearRegression,
     RandomForestRegressor,
+    RandomizedSearchCV,
     SVR,
 )
 
@@ -142,12 +145,7 @@ def create_models(
         "LSTM": LSTM(input_size=x_train.shape[1]),
         "LinearRegression": LinearRegression(),
         "RandomForestRegressor": RandomForestRegressor(),
-        "SVR-Linear": SVR(kernel="linear"),
-        "SVR-RBF": SVR(kernel="rbf", C=1.0),  # this is the default kernel
-        "SVR-RBF-C0.1-E0.1": SVR(kernel="rbf", C=0.1, epsilon=0.1),
-        "SVR-RBF-C10.0-E0.1": SVR(kernel="rbf", C=10.0, epsilon=0.1),
-        "SVR-RBF-C1.0-E0.01": SVR(kernel="rbf", C=1.0, epsilon=0.01),
-        "SVR-RBF-C1.0-E0.5": SVR(kernel="rbf", C=1.0, epsilon=0.5),
+        "SVR-RBF": search_for_svr_hyperparams().fit(x_train, y_train),
     }
 
     results = {}
@@ -162,6 +160,25 @@ def create_models(
         )
 
     report(results)
+
+
+@beartype
+def search_for_svr_hyperparams() -> RandomizedSearchCV:
+    svr_param_grid = {
+        "C": loguniform(1e-2, 1e3),
+        "epsilon": uniform(0.01, 0.5),
+        "kernel": ["linear", "rbf"],
+        "gamma": ["scale", "auto"],
+    }
+    return RandomizedSearchCV(
+        SVR(kernel="rbf"),
+        svr_param_grid,
+        n_iter=10,
+        cv=5,
+        verbose=1,
+        random_state=42,
+        n_jobs=-1,
+    )
 
 
 @beartype

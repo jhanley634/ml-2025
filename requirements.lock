@@ -181,6 +181,7 @@ pywavelets==1.8.0
     # via imagehash
 pyyaml==6.0.2
     # via
+    #   -r requirements.txt
     #   pre-commit
     #   ydata-profiling
 requests==2.32.3
