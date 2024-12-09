@@ -77,10 +77,7 @@ def main() -> None:
     x = df.drop(columns=["benzene"])
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    assert isinstance(x_train, pd.DataFrame)
-    assert isinstance(x_test, pd.DataFrame)
     assert isinstance(y_train, pd.Series)
-    assert isinstance(y_test, pd.Series)
 
     scaler = StandardScaler()
     x_train_scaled = scaler.fit_transform(x_train)
