@@ -12,7 +12,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
-from torch import Tensor, nn, optim, tensor
+from torch import Tensor, float32, nn, optim, tensor
 
 from irvine.air_quality_eda import get_air_quality_dataset
 
@@ -47,12 +47,12 @@ def train_evaluate_sklearn_model(
 
 def train_evaluate_lstm(
     x_train: Tensor,
-    y_train: Iterable[float],
+    y_train: NDArray[np.float64],
     x_test: Tensor,
     y_test: Iterable[float],
     epochs: int = 10,
 ) -> dict[str, float]:
-    model = LSTM(input_size=2)
+    model = LSTM(input_size=x_train.shape[2])
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -60,7 +60,7 @@ def train_evaluate_lstm(
         model.train()
         optimizer.zero_grad()
         y_pred = model(x_train)
-        loss = criterion(y_pred, y_train)
+        loss = criterion(y_pred, Tensor(y_train))
         loss.backward()
         optimizer.step()
 
@@ -103,10 +103,10 @@ def main() -> None:
             y_test,
         )
 
-    x_train_lstm = tensor(x_train_scaled).unsqueeze(1)
-    x_test_lstm = tensor(x_test_scaled).unsqueeze(1)
+    x_train_lstm = tensor(x_train_scaled, dtype=float32).unsqueeze(1)
+    x_test_lstm = tensor(x_test_scaled, dtype=float32).unsqueeze(1)
 
-    results["LSTM"] = train_evaluate_lstm(x_train_lstm, y_train, x_test_lstm, y_test)
+    results["LSTM"] = train_evaluate_lstm(x_train_lstm, y_train.to_numpy(), x_test_lstm, y_test)
 
     for name, metrics in results.items():
         print(f"Model: {name}")
