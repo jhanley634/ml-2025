@@ -10,7 +10,7 @@ from numpy.typing import NDArray
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import ElasticNet, LinearRegression
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import RandomizedSearchCV, train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
@@ -142,6 +142,7 @@ def create_models(
         "LSTM": LSTM(input_size=x_train.shape[1]),
         "LinearRegression": LinearRegression(),
         "RandomForestRegressor": RandomForestRegressor(),
+        "SVR-Linear": SVR(kernel="linear"),
         "SVR-RBF": SVR(kernel="rbf", C=1.0),  # this is the default kernel
         "SVR-RBF-C0.1-E0.1": SVR(kernel="rbf", C=0.1, epsilon=0.1),
         "SVR-RBF-C10.0-E0.1": SVR(kernel="rbf", C=10.0, epsilon=0.1),
