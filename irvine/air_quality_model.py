@@ -79,7 +79,10 @@ def train_evaluate_lstm(
     model.eval()
     with torch.no_grad():
         y_pred = model(x_test)
-        return {"rmse": mean_squared_error(y_test, y_pred), "r2": 0.0}
+        return {
+            "rmse": float(mean_squared_error(y_test, y_pred)),
+            "r2": 0.0,
+        }
 
 
 def main() -> None:
@@ -105,6 +108,7 @@ def main() -> None:
 
     results = {}
     for name, model in models.items():
+        print(name)
         results[name] = train_evaluate_sklearn_model(
             model,
             x_train_scaled,
