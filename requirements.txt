@@ -1,5 +1,20 @@
+black
+isort
+matplotlib
 mypy
+numpy < 2
+pandas > 2.2
+pandas-stubs
 pip
-pyright
+pre-commit
+pyright >= 1.1.390
 ruff
+scikit-learn
+scipy
+seaborn
+setuptools
+torchvision
+types-seaborn
+ucimlrepo
 uv
+ydata-profiling

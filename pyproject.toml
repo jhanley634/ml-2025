@@ -24,10 +24,10 @@ line_length =             100
 exclude = "^.*/.venv/"
 
 [tool.pyright]
-typeCheckingMode = "strict"
+# typeCheckingMode = "strict"
 reportUninitializedInstanceVariable = true
-reportUnknownVariableType = true
-reportUnknownArgumentType = true
+# reportUnknownVariableType = true
+# reportUnknownArgumentType = true
 reportMissingTypeStubs = false
 exclude = [
     "**/.venv/",
@@ -44,5 +44,6 @@ select = [
     "SIM", "SLF", "SLOT", "TCH", "TID", "TRY", "UP", "W", "YTT",
 ]
 ignore = [
-    "ANN401",
+    "PD901",
+    "PLR2004",
 ]

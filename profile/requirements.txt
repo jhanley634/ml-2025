@@ -1,0 +1,7 @@
+numpy < 2
+pandas > 2.2
+scikit-learn
+setuptools
+torchvision
+ucimlrepo
+ydata-profiling
