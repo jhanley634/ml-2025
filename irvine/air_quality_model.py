@@ -46,8 +46,10 @@ def train_evaluate_sklearn_model(
     x_test: NDArray[np.float64],
     y_test: Iterable[float],
 ) -> dict[str, float]:
+
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
+
     return {
         "rmse": float(mean_squared_error(y_test, y_pred)),
         "r2": float(model.score(x_test, y_test)),
@@ -101,7 +103,17 @@ def main() -> None:
     x_train_scaled = scaler.fit_transform(x_train)
     x_test_scaled = scaler.transform(x_test)
     assert isinstance(x_test_scaled, np.ndarray)
+    x_test_scl = x_test_scaled.astype(np.float64)
 
+    create_models(x_train_scaled, y_train.to_numpy(), x_test_scl, pd.Series(y_test).to_numpy())
+
+
+def create_models(
+    x_train_scaled: Tensor,
+    y_train: NDArray[np.float64],
+    x_test_scaled: NDArray[np.float64],
+    y_test: NDArray[np.float64],
+) -> None:
     models = {
         "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
         "RandomForestRegressor": RandomForestRegressor(),
@@ -125,7 +137,7 @@ def main() -> None:
 
     results["LSTM"] = train_evaluate_lstm_model(
         x_train_lstm,
-        y_train.to_numpy(),
+        y_train,
         x_test_lstm,
         y_test,
     )
