@@ -8,9 +8,10 @@ import torch
 from beartype import beartype
 from numpy.typing import NDArray
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import ElasticNet, LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from torch import Tensor, nn, optim
@@ -35,7 +36,9 @@ class LSTM(nn.Module):
 
 ModelType = TypeVar(
     "ModelType",
+    ElasticNet,
     HistGradientBoostingRegressor,
+    KNeighborsRegressor,
     LSTM,
     LinearRegression,
     RandomForestRegressor,
@@ -133,11 +136,17 @@ def create_models(
     y_test: NDArray[np.float64],
 ) -> None:
     models = {
+        "ElasticNet": ElasticNet(),
         "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
+        "K-Nearest Neighbors": KNeighborsRegressor(),
         "LSTM": LSTM(input_size=x_train.shape[1]),
         "LinearRegression": LinearRegression(),
         "RandomForestRegressor": RandomForestRegressor(),
-        "SVR": SVR(),
+        "SVR-RBF": SVR(kernel="rbf", C=1.0),  # this is the default kernel
+        "SVR-RBF-C0.1-E0.1": SVR(kernel="rbf", C=0.1, epsilon=0.1),
+        "SVR-RBF-C10.0-E0.1": SVR(kernel="rbf", C=10.0, epsilon=0.1),
+        "SVR-RBF-C1.0-E0.01": SVR(kernel="rbf", C=1.0, epsilon=0.01),
+        "SVR-RBF-C1.0-E0.5": SVR(kernel="rbf", C=1.0, epsilon=0.5),
     }
 
     results = {}
