@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 from collections.abc import Iterable
+from pathlib import Path
 from typing import TypeVar
 
 import numpy as np
@@ -63,9 +64,11 @@ def train_evaluate_sklearn_model(
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
 
+    score = model.score(x_test, y_test)
+    assert isinstance(score, float)
     return {
         "rmse": float(mean_squared_error(y_test, y_pred)),
-        "r2": float(model.score(x_test, y_test)),
+        "r2": score,
     }
 
 
@@ -145,7 +148,10 @@ def create_models(
         "LSTM": LSTM(input_size=x_train.shape[1]),
         "LinearRegression": LinearRegression(),
         "RandomForestRegressor": RandomForestRegressor(),
-        "SVR-RBF": search_for_svr_hyperparams().fit(x_train, y_train),
+        "SVR-RBF": load_or_search_for_svr_hyperparams(
+            x_train,
+            y_train,
+        ),  # This uses the caching mechanism
     }
 
     results = {}
@@ -160,6 +166,27 @@ def create_models(
         )
 
     report(results)
+
+
+PARAM_CACHE = Path("/tmp/svr_params.yaml")
+
+
+@beartype
+def load_or_search_for_svr_hyperparams(
+    x_train: NDArray[np.float64],
+    y_train: NDArray[np.float64],
+) -> RandomizedSearchCV:
+    if PARAM_CACHE.exists():
+        with PARAM_CACHE.open() as fin:
+            return yaml.load(fin, Loader=yaml.FullLoader)
+
+    svr_search = search_for_svr_hyperparams()
+    svr_search.fit(x_train, y_train)
+
+    with PARAM_CACHE.open("w") as fout:
+        yaml.dump(svr_search.best_params_, fout)
+
+    return svr_search
 
 
 @beartype

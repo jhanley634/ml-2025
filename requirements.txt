@@ -19,6 +19,7 @@ seaborn
 setuptools
 torchvision
 tqdm
+types-PyYAML
 types-seaborn
 ucimlrepo
 uv
