@@ -2,8 +2,8 @@ black
 isort
 matplotlib
 mypy
-numpy
-pandas
+numpy < 2
+pandas > 2.2
 pandas-stubs
 pip
 pre-commit
@@ -12,6 +12,9 @@ ruff
 scikit-learn
 scipy
 seaborn
+setuptools
+torchvision
 types-seaborn
 ucimlrepo
 uv
+ydata-profiling

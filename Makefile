@@ -8,7 +8,7 @@ all:
 
 .venv:
 	which uv || curl -LsSf https://astral.sh/uv/install.sh | sh
-	uv venv --python=python3.13
+	uv venv --python=python3.12
 
 install: .venv
 	sort -o requirements.txt{,}
@@ -19,7 +19,7 @@ install: .venv
 STRICT = --strict --warn-unreachable --ignore-missing-imports --no-namespace-packages
 
 ruff-check:
-	$(ACTIVATE) && ruff check --fix && black .
+	$(ACTIVATE) && black . && ruff check --fix
 lint: ruff-check
 	$(ACTIVATE) && pyright .
 	$(ACTIVATE) && mypy $(STRICT) .

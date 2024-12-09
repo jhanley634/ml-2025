@@ -1,19 +1,23 @@
 #! /usr/bin/env python
+from collections.abc import Iterable
 
+import numpy as np
 import pandas as pd
 import torch
+from numpy.typing import NDArray
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
+from sklearn.ensemble._forest import ForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
-from torch import Tensor, float32, nn, optim, tensor
+from torch import Tensor, nn, optim, tensor
 
 from irvine.air_quality_eda import get_air_quality_dataset
 
 
-class LSTM(nn.Module):  # type: ignore [misc]
+class LSTM(nn.Module):
     def __init__(self, input_size: int, hidden_layer_size: int = 50) -> None:
         super().__init__()
         self.lstm = nn.LSTM(input_size, hidden_layer_size, batch_first=True)
@@ -26,16 +30,61 @@ class LSTM(nn.Module):  # type: ignore [misc]
         return ret
 
 
+def train_evaluate_sklearn_model(
+    model: ForestRegressor | HistGradientBoostingRegressor | LinearRegression | SVR,
+    x_train: Tensor,
+    y_train: Iterable[float],
+    x_test: NDArray[np.float64],
+    y_test: Iterable[float],
+) -> dict[str, float]:
+    model.fit(x_train, y_train)
+    y_pred = model.predict(x_test)
+    return {
+        "rmse": float(mean_squared_error(y_test, y_pred)),
+        "r2": float(model.score(x_test, y_test)),
+    }
+
+
+def train_evaluate_lstm(
+    x_train: Tensor,
+    y_train: Iterable[float],
+    x_test: Tensor,
+    y_test: Iterable[float],
+    epochs: int = 10,
+) -> dict[str, float]:
+    model = LSTM(input_size=2)
+    criterion = nn.MSELoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+    for _epoch in range(epochs):
+        model.train()
+        optimizer.zero_grad()
+        y_pred = model(x_train)
+        loss = criterion(y_pred, y_train)
+        loss.backward()
+        optimizer.step()
+
+    model.eval()
+    with torch.no_grad():
+        y_pred = model(x_test)
+        return {"rmse": mean_squared_error(y_test, y_pred), "r2": 0.0}
+
+
 def main() -> None:
     df = get_air_quality_dataset().dropna(subset=["benzene"])
     y = df["benzene"]
     x = df.drop(columns=["benzene"])
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    assert isinstance(x_train, pd.DataFrame)
+    assert isinstance(x_test, pd.DataFrame)
+    assert isinstance(y_train, pd.Series)
+    assert isinstance(y_test, pd.Series)
 
     scaler = StandardScaler()
     x_train_scaled = scaler.fit_transform(x_train)
     x_test_scaled = scaler.transform(x_test)
+    assert isinstance(x_test_scaled, np.ndarray)
 
     models = {
         "HistGradientBoosting": HistGradientBoostingRegressor(),
@@ -44,56 +93,26 @@ def main() -> None:
         "LinearRegression": LinearRegression(),
     }
 
-    for model_name, model in models.items():
-        model.fit(x_train_scaled, y_train)
-        y_pred = model.predict(x_test_scaled)
-        rmse = mean_squared_error(y_test, y_pred)
-        print(f"Model: {model_name}")
-        print(f"RMSE: {rmse}")
-        print(f"R^2:  {model.score(x_test_scaled, y_test)}")
-        print(f"Features: {x.columns}")
-        print("-" * 40)
+    results = {}
+    for name, model in models.items():
+        results[name] = train_evaluate_sklearn_model(
+            model,
+            x_train_scaled,
+            y_train,
+            x_test_scaled.astype(np.float64),
+            y_test,
+        )
 
-    x_train_lstm = tensor(x_train_scaled, dtype=float32).unsqueeze(
-        1,
-    )
-    x_test_lstm = tensor(x_test_scaled, dtype=float32).unsqueeze(1)
+    x_train_lstm = tensor(x_train_scaled).unsqueeze(1)
+    x_test_lstm = tensor(x_test_scaled).unsqueeze(1)
 
-    assert isinstance(y_train, pd.Series)
-    assert isinstance(y_test, pd.Series)
-    y_train_tensor = tensor(y_train.values, dtype=float32).view(-1, 1)
-    y_test_tensor = tensor(y_test.values, dtype=float32).view(-1, 1)
+    results["LSTM"] = train_evaluate_lstm(x_train_lstm, y_train, x_test_lstm, y_test)
 
-    input_size = x_train_lstm.shape[2]  # Number of features in the input
-    lstm_model = LSTM(input_size=input_size)
-
-    # Define loss function and optimizer
-    criterion = nn.MSELoss()
-    optimizer = optim.Adam(lstm_model.parameters(), lr=0.001)
-
-    # Training the LSTM model
-    num_epochs = 10
-    for epoch in range(num_epochs):
-        lstm_model.train()
-        optimizer.zero_grad()
-
-        assert isinstance(x_train_lstm, torch.Tensor)
-        y_pred_lstm = lstm_model(x_train_lstm)
-
-        loss = criterion(y_pred_lstm, y_train_tensor)
-
-        loss.backward()
-        optimizer.step()
-
-        if epoch % 2 == 0:
-            print(f"Epoch [{epoch}/{num_epochs}], Loss: {loss.item():.4f}")
-
-    lstm_model.eval()
-    with torch.no_grad():
-        y_pred_lstm = lstm_model(x_test_lstm)
-        rmse_lstm = mean_squared_error(y_test_tensor, y_pred_lstm)
-        print("Model: LSTM")
-        print(f"RMSE: {rmse_lstm}")
+    for name, metrics in results.items():
+        print(f"Model: {name}")
+        print(f"RMSE: {metrics['rmse']}")
+        if metrics["r2"] is not None:
+            print(f"R^2: {metrics['r2']}")
         print("-" * 40)
 
 

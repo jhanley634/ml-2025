@@ -97,7 +97,7 @@ def _extract_reference_features(x: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(x[list(new_names.values())])
 
 
-def _series_neg_is_nan(x: pd.Series, sentinel: int = -200) -> pd.Series:
+def _series_neg_is_nan(x: "pd.Series[float]", sentinel: int = -200) -> "pd.Series[float]":
     """In this dataset, it turns out -200 is used to represent missing values."""
 
     def to_nan(v: float) -> float:
