@@ -33,7 +33,7 @@ docker-run:
 lab: notebook
 nb: notebook
 notebook:
-	$(ACTIVATE) && jupyter-lab
+	$(ACTIVATE) && jupyter lab
 
 test:
 	$(ACTIVATE) && python -m unittest sandbox/*/*_test.py
