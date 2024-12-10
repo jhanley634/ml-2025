@@ -168,7 +168,7 @@ def create_models(
     report(results)
 
 
-PARAM_CACHE = Path("/tmp/svr_params.yaml")
+PARAM_CACHE = Path("/tmp/svr_params.json")
 
 
 @beartype
