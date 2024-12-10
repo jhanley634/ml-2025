@@ -35,6 +35,9 @@ nb: notebook
 notebook:
 	$(ACTIVATE) && jupyter-lab
 
+test:
+	$(ACTIVATE) && python -m unittest sandbox/*/*_test.py
+
 CACHES := .mypy_cache/ .pyre/ .pytype/ .ruff_cache/
 clean-caches:
 	rm -rf $(CACHES)
