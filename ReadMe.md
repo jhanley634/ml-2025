@@ -1,6 +1,6 @@
 Machine Learning projects.
 
-Execute `$ make clean install lint` to get started.
+Execute `$ make clean install test lint` to get started.
 
 ----
 
