@@ -37,7 +37,7 @@ USER ml
 RUN (curl -LsSf https://astral.sh/uv/install.sh | sh) && \
     . $HOME/.bashrc && \
     . $HOME/.local/bin/env && \
-    cp -p profile/.gitconfig $HOME && \
+    cp -p irvine/.gitconfig $HOME && \
     make install
 
 ENTRYPOINT ["bash"]

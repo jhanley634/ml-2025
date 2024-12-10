@@ -1,5 +1,9 @@
+beartype
 black
+catboost
 isort
+jupyterlab
+lightgbm
 matplotlib
 mypy
 numpy < 2
@@ -8,12 +12,15 @@ pandas-stubs
 pip
 pre-commit
 pyright >= 1.1.390
+pyyaml
 ruff
 scikit-learn
 scipy
 seaborn
 setuptools
 torchvision
+tqdm
+types-pyyaml
 types-seaborn
 ucimlrepo
 uv
