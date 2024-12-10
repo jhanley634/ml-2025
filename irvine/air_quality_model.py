@@ -80,7 +80,7 @@ def train_evaluate_lstm_model(
     x_test: NDArray[np.float64],
     y_test: Iterable[float],
 ) -> dict[str, float]:
-    epochs: int = 300
+    epochs: int = 200
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.04)
     x_train_tensor = Tensor(x_train).unsqueeze(1)

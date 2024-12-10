@@ -30,6 +30,11 @@ docker-build: clean-caches
 docker-run:
 	docker run -v .:/tmp/ml-2025 -p 8000:8000 -it $(PROJECT)
 
+lab: notebook
+nb: notebook
+notebook:
+	$(ACTIVATE) && jupyter-lab
+
 CACHES := .mypy_cache/ .pyre/ .pytype/ .ruff_cache/
 clean-caches:
 	rm -rf $(CACHES)
