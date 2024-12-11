@@ -17,8 +17,8 @@ from sklearn.svm import SVR
 from torch import Tensor, nn, optim
 from tqdm import tqdm
 
-from irvine.air_quality_etl import TEMP, get_air_quality_dataset
-from irvine.tuning import load_or_search_for_svr_hyperparams
+from irvine.air_quality_etl import get_air_quality_dataset
+from irvine.tuning import load_or_search_for_elastic_hyperparams, load_or_search_for_svr_hyperparams
 
 
 @beartype
@@ -173,7 +173,7 @@ def create_models(
     y_train: NDArray[np.float64],
 ) -> dict[str, ModelType]:
     models = {
-        "ElasticNet": ElasticNet(),
+        "ElasticNet": load_or_search_for_elastic_hyperparams(x_train, y_train),
         "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
         "K-Nearest Neighbors": KNeighborsRegressor(),
         # "LSTM": LSTM(input_size=x_train.shape[1]),
@@ -196,9 +196,6 @@ def create_models(
     # for model in models.values():
     #     assert isinstance(model, types)
     return models
-
-
-PARAM_CACHE = TEMP / "svr_params.json"
 
 
 def report(results: dict[str, dict[str, float]]) -> None:
