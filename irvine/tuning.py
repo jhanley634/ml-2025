@@ -77,7 +77,7 @@ def _search_for_svr_hyperparams() -> RandomizedSearchCV:
         "coef0": uniform(0, 10),
     }
     return RandomizedSearchCV(
-        SVR(kernel="rbf"),
+        SVR(),
         svr_param_grid,
         n_iter=20,
         cv=4,
