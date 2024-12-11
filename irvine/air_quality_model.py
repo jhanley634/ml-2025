@@ -189,7 +189,6 @@ def load_or_search_for_svr_hyperparams(
         return RandomizedSearchCV(SVR(kernel="rbf"), best_params)
 
 
-
 @beartype
 def search_for_svr_hyperparams() -> RandomizedSearchCV:
     svr_param_grid = {
