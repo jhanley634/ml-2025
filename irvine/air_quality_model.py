@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-import json
 from collections.abc import Iterable
 from typing import TypeVar
 
@@ -8,11 +7,10 @@ import pandas as pd
 import torch
 from beartype import beartype
 from numpy.typing import NDArray
-from scipy.stats import loguniform, uniform
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import ElasticNet, LinearRegression
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import RandomizedSearchCV, train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
@@ -20,6 +18,7 @@ from torch import Tensor, nn, optim
 from tqdm import tqdm
 
 from irvine.air_quality_etl import TEMP, get_air_quality_dataset
+from irvine.tuning import load_or_search_for_svr_hyperparams
 
 
 @beartype
@@ -200,43 +199,6 @@ def create_models(
 
 
 PARAM_CACHE = TEMP / "svr_params.json"
-
-
-def load_or_search_for_svr_hyperparams(
-    x_train: NDArray[np.float64],
-    y_train: NDArray[np.float64],
-) -> SVR:
-    if not PARAM_CACHE.exists():
-
-        svr_search = search_for_svr_hyperparams()
-        svr_search.fit(x_train, y_train)
-
-        with PARAM_CACHE.open("w") as fout:
-            json.dump(svr_search.best_params_, fout)
-
-    with PARAM_CACHE.open() as fin:
-        best_params = json.load(fin)
-        return SVR(**best_params)
-
-
-def search_for_svr_hyperparams() -> RandomizedSearchCV:
-    svr_param_grid = {
-        "C": loguniform(1e-2, 1e3),
-        "epsilon": uniform(0.01, 0.5),
-        "kernel": ["linear", "poly", "rbf"],
-        "gamma": ["scale", "auto"],
-        "degree": [2, 3, 4],
-        "coef0": uniform(0, 10),
-    }
-    return RandomizedSearchCV(
-        SVR(kernel="rbf"),
-        svr_param_grid,
-        n_iter=20,
-        cv=4,
-        verbose=1,
-        random_state=42,
-        n_jobs=-1,
-    )
 
 
 def report(results: dict[str, dict[str, float]]) -> None:
