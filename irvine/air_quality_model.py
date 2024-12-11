@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 import json
 from collections.abc import Iterable
-from pathlib import Path
 from typing import TypeVar
 
 import numpy as np
@@ -20,7 +19,7 @@ from sklearn.svm import SVR
 from torch import Tensor, nn, optim
 from tqdm import tqdm
 
-from irvine.air_quality_eda import get_air_quality_dataset
+from irvine.air_quality_eda import TEMP, get_air_quality_dataset
 
 
 @beartype
@@ -168,7 +167,7 @@ def create_models(
     report(results)
 
 
-PARAM_CACHE = Path("/tmp/svr_params.json")
+PARAM_CACHE = TEMP / "svr_params.json"
 
 
 @beartype
