@@ -155,7 +155,7 @@ def _train_test_split(
     """This is simply a type safe wrapper of the familiar sklearn function."""
     kwargs = {"test_size": test_size, "random_state": seed}
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, **kwargs)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, shuffle=False, **kwargs)
 
     assert isinstance(x_train, pd.DataFrame)
     assert isinstance(x_test, pd.DataFrame)
@@ -212,7 +212,7 @@ def load_or_search_for_svr_hyperparams(
         svr_search.fit(x_train, y_train)
 
         with PARAM_CACHE.open("w") as fout:
-            json.dump({k: [v] for k, v in svr_search.best_params_.items()}, fout)
+            json.dump(svr_search.best_params_, fout)
 
     with PARAM_CACHE.open() as fin:
         best_params = json.load(fin)
