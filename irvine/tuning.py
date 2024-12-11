@@ -23,6 +23,7 @@ def load_or_search_for_elastic_hyperparams(
 
         with ELASTIC_CACHE.open("w") as fout:
             json.dump(elastic_net_search.best_params_, fout)
+            fout.write("\n")
 
     with ELASTIC_CACHE.open() as fin:
         best_params = json.load(fin)
@@ -41,6 +42,7 @@ def load_or_search_for_svr_hyperparams(
 
         with SVR_CACHE.open("w") as fout:
             json.dump(svr_search.best_params_, fout)
+            fout.write("\n")
 
     with SVR_CACHE.open() as fin:
         best_params = json.load(fin)
@@ -51,7 +53,7 @@ def _search_for_elastic_hyperparams() -> RandomizedSearchCV:
     elastic_param_grid = {
         "alpha": loguniform(1e-3, 1.0),
         "l1_ratio": uniform(0.0, 1.0),
-        "max_iter": [24_000, 26_000, 28_000, 30_000],
+        "max_iter": [22_000, 26_000, 30_000, 34_000, 38_000],
         "tol": [1e-3],
     }
     return RandomizedSearchCV(
