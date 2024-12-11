@@ -44,7 +44,7 @@ ModelType = TypeVar(
     LSTM,
     LinearRegression,
     RandomForestRegressor,
-    RandomizedSearchCV,
+    # RandomizedSearchCV,
     SVR,
 )
 
@@ -127,37 +127,15 @@ def main() -> None:
     y = df["benzene"]
     x = df.drop(columns=["benzene"])
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    assert isinstance(y_train, pd.Series)
+    x_train, x_test, y_train, y_test = _train_test_split(x, y.to_numpy())
 
     scaler = StandardScaler()
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.transform(x_test)
     assert isinstance(x_test, np.ndarray)
+    x_test = x_test.astype(np.float64)
 
-    create_models(
-        x_train, y_train.to_numpy(), x_test.astype(np.float64), pd.Series(y_test).to_numpy(),
-    )
-
-
-def create_models(
-    x_train: NDArray[np.float64],
-    y_train: NDArray[np.float64],
-    x_test: NDArray[np.float64],
-    y_test: NDArray[np.float64],
-) -> None:
-    models = {
-        "ElasticNet": ElasticNet(),
-        "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
-        "K-Nearest Neighbors": KNeighborsRegressor(),
-        "LSTM": LSTM(input_size=x_train.shape[1]),
-        "LinearRegression": LinearRegression(),
-        "RandomForestRegressor": RandomForestRegressor(),
-        "SVR-RBF": load_or_search_for_svr_hyperparams(
-            x_train,
-            y_train,
-        ),
-    }
+    models = create_models()
 
     results = {}
     for name, model in models.items():
@@ -165,6 +143,60 @@ def create_models(
         results[name] = train_evaluate_sklearn_model(model, x_train, y_train, x_test, y_test)
 
     report(results)
+
+
+@beartype
+def _train_test_split(
+    x: pd.DataFrame,
+    y: NDArray[np.float64],
+    test_size: float = 0.2,
+    seed: int = 42,
+) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
+    """This is simply a type safe wrapper of the familiar sklearn function."""
+    kwargs = {"test_size": test_size, "random_state": seed}
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, **kwargs)
+
+    assert isinstance(x_train, pd.DataFrame)
+    assert isinstance(x_test, pd.DataFrame)
+
+    return (
+        x_train.to_numpy(),
+        x_test.to_numpy(),
+        pd.Series(y_train).to_numpy(),
+        pd.Series(y_test).to_numpy(),
+    )
+
+
+@beartype
+def create_models(
+    # x_train: NDArray[np.float64],
+    # y_train: NDArray[np.float64],
+) -> dict[str, ModelType]:
+    models = {
+        "ElasticNet": ElasticNet(),
+        "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
+        "K-Nearest Neighbors": KNeighborsRegressor(),
+        # "LSTM": LSTM(input_size=x_train.shape[1]),
+        "LinearRegression": LinearRegression(),
+        "RandomForestRegressor": RandomForestRegressor(),
+        # "SVR-RBF": load_or_search_for_svr_hyperparams(
+        #     x_train,
+        #     y_train,
+        # ),
+    }
+    types = (
+        ElasticNet
+        | HistGradientBoostingRegressor
+        | KNeighborsRegressor
+        | LinearRegression
+        | RandomForestRegressor
+        | SVR
+    )
+    assert types
+    # for model in models.values():
+    #     assert isinstance(model, types)
+    return models
 
 
 PARAM_CACHE = TEMP / "svr_params.json"
@@ -193,6 +225,8 @@ def search_for_svr_hyperparams() -> RandomizedSearchCV:
         "epsilon": uniform(0.01, 0.5),
         "kernel": ["linear", "poly", "rbf"],
         "gamma": ["scale", "auto"],
+        "degree": [2, 3, 4],
+        "coef0": uniform(0, 10),
     }
     return RandomizedSearchCV(
         SVR(kernel="rbf"),
