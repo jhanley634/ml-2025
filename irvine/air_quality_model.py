@@ -19,7 +19,7 @@ from sklearn.svm import SVR
 from torch import Tensor, nn, optim
 from tqdm import tqdm
 
-from irvine.air_quality_eda import TEMP, get_air_quality_dataset
+from irvine.air_quality_etl import TEMP, get_air_quality_dataset
 
 
 @beartype
