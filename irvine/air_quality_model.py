@@ -135,7 +135,7 @@ def main() -> None:
     assert isinstance(x_test, np.ndarray)
     x_test = x_test.astype(np.float64)
 
-    models = create_models()
+    models = create_models(x_train, y_train)
 
     results = {}
     for name, model in models.items():
@@ -170,8 +170,8 @@ def _train_test_split(
 
 @beartype
 def create_models(
-    # x_train: NDArray[np.float64],
-    # y_train: NDArray[np.float64],
+    x_train: NDArray[np.float64],
+    y_train: NDArray[np.float64],
 ) -> dict[str, ModelType]:
     models = {
         "ElasticNet": ElasticNet(),
@@ -180,10 +180,10 @@ def create_models(
         # "LSTM": LSTM(input_size=x_train.shape[1]),
         "LinearRegression": LinearRegression(),
         "RandomForestRegressor": RandomForestRegressor(),
-        # "SVR-RBF": load_or_search_for_svr_hyperparams(
-        #     x_train,
-        #     y_train,
-        # ),
+        "SVR-RBF": load_or_search_for_svr_hyperparams(
+            x_train,
+            y_train,
+        ),
     }
     types = (
         ElasticNet
@@ -205,7 +205,7 @@ PARAM_CACHE = TEMP / "svr_params.json"
 def load_or_search_for_svr_hyperparams(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
-) -> RandomizedSearchCV:
+) -> SVR:
     if not PARAM_CACHE.exists():
 
         svr_search = search_for_svr_hyperparams()
@@ -216,7 +216,7 @@ def load_or_search_for_svr_hyperparams(
 
     with PARAM_CACHE.open() as fin:
         best_params = json.load(fin)
-        return RandomizedSearchCV(SVR(kernel="rbf"), best_params, n_iter=1)
+        return SVR(**best_params)
 
 
 def search_for_svr_hyperparams() -> RandomizedSearchCV:
@@ -231,8 +231,8 @@ def search_for_svr_hyperparams() -> RandomizedSearchCV:
     return RandomizedSearchCV(
         SVR(kernel="rbf"),
         svr_param_grid,
-        n_iter=30,
-        cv=5,
+        n_iter=20,
+        cv=4,
         verbose=1,
         random_state=42,
         n_jobs=-1,
