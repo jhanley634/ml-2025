@@ -2,6 +2,7 @@
 PROJECT := ml-2025
 SHELL := bash
 ACTIVATE := source .venv/bin/activate
+PYTHONPATH := .:..
 
 all:
 	ls -l

@@ -182,10 +182,12 @@ def load_or_search_for_svr_hyperparams(
         svr_search.fit(x_train, y_train)
 
         with PARAM_CACHE.open("w") as fout:
-            json.dump(svr_search.best_params_, fout)
+            json.dump({k: [v] for k, v in svr_search.best_params_.items()}, fout)
 
     with PARAM_CACHE.open() as fin:
-        return json.load(fin)
+        best_params = json.load(fin)
+        return RandomizedSearchCV(SVR(kernel="rbf"), best_params)
+
 
 
 @beartype
@@ -199,7 +201,7 @@ def search_for_svr_hyperparams() -> RandomizedSearchCV:
     return RandomizedSearchCV(
         SVR(kernel="rbf"),
         svr_param_grid,
-        n_iter=5,
+        n_iter=15,
         cv=5,
         verbose=1,
         random_state=42,
