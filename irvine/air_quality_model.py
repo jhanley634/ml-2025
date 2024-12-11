@@ -49,7 +49,6 @@ ModelType = TypeVar(
 )
 
 
-@beartype
 def train_evaluate_sklearn_model(
     model: ModelType,
     x_train: NDArray[np.float64],
@@ -69,7 +68,6 @@ def train_evaluate_sklearn_model(
     }
 
 
-@beartype
 def train_evaluate_lstm_model(
     model: LSTM,
     x_train: NDArray[np.float64],
@@ -107,7 +105,6 @@ def train_evaluate_lstm_model(
         }
 
 
-@beartype
 def main() -> None:
     df = get_air_quality_dataset().dropna(subset=["benzene"])
     holdout_split = 1800
@@ -131,7 +128,6 @@ def main() -> None:
     create_models(x_train_scaled, y_train.to_numpy(), x_test_scl, pd.Series(y_test).to_numpy())
 
 
-@beartype
 def create_models(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
@@ -168,7 +164,6 @@ def create_models(
 PARAM_CACHE = TEMP / "svr_params.json"
 
 
-@beartype
 def load_or_search_for_svr_hyperparams(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
@@ -186,7 +181,6 @@ def load_or_search_for_svr_hyperparams(
         return RandomizedSearchCV(SVR(kernel="rbf"), best_params)
 
 
-@beartype
 def search_for_svr_hyperparams() -> RandomizedSearchCV:
     svr_param_grid = {
         "C": loguniform(1e-2, 1e3),
@@ -205,7 +199,6 @@ def search_for_svr_hyperparams() -> RandomizedSearchCV:
     )
 
 
-@beartype
 def report(results: dict[str, dict[str, float]]) -> None:
     for name, metrics in results.items():
         print(f"Model: {name}")
