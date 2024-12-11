@@ -22,6 +22,7 @@ ruff-check:
 	$(ACTIVATE) && black . && ruff check --fix
 lint: ruff-check
 	$(ACTIVATE) && pyright .
+mypy: lint
 	$(ACTIVATE) && mypy $(STRICT) .
 
 docker-build: clean-caches
@@ -44,4 +45,4 @@ clean-caches:
 clean: clean-caches
 	rm -rf .venv/
 
-.PHONY: all install ruff-check lint docker-build docker-run clean-caches clean
+.PHONY: all install ruff-check lint mypy docker-build docker-run lab nb notebook test clean-caches clean

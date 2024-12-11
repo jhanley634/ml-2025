@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+import json
 from collections.abc import Iterable
 from pathlib import Path
 from typing import TypeVar
@@ -6,7 +7,6 @@ from typing import TypeVar
 import numpy as np
 import pandas as pd
 import torch
-import yaml
 from beartype import beartype
 from numpy.typing import NDArray
 from scipy.stats import loguniform, uniform
@@ -176,17 +176,16 @@ def load_or_search_for_svr_hyperparams(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
 ) -> RandomizedSearchCV:
-    if PARAM_CACHE.exists():
-        with PARAM_CACHE.open() as fin:
-            return yaml.load(fin, Loader=yaml.FullLoader)
+    if not PARAM_CACHE.exists():
 
-    svr_search = search_for_svr_hyperparams()
-    svr_search.fit(x_train, y_train)
+        svr_search = search_for_svr_hyperparams()
+        svr_search.fit(x_train, y_train)
 
-    with PARAM_CACHE.open("w") as fout:
-        yaml.dump(svr_search.best_params_, fout)
+        with PARAM_CACHE.open("w") as fout:
+            json.dump(svr_search.best_params_, fout)
 
-    return svr_search
+    with PARAM_CACHE.open() as fin:
+        return json.load(fin)
 
 
 @beartype
@@ -200,7 +199,7 @@ def search_for_svr_hyperparams() -> RandomizedSearchCV:
     return RandomizedSearchCV(
         SVR(kernel="rbf"),
         svr_param_grid,
-        n_iter=10,
+        n_iter=5,
         cv=5,
         verbose=1,
         random_state=42,
