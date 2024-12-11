@@ -63,11 +63,9 @@ def train_evaluate_sklearn_model(
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
 
-    score = model.score(x_test, y_test)
-    assert isinstance(score, float)
     return {
         "rmse": float(mean_squared_error(y_test, y_pred)),
-        "r2": score,
+        "r2": float(model.score(x_test, y_test)),
     }
 
 
