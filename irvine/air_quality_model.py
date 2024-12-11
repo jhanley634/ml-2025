@@ -49,12 +49,13 @@ ModelType = TypeVar(
 )
 
 
+@beartype
 def train_evaluate_sklearn_model(
     model: ModelType,
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
     x_test: NDArray[np.float64],
-    y_test: Iterable[float],
+    y_test: NDArray[np.float64],
 ) -> dict[str, float]:
     if isinstance(model, LSTM):
         return train_evaluate_lstm_model(model, x_train, y_train, x_test, y_test)
@@ -64,8 +65,18 @@ def train_evaluate_sklearn_model(
 
     return {
         "rmse": float(mean_squared_error(y_test, y_pred)),
-        "r2": float(model.score(x_test, y_test)),
+        "r2": _score(model, x_test, y_test),
     }
+
+
+def _score(
+    model: ModelType,
+    x_test: NDArray[np.float64],
+    y_test: NDArray[np.float64],
+) -> float:
+    score = model.score(x_test, y_test)
+    assert isinstance(score, float)
+    return score
 
 
 def train_evaluate_lstm_model(
@@ -144,19 +155,13 @@ def create_models(
         "SVR-RBF": load_or_search_for_svr_hyperparams(
             x_train,
             y_train,
-        ),  # This uses the caching mechanism
+        ),
     }
 
     results = {}
     for name, model in models.items():
         print(name)
-        results[name] = train_evaluate_sklearn_model(
-            model,
-            x_train,
-            y_train,
-            x_test,
-            y_test,
-        )
+        results[name] = train_evaluate_sklearn_model(model, x_train, y_train, x_test, y_test)
 
     report(results)
 
@@ -178,20 +183,20 @@ def load_or_search_for_svr_hyperparams(
 
     with PARAM_CACHE.open() as fin:
         best_params = json.load(fin)
-        return RandomizedSearchCV(SVR(kernel="rbf"), best_params)
+        return RandomizedSearchCV(SVR(kernel="rbf"), best_params, n_iter=1)
 
 
 def search_for_svr_hyperparams() -> RandomizedSearchCV:
     svr_param_grid = {
         "C": loguniform(1e-2, 1e3),
         "epsilon": uniform(0.01, 0.5),
-        "kernel": ["linear", "rbf"],
+        "kernel": ["linear", "poly", "rbf"],
         "gamma": ["scale", "auto"],
     }
     return RandomizedSearchCV(
         SVR(kernel="rbf"),
         svr_param_grid,
-        n_iter=15,
+        n_iter=30,
         cv=5,
         verbose=1,
         random_state=42,
