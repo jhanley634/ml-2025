@@ -131,12 +131,13 @@ def main() -> None:
     assert isinstance(y_train, pd.Series)
 
     scaler = StandardScaler()
-    x_train_scaled = scaler.fit_transform(x_train)
-    x_test_scaled = scaler.transform(x_test)
-    assert isinstance(x_test_scaled, np.ndarray)
-    x_test_scl = x_test_scaled.astype(np.float64)
+    x_train = scaler.fit_transform(x_train)
+    x_test = scaler.transform(x_test)
+    assert isinstance(x_test, np.ndarray)
 
-    create_models(x_train_scaled, y_train.to_numpy(), x_test_scl, pd.Series(y_test).to_numpy())
+    create_models(
+        x_train, y_train.to_numpy(), x_test.astype(np.float64), pd.Series(y_test).to_numpy(),
+    )
 
 
 def create_models(
