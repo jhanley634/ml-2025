@@ -2,6 +2,7 @@
 """
 Exploratory data analysis for the air quality dataset.
 """
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,6 +10,9 @@ import pandas as pd
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 from ucimlrepo import fetch_ucirepo
+from ydata_profiling import ProfileReport
+
+TEMP = Path("/tmp")
 
 
 def main() -> None:
@@ -20,9 +24,12 @@ def main() -> None:
 
     scaler = StandardScaler()
     x = pd.DataFrame(scaler.fit_transform(x), columns=x.columns)
-    x.to_csv("/tmp/data.csv", index=False)
+    x.to_csv(TEMP / "data.csv", index=False)
 
     _plot_correlation(x)
+
+    pr = ProfileReport(x)
+    pr.to_file(TEMP / "air_quality_report.html")
 
 
 def get_air_quality_dataset(*, verbose: bool = False) -> pd.DataFrame:

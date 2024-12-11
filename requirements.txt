@@ -1,5 +1,5 @@
 beartype
-black
+black[jupyter]
 catboost
 isort
 jupyterlab

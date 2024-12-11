@@ -1,12 +1,11 @@
 #! /usr/bin/env python
+import json
 from collections.abc import Iterable
-from pathlib import Path
 from typing import TypeVar
 
 import numpy as np
 import pandas as pd
 import torch
-import yaml
 from beartype import beartype
 from numpy.typing import NDArray
 from scipy.stats import loguniform, uniform
@@ -20,7 +19,7 @@ from sklearn.svm import SVR
 from torch import Tensor, nn, optim
 from tqdm import tqdm
 
-from irvine.air_quality_eda import get_air_quality_dataset
+from irvine.air_quality_eda import TEMP, get_air_quality_dataset
 
 
 @beartype
@@ -168,7 +167,7 @@ def create_models(
     report(results)
 
 
-PARAM_CACHE = Path("/tmp/svr_params.json")
+PARAM_CACHE = TEMP / "svr_params.json"
 
 
 @beartype
@@ -176,17 +175,17 @@ def load_or_search_for_svr_hyperparams(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
 ) -> RandomizedSearchCV:
-    if PARAM_CACHE.exists():
-        with PARAM_CACHE.open() as fin:
-            return yaml.load(fin, Loader=yaml.FullLoader)
+    if not PARAM_CACHE.exists():
 
-    svr_search = search_for_svr_hyperparams()
-    svr_search.fit(x_train, y_train)
+        svr_search = search_for_svr_hyperparams()
+        svr_search.fit(x_train, y_train)
 
-    with PARAM_CACHE.open("w") as fout:
-        yaml.dump(svr_search.best_params_, fout)
+        with PARAM_CACHE.open("w") as fout:
+            json.dump({k: [v] for k, v in svr_search.best_params_.items()}, fout)
 
-    return svr_search
+    with PARAM_CACHE.open() as fin:
+        best_params = json.load(fin)
+        return RandomizedSearchCV(SVR(kernel="rbf"), best_params)
 
 
 @beartype
@@ -200,7 +199,7 @@ def search_for_svr_hyperparams() -> RandomizedSearchCV:
     return RandomizedSearchCV(
         SVR(kernel="rbf"),
         svr_param_grid,
-        n_iter=10,
+        n_iter=15,
         cv=5,
         verbose=1,
         random_state=42,

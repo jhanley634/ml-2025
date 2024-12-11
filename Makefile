@@ -2,6 +2,7 @@
 PROJECT := ml-2025
 SHELL := bash
 ACTIVATE := source .venv/bin/activate
+PYTHONPATH := .:..
 
 all:
 	ls -l
@@ -22,6 +23,7 @@ ruff-check:
 	$(ACTIVATE) && black . && ruff check --fix
 lint: ruff-check
 	$(ACTIVATE) && pyright .
+mypy: lint
 	$(ACTIVATE) && mypy $(STRICT) .
 
 docker-build: clean-caches
@@ -33,7 +35,7 @@ docker-run:
 lab: notebook
 nb: notebook
 notebook:
-	$(ACTIVATE) && jupyter-lab
+	$(ACTIVATE) && jupyter lab
 
 test:
 	$(ACTIVATE) && python -m unittest sandbox/*/*_test.py
@@ -44,4 +46,4 @@ clean-caches:
 clean: clean-caches
 	rm -rf .venv/
 
-.PHONY: all install ruff-check lint docker-build docker-run clean-caches clean
+.PHONY: all install ruff-check lint mypy docker-build docker-run lab nb notebook test clean-caches clean

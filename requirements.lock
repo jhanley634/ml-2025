@@ -57,7 +57,7 @@ cycler==0.12.1
     # via matplotlib
 dacite==1.8.1
     # via ydata-profiling
-debugpy==1.8.9
+debugpy==1.8.10
     # via ipykernel
 decorator==5.1.1
     # via ipython
@@ -73,7 +73,7 @@ filelock==3.16.1
     # via
     #   torch
     #   virtualenv
-fonttools==4.55.2
+fonttools==4.55.3
     # via matplotlib
 fqdn==1.5.1
     # via jsonschema
@@ -104,7 +104,9 @@ imagehash==4.3.1
 ipykernel==6.29.5
     # via jupyterlab
 ipython==8.30.0
-    # via ipykernel
+    # via
+    #   black
+    #   ipykernel
 isoduration==20.11.0
     # via jsonschema
 isort==5.13.2
@@ -160,7 +162,7 @@ jupyter-server==2.14.2
     #   notebook-shim
 jupyter-server-terminals==0.5.3
     # via jupyter-server
-jupyterlab==4.3.2
+jupyterlab==4.3.3
     # via -r requirements.txt
 jupyterlab-pygments==0.3.0
     # via nbconvert
@@ -425,6 +427,8 @@ threadpoolctl==3.5.0
     # via scikit-learn
 tinycss2==1.4.0
     # via nbconvert
+tokenize-rt==6.1.0
+    # via black
 torch==2.2.2
     # via torchvision
 torchvision==0.17.2
