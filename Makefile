@@ -23,8 +23,8 @@ ruff-check:
 	$(ACTIVATE) && black . && ruff check --fix
 lint: ruff-check
 	$(ACTIVATE) && pyright .
-mypy: lint
 	$(ACTIVATE) && mypy $(STRICT) .
+	$(ACTIVATE) && isort .
 
 docker-build: clean-caches
 	rm -rf .venv/
