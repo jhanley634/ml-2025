@@ -31,7 +31,7 @@ def get_air_quality_dataset(*, verbose: bool = False) -> pd.DataFrame:
 
     x["stamp"] = pd.to_datetime(x.Date + " " + x.Time, format="%m/%d/%Y %H:%M:%S")
     x["Time"] = pd.to_timedelta(x.Time.values).to_numpy().astype("timedelta64[s]")
-    x["hour"] = 24 * x.stamp.dt.day_of_week + x.stamp.dt.hour# 168 hourly buckets
+    x["hour"] = 24 * x.stamp.dt.day_of_week + x.stamp.dt.hour  # 168 hourly buckets
     x = x.drop(columns=["Date"])
     x = _extract_pt08_features(x)
     x = x.drop(columns=["abs_humid"])
