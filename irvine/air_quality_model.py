@@ -43,7 +43,6 @@ ModelType = TypeVar(
     LSTM,
     LinearRegression,
     RandomForestRegressor,
-    # RandomizedSearchCV,
     SVR,
 )
 
@@ -116,7 +115,9 @@ def train_evaluate_lstm_model(
 
 
 def main() -> None:
-    df = get_air_quality_dataset().dropna(subset=["benzene"])
+    df = get_air_quality_dataset()
+    df = df.drop(columns=["stamp"])
+    df = df.dropna(subset=["benzene"])
     holdout_split = 1800
     holdout = df.tail(holdout_split)
     df = df.head(len(df) - holdout_split)
@@ -176,7 +177,7 @@ def create_models(
         "ElasticNet": load_or_search_for_elastic_hyperparams(x_train, y_train),
         "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
         "K-Nearest Neighbors": KNeighborsRegressor(),
-        # "LSTM": LSTM(input_size=x_train.shape[1]),
+        "LSTM": LSTM(input_size=x_train.shape[1]),
         "LinearRegression": LinearRegression(),
         "RandomForestRegressor": RandomForestRegressor(),
         "SVR-RBF": load_or_search_for_svr_hyperparams(
@@ -188,13 +189,14 @@ def create_models(
         ElasticNet
         | HistGradientBoostingRegressor
         | KNeighborsRegressor
+        | LSTM
         | LinearRegression
         | RandomForestRegressor
         | SVR
     )
     assert types
-    # for model in models.values():
-    #     assert isinstance(model, types)
+    for model in models.values():
+        assert isinstance(model, types)
     return models
 
 
