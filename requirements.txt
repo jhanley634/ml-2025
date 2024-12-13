@@ -1,6 +1,7 @@
 beartype
 black[jupyter]
 catboost
+ipywidgets
 isort
 jupyterlab
 lightgbm

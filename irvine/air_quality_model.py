@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-from collections.abc import Iterable
+from collections.abc import Callable
 from typing import TypeVar
 
 import numpy as np
@@ -23,7 +23,7 @@ from irvine.tuning import load_or_search_for_elastic_hyperparams, load_or_search
 
 @beartype
 class LSTM(nn.Module):
-    def __init__(self, input_size: int, hidden_layer_size: int = 50) -> None:
+    def __init__(self, input_size: int, hidden_layer_size: int = 200) -> None:
         super().__init__()
         self.lstm = nn.LSTM(input_size, hidden_layer_size, batch_first=True)
         self.fc = nn.Linear(hidden_layer_size, 1)
@@ -43,7 +43,6 @@ ModelType = TypeVar(
     LSTM,
     LinearRegression,
     RandomForestRegressor,
-    # RandomizedSearchCV,
     SVR,
 )
 
@@ -79,12 +78,13 @@ def _score(
 
 
 def train_evaluate_lstm_model(
-    model: LSTM,
+    model: ModelType,
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
     x_test: NDArray[np.float64],
-    y_test: Iterable[float],
+    y_test: NDArray[np.float64],
 ) -> dict[str, float]:
+    assert isinstance(model, LSTM)
     epochs: int = 200
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.04)
@@ -116,7 +116,9 @@ def train_evaluate_lstm_model(
 
 
 def main() -> None:
-    df = get_air_quality_dataset().dropna(subset=["benzene"])
+    df = get_air_quality_dataset()
+    df = df.drop(columns=["stamp"])
+    df = df.dropna(subset=["benzene"])
     holdout_split = 1800
     holdout = df.tail(holdout_split)
     df = df.head(len(df) - holdout_split)
@@ -137,9 +139,9 @@ def main() -> None:
     models = create_models(x_train, y_train)
 
     results = {}
-    for name, model in models.items():
+    for name, (train_and_evaluate_model, model) in models.items():
         print(name)
-        results[name] = train_evaluate_sklearn_model(model, x_train, y_train, x_test, y_test)
+        results[name] = train_and_evaluate_model(model, x_train, y_train, x_test, y_test)
 
     report(results)
 
@@ -171,31 +173,44 @@ def _train_test_split(
 def create_models(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
-) -> dict[str, ModelType]:
-    models = {
-        "ElasticNet": load_or_search_for_elastic_hyperparams(x_train, y_train),
-        "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
-        "K-Nearest Neighbors": KNeighborsRegressor(),
-        # "LSTM": LSTM(input_size=x_train.shape[1]),
-        "LinearRegression": LinearRegression(),
-        "RandomForestRegressor": RandomForestRegressor(),
-        "SVR-RBF": load_or_search_for_svr_hyperparams(
-            x_train,
-            y_train,
-        ),
-    }
-    types = (
+) -> dict[
+    str,
+    tuple[
+        Callable[
+            [
+                ModelType,
+                NDArray[np.float64],
+                NDArray[np.float64],
+                NDArray[np.float64],
+                NDArray[np.float64],
+            ],
+            dict[str, float],
+        ],
         ElasticNet
         | HistGradientBoostingRegressor
         | KNeighborsRegressor
+        | LSTM
         | LinearRegression
         | RandomForestRegressor
-        | SVR
-    )
-    assert types
-    # for model in models.values():
-    #     assert isinstance(model, types)
-    return models
+        | SVR,
+    ],
+]:
+    tesk = train_evaluate_sklearn_model
+    return {
+        "ElasticNet": (tesk, load_or_search_for_elastic_hyperparams(x_train, y_train)),
+        "HistGradientBoostingRegressor": (tesk, HistGradientBoostingRegressor()),
+        "K-Nearest Neighbors": (tesk, KNeighborsRegressor()),
+        "LSTM": (train_evaluate_lstm_model, LSTM(input_size=x_train.shape[1])),
+        "LinearRegression": (tesk, LinearRegression()),
+        "RandomForestRegressor": (tesk, RandomForestRegressor()),
+        "SVR-RBF": (
+            tesk,
+            load_or_search_for_svr_hyperparams(
+                x_train,
+                y_train,
+            ),
+        ),
+    }
 
 
 def report(results: dict[str, dict[str, float]]) -> None:
