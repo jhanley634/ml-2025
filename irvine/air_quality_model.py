@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-from collections.abc import Callable, Iterable
+from collections.abc import Callable
 from typing import TypeVar
 
 import numpy as np
@@ -23,7 +23,7 @@ from irvine.tuning import load_or_search_for_elastic_hyperparams, load_or_search
 
 @beartype
 class LSTM(nn.Module):
-    def __init__(self, input_size: int, hidden_layer_size: int = 300) -> None:
+    def __init__(self, input_size: int, hidden_layer_size: int = 200) -> None:
         super().__init__()
         self.lstm = nn.LSTM(input_size, hidden_layer_size, batch_first=True)
         self.fc = nn.Linear(hidden_layer_size, 1)
@@ -78,12 +78,13 @@ def _score(
 
 
 def train_evaluate_lstm_model(
-    model: LSTM,
+    model: ModelType,
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
     x_test: NDArray[np.float64],
-    y_test: Iterable[float],
+    y_test: NDArray[np.float64],
 ) -> dict[str, float]:
+    assert isinstance(model, LSTM)
     epochs: int = 200
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.04)
@@ -188,6 +189,7 @@ def create_models(
         ElasticNet
         | HistGradientBoostingRegressor
         | KNeighborsRegressor
+        | LSTM
         | LinearRegression
         | RandomForestRegressor
         | SVR,
@@ -198,7 +200,7 @@ def create_models(
         "ElasticNet": (tesk, load_or_search_for_elastic_hyperparams(x_train, y_train)),
         "HistGradientBoostingRegressor": (tesk, HistGradientBoostingRegressor()),
         "K-Nearest Neighbors": (tesk, KNeighborsRegressor()),
-        # "LSTM": (train_evaluate_lstm_model, LSTM(input_size=x_train.shape[1])),
+        "LSTM": (train_evaluate_lstm_model, LSTM(input_size=x_train.shape[1])),
         "LinearRegression": (tesk, LinearRegression()),
         "RandomForestRegressor": (tesk, RandomForestRegressor()),
         "SVR-RBF": (
