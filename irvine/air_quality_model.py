@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from typing import TypeVar
 
 import numpy as np
@@ -23,7 +23,7 @@ from irvine.tuning import load_or_search_for_elastic_hyperparams, load_or_search
 
 @beartype
 class LSTM(nn.Module):
-    def __init__(self, input_size: int, hidden_layer_size: int = 800) -> None:
+    def __init__(self, input_size: int, hidden_layer_size: int = 300) -> None:
         super().__init__()
         self.lstm = nn.LSTM(input_size, hidden_layer_size, batch_first=True)
         self.fc = nn.Linear(hidden_layer_size, 1)
@@ -138,9 +138,9 @@ def main() -> None:
     models = create_models(x_train, y_train)
 
     results = {}
-    for name, model in models.items():
+    for name, (train_and_evaluate_model, model) in models.items():
         print(name)
-        results[name] = train_evaluate_sklearn_model(model, x_train, y_train, x_test, y_test)
+        results[name] = train_and_evaluate_model(model, x_train, y_train, x_test, y_test)
 
     report(results)
 
@@ -172,17 +172,41 @@ def _train_test_split(
 def create_models(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
-) -> dict[str, ModelType]:
+) -> dict[
+    str,
+    tuple[
+        Callable[
+            [
+                ModelType,
+                NDArray[np.float64],
+                NDArray[np.float64],
+                NDArray[np.float64],
+                NDArray[np.float64],
+            ],
+            dict[str, float],
+        ],
+        ElasticNet
+        | HistGradientBoostingRegressor
+        | KNeighborsRegressor
+        | LinearRegression
+        | RandomForestRegressor
+        | SVR,
+    ],
+]:
+    tesk = train_evaluate_sklearn_model
     return {
-        "ElasticNet": load_or_search_for_elastic_hyperparams(x_train, y_train),
-        "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
-        "K-Nearest Neighbors": KNeighborsRegressor(),
-        "LSTM": LSTM(input_size=x_train.shape[1]),
-        "LinearRegression": LinearRegression(),
-        "RandomForestRegressor": RandomForestRegressor(),
-        "SVR-RBF": load_or_search_for_svr_hyperparams(
-            x_train,
-            y_train,
+        "ElasticNet": (tesk, load_or_search_for_elastic_hyperparams(x_train, y_train)),
+        "HistGradientBoostingRegressor": (tesk, HistGradientBoostingRegressor()),
+        "K-Nearest Neighbors": (tesk, KNeighborsRegressor()),
+        # "LSTM": (train_evaluate_lstm_model, LSTM(input_size=x_train.shape[1])),
+        "LinearRegression": (tesk, LinearRegression()),
+        "RandomForestRegressor": (tesk, RandomForestRegressor()),
+        "SVR-RBF": (
+            tesk,
+            load_or_search_for_svr_hyperparams(
+                x_train,
+                y_train,
+            ),
         ),
     }
 
