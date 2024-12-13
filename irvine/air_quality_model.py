@@ -23,7 +23,7 @@ from irvine.tuning import load_or_search_for_elastic_hyperparams, load_or_search
 
 @beartype
 class LSTM(nn.Module):
-    def __init__(self, input_size: int, hidden_layer_size: int = 50) -> None:
+    def __init__(self, input_size: int, hidden_layer_size: int = 800) -> None:
         super().__init__()
         self.lstm = nn.LSTM(input_size, hidden_layer_size, batch_first=True)
         self.fc = nn.Linear(hidden_layer_size, 1)
@@ -173,7 +173,7 @@ def create_models(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
 ) -> dict[str, ModelType]:
-    models = {
+    return {
         "ElasticNet": load_or_search_for_elastic_hyperparams(x_train, y_train),
         "HistGradientBoostingRegressor": HistGradientBoostingRegressor(),
         "K-Nearest Neighbors": KNeighborsRegressor(),
@@ -185,19 +185,6 @@ def create_models(
             y_train,
         ),
     }
-    types = (
-        ElasticNet
-        | HistGradientBoostingRegressor
-        | KNeighborsRegressor
-        | LSTM
-        | LinearRegression
-        | RandomForestRegressor
-        | SVR
-    )
-    assert types
-    for model in models.values():
-        assert isinstance(model, types)
-    return models
 
 
 def report(results: dict[str, dict[str, float]]) -> None:
