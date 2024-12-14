@@ -7,7 +7,7 @@ from sklearn.linear_model import ElasticNet
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.svm import SVR
 
-from irvine.air_quality_etl import TEMP
+from irvine.air_quality.aq_etl import TEMP
 
 ELASTIC_CACHE = TEMP / "elasticnet_params_cache.json"
 SVR_CACHE = TEMP / "svr_params.json"

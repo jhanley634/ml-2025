@@ -2,7 +2,7 @@ import numpy as np
 import optuna
 from numpy.typing import NDArray
 
-from irvine.air_quality_model import LSTM, train_evaluate_lstm_model
+from irvine.air_quality.aq_model import LSTM, train_evaluate_lstm_model
 
 
 def lstm_error_objective(

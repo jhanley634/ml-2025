@@ -18,12 +18,12 @@ from sklearn.svm import SVR
 from torch import Tensor, nn, optim
 from tqdm import tqdm
 
-from irvine.air_quality_etl import get_air_quality_dataset
-from irvine.tuning_sklearn import (
+from irvine.air_quality.aq_etl import get_air_quality_dataset
+from irvine.air_quality.tuning_sklearn import (
     load_or_search_for_elastic_hyperparams,
     load_or_search_for_svr_hyperparams,
 )
-from irvine.tuning_torch import lstm_error_objective
+from irvine.air_quality.tuning_torch import lstm_error_objective
 
 
 @beartype
