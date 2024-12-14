@@ -55,8 +55,6 @@ def train_evaluate_sklearn_model(
     x_test: NDArray[np.float64],
     y_test: NDArray[np.float64],
 ) -> dict[str, float]:
-    if isinstance(model, LSTM):
-        return train_evaluate_lstm_model(model, x_train, y_train, x_test, y_test)
 
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
