@@ -23,6 +23,7 @@ from irvine.tuning_sklearn import (
     load_or_search_for_elastic_hyperparams,
     load_or_search_for_svr_hyperparams,
 )
+from irvine.tuning_torch import lstm_error_objective
 
 
 @beartype
@@ -59,6 +60,10 @@ def train_evaluate_lstm_model(
     y_test: NDArray[np.float64],
 ) -> dict[str, float]:
     assert isinstance(model, LSTM)
+
+    study = optuna.create_study(direction="minimize")
+    study.optimize(lstm_error_objective, n_trials=50)
+
     epochs: int = 200
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.04)
