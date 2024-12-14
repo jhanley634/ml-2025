@@ -47,34 +47,6 @@ ModelType = TypeVar(
 )
 
 
-@beartype
-def train_evaluate_sklearn_model(
-    model: ModelType,
-    x_train: NDArray[np.float64],
-    y_train: NDArray[np.float64],
-    x_test: NDArray[np.float64],
-    y_test: NDArray[np.float64],
-) -> dict[str, float]:
-
-    model.fit(x_train, y_train)
-    y_pred = model.predict(x_test)
-
-    return {
-        "rmse": float(mean_squared_error(y_test, y_pred)),
-        "r2": _score(model, x_test, y_test),
-    }
-
-
-def _score(
-    model: ModelType,
-    x_test: NDArray[np.float64],
-    y_test: NDArray[np.float64],
-) -> float:
-    score = model.score(x_test, y_test)
-    assert isinstance(score, float)
-    return score
-
-
 def train_evaluate_lstm_model(
     model: ModelType,
     x_train: NDArray[np.float64],
@@ -111,6 +83,33 @@ def train_evaluate_lstm_model(
             "rmse": float(mean_squared_error(y_test, y_pred)),
             "r2": float(r2_score(y_test, y_pred.numpy())),
         }
+
+
+def train_evaluate_sklearn_model(
+    model: ModelType,
+    x_train: NDArray[np.float64],
+    y_train: NDArray[np.float64],
+    x_test: NDArray[np.float64],
+    y_test: NDArray[np.float64],
+) -> dict[str, float]:
+
+    model.fit(x_train, y_train)
+    y_pred = model.predict(x_test)
+
+    return {
+        "rmse": float(mean_squared_error(y_test, y_pred)),
+        "r2": _score(model, x_test, y_test),
+    }
+
+
+def _score(
+    model: ModelType,
+    x_test: NDArray[np.float64],
+    y_test: NDArray[np.float64],
+) -> float:
+    score = model.score(x_test, y_test)
+    assert isinstance(score, float)
+    return score
 
 
 def main() -> None:
