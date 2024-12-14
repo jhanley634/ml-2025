@@ -3,7 +3,6 @@ from collections.abc import Callable
 from typing import TypeVar
 
 import numpy as np
-import optuna
 import pandas as pd
 import torch
 from beartype import beartype
@@ -23,7 +22,6 @@ from irvine.air_quality.tuning_sklearn import (
     load_or_search_for_elastic_hyperparams,
     load_or_search_for_svr_hyperparams,
 )
-from irvine.air_quality.tuning_torch import lstm_error_objective
 
 
 @beartype
@@ -60,11 +58,8 @@ def train_evaluate_lstm_model(
     y_test: NDArray[np.float64],
 ) -> dict[str, float]:
     assert isinstance(model, LSTM)
+    epochs = 100
 
-    study = optuna.create_study(direction="minimize")
-    study.optimize(lstm_error_objective, n_trials=50)
-
-    epochs: int = 200
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.04)
     x_train_tensor = Tensor(x_train).unsqueeze(1)
