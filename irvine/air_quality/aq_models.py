@@ -168,7 +168,7 @@ ModelTrainer = Callable[
 def create_models(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
-) -> dict[
+) -> dict[  # type: ignore [type-arg]
     str,
     tuple[
         ModelTrainer,

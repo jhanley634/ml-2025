@@ -12,7 +12,7 @@ from torch import Tensor, nn
 from irvine.air_quality.aq_models import train_evaluate_lstm_model
 
 
-class SklearnLSTMWrapper(BaseEstimator, ClassifierMixin):
+class SklearnLSTMWrapper(BaseEstimator, ClassifierMixin):  # type: ignore [misc]
     def __init__(
         self,
         input_size: int,
@@ -24,25 +24,23 @@ class SklearnLSTMWrapper(BaseEstimator, ClassifierMixin):
         self.hidden_layer_size = hidden_layer_size
         self.epochs = epochs
         self.lr = lr
-        self.model = None
+        self.model = LSTM(input_size=input_size, hidden_layer_size=hidden_layer_size)
         self.rmse = float("inf")
 
     def fit(self, x: NDArray[np.float64], y: NDArray[np.float64]) -> "SklearnLSTMWrapper":
-        model = LSTM(input_size=self.input_size, hidden_layer_size=self.hidden_layer_size)
-        # optimizer = optim.Adam(model.parameters(), lr=self.lr)
-        self.model = model
+        self.model = LSTM(input_size=self.input_size, hidden_layer_size=self.hidden_layer_size)
 
-        metrics = train_evaluate_lstm_model(model, x, y, x, y, self.epochs, self.lr)
+        metrics = train_evaluate_lstm_model(self.model, x, y, x, y, self.epochs, self.lr)
         self.rmse = metrics["rmse"]
         return self
 
-    def predict(self, x: NDArray[np.float64]) -> np.ndarray:
+    def predict(self, x: NDArray[np.float64]) -> NDArray[np.float64]:
         with torch.no_grad():
             assert self.model
             self.model.eval()
             inputs = torch.tensor(x, dtype=torch.float32)
             output = self.model(inputs)
-            return output.numpy()
+            return np.ndarray(output.numpy())
 
     def score(
         self,
@@ -140,4 +138,5 @@ def randomly_sample_lstm_hyperparams(
     best_model = random_search.best_estimator_
 
     # Return the best model (which has been trained with the best hyperparameters)
+    assert isinstance(best_model.model, LSTM)
     return best_model.model
