@@ -158,6 +158,12 @@ def _train_test_split(
     )
 
 
+ModelTrainer = Callable[
+    [ModelType, NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]],
+    dict[str, float],
+]
+
+
 @beartype
 def create_models(
     x_train: NDArray[np.float64],
@@ -165,16 +171,7 @@ def create_models(
 ) -> dict[
     str,
     tuple[
-        Callable[
-            [
-                ModelType,
-                NDArray[np.float64],
-                NDArray[np.float64],
-                NDArray[np.float64],
-                NDArray[np.float64],
-            ],
-            dict[str, float],
-        ],
+        ModelTrainer,
         ElasticNet
         | HistGradientBoostingRegressor
         | KNeighborsRegressor
