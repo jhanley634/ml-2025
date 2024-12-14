@@ -1,15 +1,19 @@
 import random
+from typing import TypeVar
 
 import numpy as np
 import torch
 from beartype import beartype
 from numpy._typing import NDArray
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.metrics import mean_squared_error
+from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
+from sklearn.linear_model import ElasticNet, LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import RandomizedSearchCV
-from torch import Tensor, nn
-
-from irvine.air_quality.aq_models import train_evaluate_lstm_model
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.svm import SVR
+from torch import Tensor, nn, optim
+from tqdm import tqdm
 
 
 class SklearnLSTMWrapper(BaseEstimator, ClassifierMixin):  # type: ignore [misc]
@@ -57,14 +61,16 @@ class SklearnLSTMWrapper(BaseEstimator, ClassifierMixin):  # type: ignore [misc]
 class LSTM(nn.Module):
     def __init__(self, input_size: int, hidden_layer_size: int = 200) -> None:
         super().__init__()
-        self.lstm = nn.LSTM(input_size, hidden_layer_size, batch_first=True)
+        self.input_size = input_size
+        self.hidden_layer_size = hidden_layer_size
+        self.lstm = nn.LSTM(input_size=input_size, hidden_size=hidden_layer_size, batch_first=True)
         self.fc = nn.Linear(hidden_layer_size, 1)
 
     def forward(self, x: Tensor) -> Tensor:
         lstm_out, _ = self.lstm(x)
-        ret = self.fc(lstm_out[:, -1, :])  # Get the last LSTM output
-        assert isinstance(ret, Tensor)
-        return ret
+        last_hidden = self.fc(lstm_out[:, -1, :])
+        assert isinstance(last_hidden, Tensor)
+        return last_hidden
 
 
 def randomly_sample_lstm_hyperparams_unused(
@@ -104,8 +110,8 @@ def randomly_sample_lstm_hyperparams(
     *,
     n_iter: int = 10,
 ) -> LSTM:
-
-    assert x_test != y_test
+    assert len(x_test) > 0
+    assert len(y_test) > 0
 
     param_dist = {
         "hidden_layer_size": [50, 100, 150, 200, 250],
@@ -140,3 +146,55 @@ def randomly_sample_lstm_hyperparams(
     # Return the best model (which has been trained with the best hyperparameters)
     assert isinstance(best_model.model, LSTM)
     return best_model.model
+
+
+ModelType = TypeVar(
+    "ModelType",
+    ElasticNet,
+    HistGradientBoostingRegressor,
+    KNeighborsRegressor,
+    LSTM,
+    LinearRegression,
+    RandomForestRegressor,
+    SVR,
+)
+
+
+def train_evaluate_lstm_model(  # noqa: PLR0913
+    model: ModelType,
+    x_train: NDArray[np.float64],
+    y_train: NDArray[np.float64],
+    x_test: NDArray[np.float64],
+    y_test: NDArray[np.float64],
+    epochs: int = 100,
+    learning_rate: float = 0.04,
+) -> dict[str, float]:
+    assert isinstance(model, LSTM)
+
+    criterion = nn.MSELoss()
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    x_train_tensor = Tensor(x_train).unsqueeze(1)
+    x_test_tensor = Tensor(x_test).unsqueeze(1)
+    y_train_tensor = Tensor(y_train).unsqueeze(-1)  # Adds a dimension to make it [7192, 1]
+
+    for name, param in model.lstm.named_parameters():
+        if "weight" in name:
+            torch.nn.init.xavier_uniform_(param)
+        elif "bias" in name:
+            torch.nn.init.zeros_(param)
+
+    for _ in tqdm(range(epochs), leave=False):
+        model.train()
+        optimizer.zero_grad()
+        y_pred = model(x_train_tensor)
+        loss = criterion(y_pred, y_train_tensor)
+        loss.backward()
+        optimizer.step()
+
+    model.eval()
+    with torch.no_grad():
+        y_pred = model(x_test_tensor)
+        return {
+            "rmse": float(mean_squared_error(y_test, y_pred)),
+            "r2": float(r2_score(y_test, y_pred.numpy())),
+        }

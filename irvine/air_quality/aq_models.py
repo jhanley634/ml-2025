@@ -1,80 +1,30 @@
 #! /usr/bin/env python
 
 from collections.abc import Callable
-from typing import TypeVar
 
 import numpy as np
 import pandas as pd
-import torch
 from beartype import beartype
 from numpy.typing import NDArray
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import ElasticNet, LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
-from torch import Tensor, nn, optim
-from tqdm import tqdm
 
 from irvine.air_quality.aq_etl import get_air_quality_dataset
-from irvine.air_quality.lstm_model import LSTM, randomly_sample_lstm_hyperparams
+from irvine.air_quality.lstm_model import (
+    LSTM,
+    ModelType,
+    randomly_sample_lstm_hyperparams,
+    train_evaluate_lstm_model,
+)
 from irvine.air_quality.tuning_sklearn import (
     load_or_search_for_elastic_hyperparams,
     load_or_search_for_svr_hyperparams,
 )
-
-ModelType = TypeVar(
-    "ModelType",
-    ElasticNet,
-    HistGradientBoostingRegressor,
-    KNeighborsRegressor,
-    LSTM,
-    LinearRegression,
-    RandomForestRegressor,
-    SVR,
-)
-
-
-def train_evaluate_lstm_model(  # noqa: PLR0913
-    model: ModelType,
-    x_train: NDArray[np.float64],
-    y_train: NDArray[np.float64],
-    x_test: NDArray[np.float64],
-    y_test: NDArray[np.float64],
-    epochs: int = 100,
-    learning_rate: float = 0.04,
-) -> dict[str, float]:
-    assert isinstance(model, LSTM)
-
-    criterion = nn.MSELoss()
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-    x_train_tensor = Tensor(x_train).unsqueeze(1)
-    x_test_tensor = Tensor(x_test).unsqueeze(1)
-    y_train_tensor = Tensor(y_train).unsqueeze(-1)  # Adds a dimension to make it [7192, 1]
-
-    for name, param in model.lstm.named_parameters():
-        if "weight" in name:
-            torch.nn.init.xavier_uniform_(param)
-        elif "bias" in name:
-            torch.nn.init.zeros_(param)
-
-    for _ in tqdm(range(epochs), leave=False):
-        model.train()
-        optimizer.zero_grad()
-        y_pred = model(x_train_tensor)
-        loss = criterion(y_pred, y_train_tensor)
-        loss.backward()
-        optimizer.step()
-
-    model.eval()
-    with torch.no_grad():
-        y_pred = model(x_test_tensor)
-        return {
-            "rmse": float(mean_squared_error(y_test, y_pred)),
-            "r2": float(r2_score(y_test, y_pred.numpy())),
-        }
 
 
 def train_evaluate_sklearn_model(
@@ -168,7 +118,7 @@ ModelTrainer = Callable[
 def create_models(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
-) -> dict[  # type: ignore [type-arg]
+) -> dict[
     str,
     tuple[
         ModelTrainer,
