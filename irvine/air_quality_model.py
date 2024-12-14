@@ -3,6 +3,7 @@ from collections.abc import Callable
 from typing import TypeVar
 
 import numpy as np
+import optuna
 import pandas as pd
 import torch
 from beartype import beartype
@@ -18,7 +19,10 @@ from torch import Tensor, nn, optim
 from tqdm import tqdm
 
 from irvine.air_quality_etl import get_air_quality_dataset
-from irvine.tuning import load_or_search_for_elastic_hyperparams, load_or_search_for_svr_hyperparams
+from irvine.tuning_sklearn import (
+    load_or_search_for_elastic_hyperparams,
+    load_or_search_for_svr_hyperparams,
+)
 
 
 @beartype
