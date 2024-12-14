@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+
+import random
 from collections.abc import Callable
 from typing import TypeVar
 
@@ -38,6 +40,35 @@ class LSTM(nn.Module):
         return ret
 
 
+def randomly_sample_lstm_hyperparams(
+    x_train: NDArray[np.float64],
+    y_train: NDArray[np.float64],
+    x_test: NDArray[np.float64],
+    y_test: NDArray[np.float64],
+    *,
+    n_iter: int = 10,
+) -> LSTM:
+    best_rmse = float("inf")
+    best_model = None
+
+    for _ in range(n_iter):
+        epochs = random.randint(50, 200)
+        hidden_layer_size = random.choice([50, 100, 150, 200, 250])
+        lr = 10 ** random.uniform(-5, -2)
+        assert 1e-5 <= lr < 1e-2
+
+        model = LSTM(input_size=x_train.shape[1], hidden_layer_size=hidden_layer_size)
+
+        metrics = train_evaluate_lstm_model(model, x_train, y_train, x_test, y_test, epochs, lr)
+
+        if metrics["rmse"] < best_rmse:
+            best_rmse = metrics["rmse"]
+            best_model = model
+
+    assert best_model
+    return best_model
+
+
 ModelType = TypeVar(
     "ModelType",
     ElasticNet,
@@ -50,18 +81,19 @@ ModelType = TypeVar(
 )
 
 
-def train_evaluate_lstm_model(
+def train_evaluate_lstm_model(  # noqa: PLR0913
     model: ModelType,
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
     x_test: NDArray[np.float64],
     y_test: NDArray[np.float64],
+    epochs: int = 100,
+    learning_rate: float = 0.04,
 ) -> dict[str, float]:
     assert isinstance(model, LSTM)
-    epochs = 100
 
     criterion = nn.MSELoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.04)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     x_train_tensor = Tensor(x_train).unsqueeze(1)
     x_test_tensor = Tensor(x_test).unsqueeze(1)
     y_train_tensor = Tensor(y_train).unsqueeze(-1)  # Adds a dimension to make it [7192, 1]
@@ -196,12 +228,20 @@ def create_models(
         | SVR,
     ],
 ]:
+    best_lstm_model = randomly_sample_lstm_hyperparams(
+        x_train,
+        y_train,
+        x_train,
+        y_train,
+        n_iter=10,
+    )
+
     tesk = train_evaluate_sklearn_model
     return {
         "ElasticNet": (tesk, load_or_search_for_elastic_hyperparams(x_train, y_train)),
         "HistGradientBoostingRegressor": (tesk, HistGradientBoostingRegressor()),
         "K-Nearest Neighbors": (tesk, KNeighborsRegressor()),
-        "LSTM": (train_evaluate_lstm_model, LSTM(input_size=x_train.shape[1])),
+        "LSTM": (train_evaluate_lstm_model, best_lstm_model),
         "LinearRegression": (tesk, LinearRegression()),
         "RandomForestRegressor": (tesk, RandomForestRegressor()),
         "SVR-RBF": (
