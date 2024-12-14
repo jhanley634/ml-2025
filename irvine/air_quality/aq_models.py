@@ -162,22 +162,25 @@ ModelTrainer = Callable[
     [ModelType, NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]],
     dict[str, float],
 ]
-ModelType = type[
-    ElasticNet,
-    HistGradientBoostingRegressor,
-    KNeighborsRegressor,
-    LSTM,
-    LinearRegression,
-    RandomForestRegressor,
-    SVR,
-]
 
 
 @beartype
 def create_models(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
-) -> dict[str, tuple[ModelTrainer, ModelType]]:
+) -> dict[
+    str,
+    tuple[
+        ModelTrainer,
+        ElasticNet
+        | HistGradientBoostingRegressor
+        | KNeighborsRegressor
+        | LSTM
+        | LinearRegression
+        | RandomForestRegressor
+        | SVR,
+    ],
+]:
     best_lstm_model = randomly_sample_lstm_hyperparams(
         x_train,
         y_train,
