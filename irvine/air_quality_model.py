@@ -9,7 +9,7 @@ from beartype import beartype
 from numpy.typing import NDArray
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import ElasticNet, LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
@@ -111,7 +111,7 @@ def train_evaluate_lstm_model(
         y_pred = model(x_test_tensor)
         return {
             "rmse": float(mean_squared_error(y_test, y_pred)),
-            "r2": 0.0,
+            "r2": float(r2_score(y_test, y_pred.numpy())),
         }
 
 
