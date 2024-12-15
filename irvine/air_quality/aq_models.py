@@ -15,7 +15,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 
 from irvine.air_quality.aq_etl import get_air_quality_dataset
-from irvine.air_quality.lstm_model import LSTM, ModelType, train_evaluate_lstm_model
+from irvine.air_quality.lstm_model import (
+    LSTM,
+    ModelType,
+    randomly_sample_lstm_hyperparams_old,
+    train_evaluate_lstm_model,
+)
 from irvine.air_quality.tuning_sklearn import (
     load_or_search_for_elastic_hyperparams,
     load_or_search_for_svr_hyperparams,
@@ -130,12 +135,21 @@ def create_models(
     #     x_train, y_train, x_train, y_train, n_iter=10
     # )
 
+    mid = len(x_train) // 2
     tesk = train_evaluate_sklearn_model
     return {
         "ElasticNet": (tesk, load_or_search_for_elastic_hyperparams(x_train, y_train)),
         "HistGradientBoostingRegressor": (tesk, HistGradientBoostingRegressor()),
         "K-Nearest Neighbors": (tesk, KNeighborsRegressor()),
-        "LSTM": (train_evaluate_lstm_model, LSTM(len(x_train))),
+        "LSTM": (
+            train_evaluate_lstm_model,
+            randomly_sample_lstm_hyperparams_old(
+                x_train[:mid],
+                y_train[:mid],
+                x_train[mid:],
+                y_train[mid:],
+            ),
+        ),
         "LinearRegression": (tesk, LinearRegression()),
         "RandomForestRegressor": (tesk, RandomForestRegressor()),
         "SVR-RBF": (

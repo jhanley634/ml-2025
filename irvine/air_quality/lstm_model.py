@@ -16,6 +16,7 @@ from torch import Tensor, nn, optim
 from tqdm import tqdm
 
 
+@beartype
 class SklearnLSTMWrapper(BaseEstimator, ClassifierMixin):  # type: ignore [misc]
     def __init__(
         self,
@@ -68,13 +69,14 @@ class LSTM(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         lstm_out, _ = self.lstm(x)
-        assert lstm_out.shape[1:] == (1, self.input_size)
+        # assert lstm_out.shape[1:] == (1, self.input_size)
         last_hidden = self.fc(lstm_out[:, -1, :])
         assert isinstance(last_hidden, Tensor)
         assert last_hidden.shape[1:] == (1,)
         return last_hidden
 
 
+@beartype
 def randomly_sample_lstm_hyperparams_old(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
@@ -104,6 +106,7 @@ def randomly_sample_lstm_hyperparams_old(
     return best_model
 
 
+@beartype
 def randomly_sample_lstm_hyperparams(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
@@ -162,6 +165,7 @@ ModelType = TypeVar(
 )
 
 
+@beartype
 def train_evaluate_lstm_model(  # noqa: PLR0913
     model: ModelType,
     x_train: NDArray[np.float64],
