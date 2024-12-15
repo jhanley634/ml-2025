@@ -68,8 +68,10 @@ class LSTM(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         lstm_out, _ = self.lstm(x)
+        assert torch.Size([3834, 1, 100]) == lstm_out.shape, lstm_out.shape
         last_hidden = self.fc(lstm_out[:, -1, :])
         assert isinstance(last_hidden, Tensor)
+        assert torch.Size([3834, 1]) == last_hidden.shape, last_hidden.shape
         return last_hidden
 
 
@@ -173,9 +175,9 @@ def train_evaluate_lstm_model(  # noqa: PLR0913
 
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-    x_train_tensor = Tensor(x_train).unsqueeze(1)
-    x_test_tensor = Tensor(x_test).unsqueeze(1)
-    y_train_tensor = Tensor(y_train).unsqueeze(-1)  # Adds a dimension to make it [7192, 1]
+    x_train_tensor = Tensor(x_train).unsqueeze(1)  # shape [batch_size, seq_length=1, input_size]
+    x_test_tensor = Tensor(x_test).unsqueeze(1)  # shape [batch_size, seq_length=1, input_size]
+    y_train_tensor = Tensor(y_train).unsqueeze(-1)  # shape [batch_size, 1] for regression tasks
 
     for name, param in model.lstm.named_parameters():
         if "weight" in name:

@@ -132,11 +132,7 @@ def create_models(
     ],
 ]:
     best_lstm_model = randomly_sample_lstm_hyperparams(
-        x_train,
-        y_train,
-        x_train,
-        y_train,
-        n_iter=10,
+        x_train, y_train, x_train, y_train, n_iter=10
     )
 
     tesk = train_evaluate_sklearn_model
