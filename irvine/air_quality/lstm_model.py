@@ -59,7 +59,7 @@ class SklearnLSTMWrapper(BaseEstimator, ClassifierMixin):  # type: ignore [misc]
 
 @beartype
 class LSTM(nn.Module):
-    def __init__(self, input_size: int, hidden_layer_size: int = 200) -> None:
+    def __init__(self, input_size: int, hidden_layer_size: int = 100) -> None:
         super().__init__()
         self.input_size = input_size
         self.hidden_layer_size = hidden_layer_size
@@ -68,14 +68,14 @@ class LSTM(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         lstm_out, _ = self.lstm(x)
-        assert torch.Size([3834, 1, 100]) == lstm_out.shape, lstm_out.shape
+        assert lstm_out.shape[1:] == (1, self.input_size)
         last_hidden = self.fc(lstm_out[:, -1, :])
         assert isinstance(last_hidden, Tensor)
-        assert torch.Size([3834, 1]) == last_hidden.shape, last_hidden.shape
+        assert last_hidden.shape[1:] == (1,)
         return last_hidden
 
 
-def randomly_sample_lstm_hyperparams_unused(
+def randomly_sample_lstm_hyperparams_old(
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
     x_test: NDArray[np.float64],
