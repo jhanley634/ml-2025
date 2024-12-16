@@ -54,15 +54,27 @@ def _score(
     return score
 
 
+def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.dropna(subset=["benzene"])  # 9357 --> 8991 rows
+    n = len(df)
+    df = df.dropna(subset=["o3"])
+    assert n == len(df)
+
+    df["dt"] = df.stamp.diff()
+    df["benzene_deriv"] = df.benzene.diff() / df.dt
+    df["o3_deriv"] = df.o3.diff() / df.dt
+    return df.dropna(subset=["benzene_deriv"])  # discard first row
+
+
 def main() -> None:
-    df = get_air_quality_dataset()
+    df = _find_derivatives(get_air_quality_dataset())
+
     df = df.drop(columns=["stamp"])
-    df = df.dropna(subset=["benzene"])
     holdout_split = 1800
     holdout = df.tail(holdout_split)
     df = df.head(len(df) - holdout_split)
     assert len(holdout) == holdout_split
-    assert len(df) == 7191
+    assert len(df) == 7190
 
     y = df["benzene"]
     x = df.drop(columns=["benzene"])
