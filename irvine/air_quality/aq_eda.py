@@ -9,7 +9,7 @@ import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 from ydata_profiling import ProfileReport
 
-from irvine.air_quality_etl import TEMP, get_air_quality_dataset
+from irvine.air_quality.aq_etl import TEMP, get_air_quality_dataset
 
 
 def main() -> None:

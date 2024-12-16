@@ -8,6 +8,7 @@ lightgbm
 matplotlib
 mypy
 numpy < 2
+optuna
 pandas > 2.2
 pandas-stubs
 pip

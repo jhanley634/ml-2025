@@ -1,10 +1,9 @@
 #! /usr/bin/env python
+
 from collections.abc import Callable
-from typing import TypeVar
 
 import numpy as np
 import pandas as pd
-import torch
 from beartype import beartype
 from numpy.typing import NDArray
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
@@ -14,40 +13,20 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
-from torch import Tensor, nn, optim
-from tqdm import tqdm
 
-from irvine.air_quality_etl import get_air_quality_dataset
-from irvine.tuning import load_or_search_for_elastic_hyperparams, load_or_search_for_svr_hyperparams
-
-
-@beartype
-class LSTM(nn.Module):
-    def __init__(self, input_size: int, hidden_layer_size: int = 200) -> None:
-        super().__init__()
-        self.lstm = nn.LSTM(input_size, hidden_layer_size, batch_first=True)
-        self.fc = nn.Linear(hidden_layer_size, 1)
-
-    def forward(self, x: Tensor) -> Tensor:
-        lstm_out, _ = self.lstm(x)
-        ret = self.fc(lstm_out[:, -1, :])  # Get the last LSTM output
-        assert isinstance(ret, Tensor)
-        return ret
-
-
-ModelType = TypeVar(
-    "ModelType",
-    ElasticNet,
-    HistGradientBoostingRegressor,
-    KNeighborsRegressor,
+from irvine.air_quality.aq_etl import get_air_quality_dataset
+from irvine.air_quality.lstm_model import (
     LSTM,
-    LinearRegression,
-    RandomForestRegressor,
-    SVR,
+    ModelType,
+    randomly_sample_lstm_hyperparams_old,
+    train_evaluate_lstm_model,
+)
+from irvine.air_quality.tuning_sklearn import (
+    load_or_search_for_elastic_hyperparams,
+    load_or_search_for_svr_hyperparams,
 )
 
 
-@beartype
 def train_evaluate_sklearn_model(
     model: ModelType,
     x_train: NDArray[np.float64],
@@ -55,8 +34,6 @@ def train_evaluate_sklearn_model(
     x_test: NDArray[np.float64],
     y_test: NDArray[np.float64],
 ) -> dict[str, float]:
-    if isinstance(model, LSTM):
-        return train_evaluate_lstm_model(model, x_train, y_train, x_test, y_test)
 
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
@@ -77,53 +54,27 @@ def _score(
     return score
 
 
-def train_evaluate_lstm_model(
-    model: ModelType,
-    x_train: NDArray[np.float64],
-    y_train: NDArray[np.float64],
-    x_test: NDArray[np.float64],
-    y_test: NDArray[np.float64],
-) -> dict[str, float]:
-    assert isinstance(model, LSTM)
-    epochs: int = 200
-    criterion = nn.MSELoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.04)
-    x_train_tensor = Tensor(x_train).unsqueeze(1)
-    x_test_tensor = Tensor(x_test).unsqueeze(1)
-    y_train_tensor = Tensor(y_train).unsqueeze(-1)  # Adds a dimension to make it [7192, 1]
+def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.dropna(subset=["benzene"])  # 9357 --> 8991 rows
+    n = len(df)
+    df = df.dropna(subset=["o3"])
+    assert n == len(df)
 
-    for name, param in model.lstm.named_parameters():
-        if "weight" in name:
-            torch.nn.init.xavier_uniform_(param)
-        elif "bias" in name:
-            torch.nn.init.zeros_(param)
-
-    for _ in tqdm(range(epochs), leave=False):
-        model.train()
-        optimizer.zero_grad()
-        y_pred = model(x_train_tensor)
-        loss = criterion(y_pred, y_train_tensor)
-        loss.backward()
-        optimizer.step()
-
-    model.eval()
-    with torch.no_grad():
-        y_pred = model(x_test_tensor)
-        return {
-            "rmse": float(mean_squared_error(y_test, y_pred)),
-            "r2": 0.0,
-        }
+    df["dt"] = df.stamp.diff()
+    df["benzene_deriv"] = df.benzene.diff() / df.dt
+    df["o3_deriv"] = df.o3.diff() / df.dt
+    return df.dropna(subset=["benzene_deriv"])  # discard first row
 
 
 def main() -> None:
-    df = get_air_quality_dataset()
+    df = _find_derivatives(get_air_quality_dataset())
+
     df = df.drop(columns=["stamp"])
-    df = df.dropna(subset=["benzene"])
     holdout_split = 1800
     holdout = df.tail(holdout_split)
     df = df.head(len(df) - holdout_split)
     assert len(holdout) == holdout_split
-    assert len(df) == 7191
+    assert len(df) == 7190
 
     y = df["benzene"]
     x = df.drop(columns=["benzene"])
@@ -169,6 +120,12 @@ def _train_test_split(
     )
 
 
+ModelTrainer = Callable[
+    [ModelType, NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]],
+    dict[str, float],
+]
+
+
 @beartype
 def create_models(
     x_train: NDArray[np.float64],
@@ -176,16 +133,7 @@ def create_models(
 ) -> dict[
     str,
     tuple[
-        Callable[
-            [
-                ModelType,
-                NDArray[np.float64],
-                NDArray[np.float64],
-                NDArray[np.float64],
-                NDArray[np.float64],
-            ],
-            dict[str, float],
-        ],
+        ModelTrainer,
         ElasticNet
         | HistGradientBoostingRegressor
         | KNeighborsRegressor
@@ -195,12 +143,21 @@ def create_models(
         | SVR,
     ],
 ]:
+    mid = len(x_train) // 2
     tesk = train_evaluate_sklearn_model
     return {
         "ElasticNet": (tesk, load_or_search_for_elastic_hyperparams(x_train, y_train)),
         "HistGradientBoostingRegressor": (tesk, HistGradientBoostingRegressor()),
         "K-Nearest Neighbors": (tesk, KNeighborsRegressor()),
-        "LSTM": (train_evaluate_lstm_model, LSTM(input_size=x_train.shape[1])),
+        "LSTM": (
+            train_evaluate_lstm_model,
+            randomly_sample_lstm_hyperparams_old(
+                x_train[:mid],
+                y_train[:mid],
+                x_train[mid:],
+                y_train[mid:],
+            ),
+        ),
         "LinearRegression": (tesk, LinearRegression()),
         "RandomForestRegressor": (tesk, RandomForestRegressor()),
         "SVR-RBF": (
