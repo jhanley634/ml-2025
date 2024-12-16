@@ -44,6 +44,13 @@ class SklearnLSTMWrapper(BaseEstimator, ClassifierMixin):  # type: ignore [misc]
             assert self.model
             self.model.eval()
             inputs = torch.tensor(x, dtype=torch.float32)
+
+            # Ensure the input has 3 dimensions (batch_size, seq_length, input_size)
+            # Assuming you are working with a sequence length of 1 (univariate time series)
+            assert inputs.ndimension() == 2, f"need a 2D tensor, {inputs.ndimension()=}"
+            inputs = inputs.unsqueeze(1)  # .shape is now [batch_size, 1, input_size]
+            assert inputs.ndimension() == 3, f"{inputs.ndimension()=}"
+
             output = self.model(inputs)
             return np.ndarray(output.numpy())
 
@@ -69,6 +76,7 @@ class LSTM(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         lstm_out, _ = self.lstm(x)
+        assert lstm_out.ndimension() == 3, f"need a 3D tensor, {lstm_out.ndimension()=}"
         # assert lstm_out.shape[1:] == (1, self.input_size)
         last_hidden = self.fc(lstm_out[:, -1, :])
         assert isinstance(last_hidden, Tensor)
@@ -85,6 +93,9 @@ def randomly_sample_lstm_hyperparams_old(
     *,
     n_iter: int = 10,
 ) -> LSTM:
+    assert 2 == x_train.ndim == x_test.ndim
+    assert 1 == y_train.ndim == y_test.ndim
+
     best_rmse = float("inf")
     best_model = None
 
