@@ -143,10 +143,6 @@ def create_models(
         | SVR,
     ],
 ]:
-    # best_lstm_model = randomly_sample_lstm_hyperparams(
-    #     x_train, y_train, x_train, y_train, n_iter=10
-    # )
-
     mid = len(x_train) // 2
     tesk = train_evaluate_sklearn_model
     return {
