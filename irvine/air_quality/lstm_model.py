@@ -52,7 +52,7 @@ class SklearnLSTMWrapper(BaseEstimator, ClassifierMixin):  # type: ignore [misc]
             assert inputs.ndimension() == 3, f"{inputs.ndimension()=}"
 
             output = self.model(inputs)
-            return np.ndarray(output.numpy())
+            return np.array(output.numpy())
 
     def score(
         self,
