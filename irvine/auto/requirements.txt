@@ -1,0 +1,4 @@
+auto-sklearn
+numpy < 2
+scikit-learn
+seaborn
