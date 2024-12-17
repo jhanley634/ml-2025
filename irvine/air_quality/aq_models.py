@@ -14,7 +14,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 
-from irvine.air_quality.aq_etl import get_air_quality_dataset
+from irvine.air_quality.aq_etl import find_derivatives, get_air_quality_dataset
 from irvine.air_quality.lstm_model import (
     LSTM,
     ModelType,
@@ -54,20 +54,8 @@ def _score(
     return score
 
 
-def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.dropna(subset=["benzene"])  # 9357 --> 8991 rows
-    n = len(df)
-    df = df.dropna(subset=["o3"])
-    assert n == len(df)
-
-    df["dt"] = df.stamp.diff()
-    df["benzene_deriv"] = df.benzene.diff() / df.dt
-    df["o3_deriv"] = df.o3.diff() / df.dt
-    return df.dropna(subset=["benzene_deriv"])  # discard first row
-
-
 def main() -> None:
-    df = _find_derivatives(get_air_quality_dataset())
+    df = find_derivatives(get_air_quality_dataset())
 
     df = df.drop(columns=["stamp"])
     holdout_split = 1800
