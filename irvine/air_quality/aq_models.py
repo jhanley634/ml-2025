@@ -144,29 +144,17 @@ def create_models(
     ],
 ]:
     mid = len(x_train) // 2
+    train = (x_train[:mid], y_train[:mid])
+    test = (x_train[mid:], y_train[mid:])
     tesk = train_evaluate_sklearn_model
     return {
         "ElasticNet": (tesk, load_or_search_for_elastic_hyperparams(x_train, y_train)),
         "HistGradientBoostingRegressor": (tesk, HistGradientBoostingRegressor()),
         "K-Nearest Neighbors": (tesk, KNeighborsRegressor()),
-        "LSTM": (
-            train_evaluate_lstm_model,
-            randomly_sample_lstm_hyperparams_old(
-                x_train[:mid],
-                y_train[:mid],
-                x_train[mid:],
-                y_train[mid:],
-            ),
-        ),
+        "LSTM": (train_evaluate_lstm_model, randomly_sample_lstm_hyperparams_old(*train, *test)),
         "LinearRegression": (tesk, LinearRegression()),
         "RandomForestRegressor": (tesk, RandomForestRegressor()),
-        "SVR-RBF": (
-            tesk,
-            load_or_search_for_svr_hyperparams(
-                x_train,
-                y_train,
-            ),
-        ),
+        "SVR-RBF": (tesk, load_or_search_for_svr_hyperparams(*train)),
     }
 
 
