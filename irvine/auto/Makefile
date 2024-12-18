@@ -16,7 +16,7 @@ install: .venv
 	sort -o requirements.txt{,}
 	$(ACTIVATE) && uv pip install -r requirements.txt
 
-test: lint
+test:
 	$(ACTIVATE) && $(ENV) python -c 'import irvine.air_quality.aq_etl'
 	$(ACTIVATE) && $(ENV) ./as_demo.py
 
