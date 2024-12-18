@@ -2,6 +2,7 @@
 SHELL := bash
 ACTIVATE := source .venv/bin/activate
 PYTHONPATH := .:../..
+ENV := env PYTHONPATH=$(PYTHONPATH)
 
 all: toc
 toc:
@@ -16,7 +17,8 @@ install: .venv
 	$(ACTIVATE) && uv pip install -r requirements.txt
 
 test: lint
-	$(ACTIVATE) && env PYTHONPATH=$(PYTHONPATH) ./as_demo.py
+	$(ACTIVATE) && $(ENV) python -c 'import irvine.air_quality.aq_etl'
+	$(ACTIVATE) && $(ENV) ./as_demo.py
 
 lint:
 	$(ACTIVATE) && ruff check .

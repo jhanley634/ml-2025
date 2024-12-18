@@ -1,5 +1,7 @@
 auto-sklearn
+beartype
 numpy < 2
 ruff
 scikit-learn
 seaborn
+ucimlrepo

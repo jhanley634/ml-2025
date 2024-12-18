@@ -4,8 +4,7 @@ import autosklearn.classification
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from irvine.air_quality.aq_etl import get_air_quality_dataset
-from irvine.air_quality.aq_models import aq_train_test_split
+from irvine.air_quality.aq_etl import aq_train_test_split, get_air_quality_dataset
 
 
 def equality_demo() -> None:
@@ -16,7 +15,7 @@ def equality_demo() -> None:
 
 def auto_learn_demo() -> None:
 
-    df = get_air_quality_dataset()
+    df = get_air_quality_dataset().dropna(subset=["benzene"])
     y = df["benzene"]
     x = df.drop(columns=["benzene"])
     x_train, x_test, y_train, y_test = aq_train_test_split(x, y.to_numpy())

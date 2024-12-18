@@ -10,6 +10,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from beartype import beartype
+from numpy._typing import NDArray
+from sklearn.model_selection import train_test_split
 from ucimlrepo import fetch_ucirepo
 
 TEMP = Path("/tmp")
@@ -107,3 +110,26 @@ def find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
     df["benzene_deriv"] = df.benzene.diff() / df.dt
     df["o3_deriv"] = df.o3.diff() / df.dt
     return df.dropna(subset=["benzene_deriv"])  # discard first row
+
+
+@beartype
+def aq_train_test_split(
+    x: pd.DataFrame,
+    y: NDArray[np.float64],
+    test_size: float = 0.2,
+    seed: int = 42,
+) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
+    """This is simply a type safe wrapper of the familiar sklearn function."""
+    kwargs = {"test_size": test_size, "random_state": seed}
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, shuffle=False, **kwargs)
+
+    assert isinstance(x_train, pd.DataFrame)
+    assert isinstance(x_test, pd.DataFrame)
+
+    return (
+        x_train.to_numpy(),
+        x_test.to_numpy(),
+        pd.Series(y_train).to_numpy(),
+        pd.Series(y_test).to_numpy(),
+    )
