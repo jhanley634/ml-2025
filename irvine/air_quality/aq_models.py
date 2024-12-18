@@ -12,7 +12,11 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 
-from irvine.air_quality.aq_etl import aq_train_test_split, find_derivatives, get_air_quality_dataset
+from irvine.air_quality.aq_etl import (
+    aq_train_test_split,
+    get_air_quality_dataset,
+    synthesize_features,
+)
 from irvine.air_quality.lstm_model import (
     LSTM,
     ModelType,
@@ -53,7 +57,7 @@ def _score(
 
 
 def main() -> None:
-    df = find_derivatives(get_air_quality_dataset())
+    df = synthesize_features(get_air_quality_dataset())
 
     df = df.drop(columns=["stamp"])
     holdout_split = 1800

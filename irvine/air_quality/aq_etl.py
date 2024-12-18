@@ -1,7 +1,7 @@
 """
 Extract, transform, and load the air quality dataset.
 
-This is a very short pipeline, offering just a pair of public functions.
+This is a very short pipeline, offering just a few public functions.
 We put it in its own module for rapid import with few bulky deps,
 as otherwise the ydata package would pull in too many deps.
 """
@@ -100,7 +100,11 @@ def _df_neg_is_nan(x: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(x.apply(_series_neg_is_nan))
 
 
-def find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
+def synthesize_features(df: pd.DataFrame) -> pd.DataFrame:
+    return _find_derivatives(df)
+
+
+def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna(subset=["benzene"])  # 9357 --> 8991 rows
     n = len(df)
     df = df.dropna(subset=["o3"])
