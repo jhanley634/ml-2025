@@ -105,7 +105,16 @@ def synthesize_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _weekend(df: pd.DataFrame) -> pd.DataFrame:
-    df["weekend"] = int(df.stamp.dt.day_of_week >= 5)
+    weekend_map = {
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 1,
+        6: 2,
+    }
+    df["weekend"] = df.stamp.dt.day_of_week.map(weekend_map)
     return df
 
 
