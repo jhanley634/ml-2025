@@ -101,7 +101,12 @@ def _df_neg_is_nan(x: pd.DataFrame) -> pd.DataFrame:
 
 
 def synthesize_features(df: pd.DataFrame) -> pd.DataFrame:
-    return _find_derivatives(df)
+    return _find_derivatives(_weekend(df))
+
+
+def _weekend(df: pd.DataFrame) -> pd.DataFrame:
+    df["weekend"] = int(df.stamp.dt.day_of_week >= 5)
+    return df
 
 
 def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
@@ -111,8 +116,8 @@ def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
     assert n == len(df)
 
     df["dt"] = df.stamp.diff()
-    df["benzene_deriv"] = df.benzene.diff() / df.dt
-    df["o3_deriv"] = df.o3.diff() / df.dt
+    for col in "benzene co nmhc nox no2 o3 temp".split():
+        df[f"{col}_deriv"] = df[col].diff() / df.dt
     return df.dropna(subset=["benzene_deriv"])  # discard first row
 
 
