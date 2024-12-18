@@ -67,7 +67,7 @@ def main() -> None:
     y = df["benzene"]
     x = df.drop(columns=["benzene"])
 
-    x_train, x_test, y_train, y_test = _train_test_split(x, y.to_numpy())
+    x_train, x_test, y_train, y_test = aq_train_test_split(x, y.to_numpy())
 
     scaler = StandardScaler()
     x_train = scaler.fit_transform(x_train)
@@ -86,7 +86,7 @@ def main() -> None:
 
 
 @beartype
-def _train_test_split(
+def aq_train_test_split(
     x: pd.DataFrame,
     y: NDArray[np.float64],
     test_size: float = 0.2,

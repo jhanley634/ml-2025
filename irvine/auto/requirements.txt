@@ -1,4 +1,5 @@
 auto-sklearn
 numpy < 2
+ruff
 scikit-learn
 seaborn

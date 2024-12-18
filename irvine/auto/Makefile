@@ -1,7 +1,7 @@
 
 SHELL := bash
 ACTIVATE := source .venv/bin/activate
-PYTHONPATH := .
+PYTHONPATH := .:../..
 
 all: toc
 toc:
@@ -15,10 +15,13 @@ install: .venv
 	sort -o requirements.txt{,}
 	$(ACTIVATE) && uv pip install -r requirements.txt
 
-test:
-	$(ACTIVATE) && env PYTHONPATH=$(PYTHONPATH) python -c 'import autosklearn'
+test: lint
+	$(ACTIVATE) && env PYTHONPATH=$(PYTHONPATH) ./as_demo.py
+
+lint:
+	$(ACTIVATE) && ruff check .
 
 clean:
 	rm -rf .venv/
 
-.PHONY: all .venv install test clean
+.PHONY: all .venv install test lint clean
