@@ -105,15 +105,13 @@ def synthesize_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _weekend(df: pd.DataFrame) -> pd.DataFrame:
-    weekend_map = {
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 1,
-        6: 2,
-    }
+    """0 / 1 / 2 for weekday / Saturday / Sunday.
+
+    Saturday shows low pollution, but is higher than Sunday.
+    Weekdays OTOH are relatively indistinguishable.
+    """
+    sat, sun = 5, 6
+    weekend_map = {**{day: 0 for day in range(5)}, sat: 1, sun: 2}
     df["weekend"] = df.stamp.dt.day_of_week.map(weekend_map)
     return df
 
