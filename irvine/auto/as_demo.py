@@ -32,10 +32,10 @@ def auto_learn_demo1() -> None:
 
 
 def auto_learn_demo() -> None:
-    X, y = sklearn.datasets.load_diabetes(return_X_y=True)
+    x, y = sklearn.datasets.load_diabetes(return_X_y=True)
 
-    X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(
-        X, y, random_state=1
+    x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(
+        x, y, random_state=1,
     )
 
     automl = autosklearn.regression.AutoSklearnRegressor(
@@ -45,7 +45,7 @@ def auto_learn_demo() -> None:
         memory_limit=100_000,
         n_jobs=1,
     )
-    f = automl.fit(X_train, y_train, dataset_name="diabetes")
+    f = automl.fit(x_train, y_train, dataset_name="diabetes")
     print(f, type(f))
     print(automl.leaderboard())
     pprint(automl.show_models(), indent=4)
