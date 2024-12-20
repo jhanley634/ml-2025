@@ -21,7 +21,7 @@ multi_line_output =       "VERTICAL_HANGING_INDENT"
 line_length =             100
 
 [tool.mypy]
-exclude = "^.*/.venv/"
+exclude = "^.*/.venv/|^./irvine/auto/"
 
 [tool.pyright]
 # typeCheckingMode = "strict"
@@ -31,6 +31,7 @@ reportUninitializedInstanceVariable = true
 reportMissingTypeStubs = false
 exclude = [
     "**/.venv/",
+    "**/irvine/auto/",
 ]
 
 [tool.ruff]

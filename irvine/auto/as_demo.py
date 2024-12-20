@@ -35,7 +35,9 @@ def auto_learn_demo() -> None:
     x, y = sklearn.datasets.load_diabetes(return_X_y=True)
 
     x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(
-        x, y, random_state=1
+        x,
+        y,
+        random_state=1,
     )
 
     automl = autosklearn.regression.AutoSklearnRegressor(
