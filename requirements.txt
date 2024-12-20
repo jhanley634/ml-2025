@@ -13,7 +13,7 @@ pandas > 2.2
 pandas-stubs
 pip
 pre-commit
-pyright >= 1.1.390
+pyright >= 1.1.391
 pyyaml
 ruff
 scikit-learn
