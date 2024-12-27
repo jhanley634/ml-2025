@@ -1,6 +1,7 @@
 
 PROJECT := ml-2025
 SHELL := bash
+PATH += $(HOME)/.local/bin
 ACTIVATE := source .venv/bin/activate
 PYTHONPATH := .:..:../..
 
