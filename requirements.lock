@@ -95,7 +95,7 @@ httpcore==1.0.7
     # via httpx
 httpx==0.28.1
     # via jupyterlab
-identify==2.6.3
+identify==2.6.4
     # via pre-commit
 idna==3.10
     # via
@@ -360,6 +360,8 @@ python-dateutil==2.9.0.post0
     #   pandas
 python-json-logger==3.2.1
     # via jupyter-events
+python-magic==0.4.27
+    # via -r requirements.txt
 pytz==2024.2
     # via pandas
 pywavelets==1.8.0
@@ -513,7 +515,7 @@ uri-template==1.3.0
     # via jsonschema
 urllib3==2.3.0
     # via requests
-uv==0.5.12
+uv==0.5.13
     # via -r requirements.txt
 virtualenv==20.28.0
     # via pre-commit
