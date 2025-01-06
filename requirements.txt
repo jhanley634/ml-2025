@@ -1,6 +1,7 @@
 beartype
 black[jupyter]
 catboost
+geoviews
 ipywidgets
 isort
 jupyterlab
@@ -11,6 +12,7 @@ numpy < 2
 optuna
 pandas > 2.2
 pandas-stubs
+panel
 pip
 pre-commit
 pyright >= 1.1.391
