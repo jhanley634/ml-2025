@@ -4,7 +4,7 @@ alembic==1.14.0
     # via optuna
 annotated-types==0.7.0
     # via pydantic
-anyio==4.7.0
+anyio==4.8.0
     # via
     #   httpx
     #   jupyter-server
@@ -95,7 +95,7 @@ httpcore==1.0.7
     # via httpx
 httpx==0.28.1
     # via jupyterlab
-identify==2.6.4
+identify==2.6.5
     # via pre-commit
 idna==3.10
     # via
@@ -205,7 +205,7 @@ matplotlib-inline==0.1.7
     # via
     #   ipykernel
     #   ipython
-mistune==3.0.2
+mistune==3.1.0
     # via nbconvert
 mpmath==1.3.0
     # via sympy
@@ -213,7 +213,7 @@ multimethod==1.12
     # via
     #   visions
     #   ydata-profiling
-mypy==1.14.0
+mypy==1.14.1
     # via -r requirements.txt
 mypy-extensions==1.0.0
     # via
@@ -221,7 +221,7 @@ mypy-extensions==1.0.0
     #   mypy
 nbclient==0.10.2
     # via nbconvert
-nbconvert==7.16.4
+nbconvert==7.16.5
     # via jupyter-server
 nbformat==5.10.4
     # via
@@ -308,7 +308,7 @@ pexpect==4.9.0
     # via ipython
 phik==0.12.4
     # via ydata-profiling
-pillow==11.0.0
+pillow==11.1.0
     # via
     #   imagehash
     #   matplotlib
@@ -344,11 +344,11 @@ pydantic==2.10.4
     # via ydata-profiling
 pydantic-core==2.27.2
     # via pydantic
-pygments==2.18.0
+pygments==2.19.1
     # via
     #   ipython
     #   nbconvert
-pyparsing==3.2.0
+pyparsing==3.2.1
     # via matplotlib
 pyright==1.1.391
     # via -r requirements.txt
@@ -399,7 +399,7 @@ rpds-py==0.22.3
     # via
     #   jsonschema
     #   referencing
-ruff==0.8.4
+ruff==0.8.6
     # via -r requirements.txt
 scikit-learn==1.6.0
     # via -r requirements.txt
@@ -419,7 +419,7 @@ seaborn==0.13.2
     #   ydata-profiling
 send2trash==1.8.3
     # via jupyter-server
-setuptools==75.6.0
+setuptools==75.7.0
     # via
     #   -r requirements.txt
     #   jupyterlab
@@ -452,7 +452,7 @@ terminado==0.18.1
 threadpoolctl==3.5.0
     # via scikit-learn
 tinycss2==1.4.0
-    # via nbconvert
+    # via bleach
 tokenize-rt==6.1.0
     # via black
 torch==2.5.1
@@ -492,7 +492,7 @@ types-python-dateutil==2.9.0.20241206
     # via arrow
 types-pytz==2024.2.0.20241221
     # via pandas-stubs
-types-pyyaml==6.0.12.20241221
+types-pyyaml==6.0.12.20241230
     # via -r requirements.txt
 types-seaborn==0.13.2.20241204
     # via -r requirements.txt
@@ -515,9 +515,9 @@ uri-template==1.3.0
     # via jsonschema
 urllib3==2.3.0
     # via requests
-uv==0.5.13
+uv==0.5.14
     # via -r requirements.txt
-virtualenv==20.28.0
+virtualenv==20.28.1
     # via pre-commit
 visions==0.7.6
     # via ydata-profiling
