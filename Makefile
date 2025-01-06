@@ -10,7 +10,7 @@ all:
 
 .venv:
 	which uv || curl -LsSf https://astral.sh/uv/install.sh | sh
-	uv venv --python=python3.12
+	uv venv --python=python3.13
 
 install: .venv
 	sort -o requirements.txt{,}

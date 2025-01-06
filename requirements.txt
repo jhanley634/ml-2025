@@ -1,6 +1,5 @@
 beartype
 black[jupyter]
-catboost
 geoviews
 hvplot
 ipywidgets
@@ -24,10 +23,8 @@ scikit-learn
 scipy
 seaborn
 setuptools
-torchvision
 tqdm
 types-pyyaml
 types-seaborn
 ucimlrepo
 uv
-ydata-profiling
