@@ -2,6 +2,7 @@ beartype
 black[jupyter]
 catboost
 geoviews
+hvplot
 ipywidgets
 isort
 jupyterlab

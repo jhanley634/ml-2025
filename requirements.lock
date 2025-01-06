@@ -41,6 +41,7 @@ bokeh==3.6.2
     # via
     #   geoviews
     #   holoviews
+    #   hvplot
     #   panel
 cartopy==0.24.1
     # via geoviews
@@ -62,7 +63,9 @@ charset-normalizer==3.4.1
 click==8.1.8
     # via black
 colorcet==3.1.0
-    # via holoviews
+    # via
+    #   holoviews
+    #   hvplot
 colorlog==6.9.0
     # via optuna
 comm==0.2.2
@@ -106,13 +109,17 @@ graphviz==0.20.3
 h11==0.14.0
     # via httpcore
 holoviews==1.20.0
-    # via geoviews
+    # via
+    #   geoviews
+    #   hvplot
 htmlmin==0.1.12
     # via ydata-profiling
 httpcore==1.0.7
     # via httpx
 httpx==0.28.1
     # via jupyterlab
+hvplot==0.11.2
+    # via -r requirements.txt
 identify==2.6.5
     # via pre-commit
 idna==3.10
@@ -283,6 +290,7 @@ numpy==1.26.4
     #   contourpy
     #   geoviews
     #   holoviews
+    #   hvplot
     #   imagehash
     #   lightgbm
     #   matplotlib
@@ -314,6 +322,7 @@ packaging==24.2
     #   cartopy
     #   geoviews
     #   holoviews
+    #   hvplot
     #   ipykernel
     #   jupyter-server
     #   jupyterlab
@@ -330,6 +339,7 @@ pandas==2.2.3
     #   bokeh
     #   catboost
     #   holoviews
+    #   hvplot
     #   panel
     #   phik
     #   seaborn
@@ -348,10 +358,12 @@ panel==1.5.5
     #   -r requirements.txt
     #   geoviews
     #   holoviews
+    #   hvplot
 param==2.2.0
     # via
     #   geoviews
     #   holoviews
+    #   hvplot
     #   panel
     #   pyviz-comms
 parso==0.8.4
