@@ -1,14 +1,18 @@
 beartype
 black[jupyter]
+bokeh-sampledata
 geodatasets
 geopandas
 geoviews
 hvplot
 ipywidgets
+iris-sample-data
 isort
 jupyterlab
 lightgbm
+line-profiler
 matplotlib
+memory-profiler
 mypy
 numpy < 2
 optuna

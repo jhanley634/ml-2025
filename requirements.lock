@@ -40,6 +40,8 @@ bokeh==3.6.2
     #   holoviews
     #   hvplot
     #   panel
+bokeh-sampledata==2024.2
+    # via -r requirements.txt
 cartopy==0.24.1
     # via
     #   geoviews
@@ -128,6 +130,8 @@ httpx==0.28.1
     # via jupyterlab
 hvplot==0.11.2
     # via -r requirements.txt
+icalendar==6.1.0
+    # via bokeh-sampledata
 identify==2.6.5
     # via pre-commit
 idna==3.10
@@ -144,6 +148,8 @@ ipython==8.31.0
     #   ipykernel
     #   ipywidgets
 ipywidgets==8.1.5
+    # via -r requirements.txt
+iris-sample-data==2.5.1
     # via -r requirements.txt
 isoduration==20.11.0
     # via jsonschema
@@ -210,6 +216,8 @@ kiwisolver==1.4.8
     # via matplotlib
 lightgbm==4.5.0
     # via -r requirements.txt
+line-profiler==4.2.0
+    # via -r requirements.txt
 linkify-it-py==2.0.3
     # via panel
 locket==1.0.0
@@ -242,6 +250,8 @@ mdit-py-plugins==0.4.2
     # via panel
 mdurl==0.1.2
     # via markdown-it-py
+memory-profiler==0.61.0
+    # via -r requirements.txt
 mistune==3.1.0
     # via nbconvert
 mypy==1.14.1
@@ -325,6 +335,7 @@ pandas==2.2.3
     # via
     #   -r requirements.txt
     #   bokeh
+    #   bokeh-sampledata
     #   geopandas
     #   holoviews
     #   hvplot
@@ -380,7 +391,9 @@ prometheus-client==0.21.1
 prompt-toolkit==3.0.48
     # via ipython
 psutil==6.1.1
-    # via ipykernel
+    # via
+    #   ipykernel
+    #   memory-profiler
 ptyprocess==0.7.0
     # via
     #   pexpect
@@ -410,6 +423,7 @@ pyshp==2.3.1
 python-dateutil==2.9.0.post0
     # via
     #   arrow
+    #   icalendar
     #   jupyter-client
     #   matplotlib
     #   pandas
@@ -556,7 +570,9 @@ typing-extensions==4.12.2
     #   pyright
     #   sqlalchemy
 tzdata==2024.2
-    # via pandas
+    # via
+    #   icalendar
+    #   pandas
 uc-micro-py==1.0.3
     # via linkify-it-py
 ucimlrepo==0.0.7
