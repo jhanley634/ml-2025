@@ -1,5 +1,7 @@
 beartype
 black[jupyter]
+geodatasets
+geopandas
 geoviews
 hvplot
 ipywidgets
@@ -21,6 +23,7 @@ pyyaml
 ruff
 scikit-learn
 scipy
+scitools-iris
 seaborn
 setuptools
 tqdm
@@ -28,3 +31,4 @@ types-pyyaml
 types-seaborn
 ucimlrepo
 uv
+xarray
