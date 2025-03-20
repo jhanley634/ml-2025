@@ -1,15 +1,16 @@
 
 PROJECT := ml-2025
 SHELL := bash
+PATH += $(HOME)/.local/bin
 ACTIVATE := source .venv/bin/activate
-PYTHONPATH := .:..
+PYTHONPATH := .:..:../..
 
 all:
 	ls -l
 
 .venv:
 	which uv || curl -LsSf https://astral.sh/uv/install.sh | sh
-	uv venv --python=python3.12
+	uv venv --python=python3.13
 
 install: .venv
 	sort -o requirements.txt{,}
@@ -46,4 +47,4 @@ clean-caches:
 clean: clean-caches
 	rm -rf .venv/
 
-.PHONY: all install ruff-check lint mypy docker-build docker-run lab nb notebook test clean-caches clean
+.PHONY: all install ruff-check lint mypy docker-build docker-run lab nb notebook test clean-caches clean .venv

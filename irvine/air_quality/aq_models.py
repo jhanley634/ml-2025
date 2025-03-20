@@ -3,18 +3,20 @@
 from collections.abc import Callable
 
 import numpy as np
-import pandas as pd
 from beartype import beartype
 from numpy.typing import NDArray
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import ElasticNet, LinearRegression
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 
-from irvine.air_quality.aq_etl import get_air_quality_dataset
+from irvine.air_quality.aq_etl import (
+    aq_train_test_split,
+    get_air_quality_dataset,
+    synthesize_features,
+)
 from irvine.air_quality.lstm_model import (
     LSTM,
     ModelType,
@@ -54,20 +56,8 @@ def _score(
     return score
 
 
-def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.dropna(subset=["benzene"])  # 9357 --> 8991 rows
-    n = len(df)
-    df = df.dropna(subset=["o3"])
-    assert n == len(df)
-
-    df["dt"] = df.stamp.diff()
-    df["benzene_deriv"] = df.benzene.diff() / df.dt
-    df["o3_deriv"] = df.o3.diff() / df.dt
-    return df.dropna(subset=["benzene_deriv"])  # discard first row
-
-
 def main() -> None:
-    df = _find_derivatives(get_air_quality_dataset())
+    df = synthesize_features(get_air_quality_dataset())
 
     df = df.drop(columns=["stamp"])
     holdout_split = 1800
@@ -79,7 +69,7 @@ def main() -> None:
     y = df["benzene"]
     x = df.drop(columns=["benzene"])
 
-    x_train, x_test, y_train, y_test = _train_test_split(x, y.to_numpy())
+    x_train, x_test, y_train, y_test = aq_train_test_split(x, y.to_numpy())
 
     scaler = StandardScaler()
     x_train = scaler.fit_transform(x_train)
@@ -95,29 +85,6 @@ def main() -> None:
         results[name] = train_and_evaluate_model(model, x_train, y_train, x_test, y_test)
 
     report(results)
-
-
-@beartype
-def _train_test_split(
-    x: pd.DataFrame,
-    y: NDArray[np.float64],
-    test_size: float = 0.2,
-    seed: int = 42,
-) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
-    """This is simply a type safe wrapper of the familiar sklearn function."""
-    kwargs = {"test_size": test_size, "random_state": seed}
-
-    x_train, x_test, y_train, y_test = train_test_split(x, y, shuffle=False, **kwargs)
-
-    assert isinstance(x_train, pd.DataFrame)
-    assert isinstance(x_test, pd.DataFrame)
-
-    return (
-        x_train.to_numpy(),
-        x_test.to_numpy(),
-        pd.Series(y_train).to_numpy(),
-        pd.Series(y_test).to_numpy(),
-    )
 
 
 ModelTrainer = Callable[
@@ -144,29 +111,17 @@ def create_models(
     ],
 ]:
     mid = len(x_train) // 2
+    train = (x_train[:mid, :], y_train[:mid])
+    test = (x_train[mid:, :], y_train[mid:])
     tesk = train_evaluate_sklearn_model
     return {
         "ElasticNet": (tesk, load_or_search_for_elastic_hyperparams(x_train, y_train)),
         "HistGradientBoostingRegressor": (tesk, HistGradientBoostingRegressor()),
         "K-Nearest Neighbors": (tesk, KNeighborsRegressor()),
-        "LSTM": (
-            train_evaluate_lstm_model,
-            randomly_sample_lstm_hyperparams_old(
-                x_train[:mid],
-                y_train[:mid],
-                x_train[mid:],
-                y_train[mid:],
-            ),
-        ),
+        "LSTM": (train_evaluate_lstm_model, randomly_sample_lstm_hyperparams_old(*train, *test)),
         "LinearRegression": (tesk, LinearRegression()),
         "RandomForestRegressor": (tesk, RandomForestRegressor()),
-        "SVR-RBF": (
-            tesk,
-            load_or_search_for_svr_hyperparams(
-                x_train,
-                y_train,
-            ),
-        ),
+        "SVR-RBF": (tesk, load_or_search_for_svr_hyperparams(x_train, y_train)),
     }
 
 

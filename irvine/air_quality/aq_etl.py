@@ -1,7 +1,7 @@
 """
 Extract, transform, and load the air quality dataset.
 
-This is a very short pipeline, offering just a single public function.
+This is a very short pipeline, offering just a few public functions.
 We put it in its own module for rapid import with few bulky deps,
 as otherwise the ydata package would pull in too many deps.
 """
@@ -10,6 +10,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from beartype import beartype
+from numpy._typing import NDArray
+from sklearn.model_selection import train_test_split
 from ucimlrepo import fetch_ucirepo
 
 TEMP = Path("/tmp")
@@ -95,3 +98,54 @@ def _series_neg_is_nan(x: "pd.Series[float]", sentinel: int = -200) -> "pd.Serie
 
 def _df_neg_is_nan(x: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(x.apply(_series_neg_is_nan))
+
+
+def synthesize_features(df: pd.DataFrame) -> pd.DataFrame:
+    return _find_derivatives(_weekend(df))
+
+
+def _weekend(df: pd.DataFrame) -> pd.DataFrame:
+    """0 / 1 / 2 for weekday / Saturday / Sunday.
+
+    Saturday shows low pollution, but is higher than Sunday.
+    Weekdays OTOH are relatively indistinguishable.
+    """
+    sat, sun = 5, 6
+    weekend_map = {**{day: 0 for day in range(5)}, sat: 1, sun: 2}
+    df["weekend"] = df.stamp.dt.day_of_week.map(weekend_map)
+    return df
+
+
+def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.dropna(subset=["benzene"])  # 9357 --> 8991 rows
+    n = len(df)
+    df = df.dropna(subset=["o3"])
+    assert n == len(df)
+
+    df["dt"] = df.stamp.diff()
+    for col in "benzene co nmhc nox no2 o3 temp".split():
+        df[f"{col}_deriv"] = df[col].diff() / df.dt
+    return df.dropna(subset=["benzene_deriv"])  # discard first row
+
+
+@beartype
+def aq_train_test_split(
+    x: pd.DataFrame,
+    y: NDArray[np.float64],
+    test_size: float = 0.2,
+    seed: int = 42,
+) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
+    """This is simply a type safe wrapper of the familiar sklearn function."""
+    kwargs = {"test_size": test_size, "random_state": seed}
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, shuffle=False, **kwargs)
+
+    assert isinstance(x_train, pd.DataFrame)
+    assert isinstance(x_test, pd.DataFrame)
+
+    return (
+        x_train.to_numpy(),
+        x_test.to_numpy(),
+        pd.Series(y_train).to_numpy(),
+        pd.Series(y_test).to_numpy(),
+    )

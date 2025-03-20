@@ -1,29 +1,39 @@
 beartype
 black[jupyter]
-catboost
+bokeh-sampledata
+geodatasets
+geopandas
+geoviews
+hvplot
 ipywidgets
+iris-sample-data
 isort
 jupyterlab
 lightgbm
+line-profiler
 matplotlib
+memory-profiler
 mypy
+nbstripout
 numpy < 2
 optuna
 pandas > 2.2
 pandas-stubs
+panel
 pip
 pre-commit
-pyright >= 1.1.390
+pyright >= 1.1.397
+python-magic
 pyyaml
 ruff
 scikit-learn
 scipy
+scitools-iris
 seaborn
 setuptools
-torchvision
 tqdm
 types-pyyaml
 types-seaborn
 ucimlrepo
 uv
-ydata-profiling
+xarray
