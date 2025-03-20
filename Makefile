@@ -47,4 +47,4 @@ clean-caches:
 clean: clean-caches
 	rm -rf .venv/
 
-.PHONY: all .venv install ruff-check lint mypy docker-build docker-run lab nb notebook test clean-caches clean
+.PHONY: all install ruff-check lint mypy docker-build docker-run lab nb notebook test clean-caches clean .venv
