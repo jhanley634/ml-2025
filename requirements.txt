@@ -31,9 +31,11 @@ scipy
 scitools-iris
 seaborn
 setuptools
+streamlit
 tqdm
 types-pyyaml
 types-seaborn
 ucimlrepo
 uv
+watchdog
 xarray
