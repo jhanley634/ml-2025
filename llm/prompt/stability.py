@@ -7,15 +7,22 @@ from langchain_ollama import OllamaLLM
 from llm.prompt.config import CHAT_PROMPT_TEMPLATE
 
 
-def single_model() -> None:
+def _msg(role: str, content: str) -> dict[str, str]:
+    return {
+        "role": role,
+        "content": content,
+    }
+
+
+model = OllamaLLM(model="phi4")
+
+
+def response_from_single_model() -> None:
     st.markdown(
         "<h2 style='text-align: center; font-family: Arial;'>LLM</h2>",
         unsafe_allow_html=True,
     )
-
     prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
-
-    model = OllamaLLM(model="phi4")
     chain = prompt | model
 
     if "messages" not in st.session_state:
@@ -28,10 +35,7 @@ def single_model() -> None:
 
     if user_input := st.chat_input("prompt?"):
         st.session_state.messages.append(
-            {
-                "role": "user",
-                "content": user_input,
-            },
+            _msg("user", user_input),
         )
         with st.chat_message("user"):
             st.markdown(user_input)
@@ -40,12 +44,9 @@ def single_model() -> None:
         response = chain.invoke({"question": user_input})
         st.markdown(response)
         st.session_state.messages.append(
-            {
-                "role": "assistant",
-                "content": response,
-            },
+            _msg("assistant", response),
         )
 
 
 if __name__ == "__main__":
-    single_model()
+    response_from_single_model()
