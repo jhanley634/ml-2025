@@ -111,7 +111,7 @@ def _weekend(df: pd.DataFrame) -> pd.DataFrame:
     Weekdays OTOH are relatively indistinguishable.
     """
     sat, sun = 5, 6
-    weekend_map = {**{day: 0 for day in range(5)}, sat: 1, sun: 2}
+    weekend_map = {**dict.fromkeys(range(5), 0), sat: 1, sun: 2}
     df["weekend"] = df.stamp.dt.day_of_week.map(weekend_map)
     return df
 
@@ -123,7 +123,7 @@ def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
     assert n == len(df)
 
     df["dt"] = df.stamp.diff()
-    for col in "benzene co nmhc nox no2 o3 temp".split():
+    for col in ["benzene", "co", "nmhc", "nox", "no2", "o3", "temp"]:
         df[f"{col}_deriv"] = df[col].diff() / df.dt
     return df.dropna(subset=["benzene_deriv"])  # discard first row
 

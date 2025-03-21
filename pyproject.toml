@@ -35,7 +35,7 @@ exclude = [
 ]
 
 [tool.ruff]
-line-length = 100
+line-length = 109
 
 [tool.ruff.lint]
 select = [
@@ -45,6 +45,7 @@ select = [
     "SIM", "SLF", "SLOT", "TCH", "TID", "TRY", "UP", "W", "YTT",
 ]
 ignore = [
+    "EXE003",
     "PD901",
     "PLR2004",
 ]
