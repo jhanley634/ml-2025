@@ -1,5 +1,6 @@
 #! /usr/bin/env streamlit run --server.runOnSave true --server.headless true --browser.gatherUsageStats false
 
+import asyncio
 from dataclasses import dataclass
 
 import streamlit as st
@@ -22,6 +23,8 @@ def _get_model(name: str) -> LLM:
 models = [
     _get_model("gemma"),
     _get_model("phi4"),
+    # _get_model("gemma3:12b"),
+    # _get_model("mixtral"),
 ]
 
 
@@ -30,6 +33,16 @@ def _msg(role: str, content: str) -> dict[str, str]:
         "role": role,
         "content": content,
     }
+
+
+async def get_response_from_model(
+    prompt_template: ChatPromptTemplate,
+    model: LLM,
+    user_input: str,
+) -> str:
+    chain = prompt_template | model.model_instance
+    response = await asyncio.to_thread(chain.invoke, {"question": user_input})
+    return f"**{model.name}**:\n\n{response}"
 
 
 def response_from_multiple_models() -> None:
@@ -53,16 +66,22 @@ def response_from_multiple_models() -> None:
         with st.chat_message("user"):
             st.markdown(user_input)
 
-    prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
-    with st.chat_message("assistant"):
-        for model in models:
-            chain = prompt | model.model_instance
-            response = chain.invoke({"question": user_input})
-            st.markdown(f"### {model.name}:")
-            st.markdown(response)
-            st.session_state.messages.append(
-                _msg("assistant", response),
-            )
+        prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
+
+        async def handle_responses() -> None:
+            tasks = [
+                get_response_from_model(prompt, model, user_input)
+                for model in models
+            ]
+
+            responses = await asyncio.gather(*tasks)
+
+            for response in responses:
+                with st.chat_message("assistant"):
+                    st.markdown(response)
+                st.session_state.messages.append(_msg("assistant", response))
+
+        asyncio.run(handle_responses())
 
 
 if __name__ == "__main__":
