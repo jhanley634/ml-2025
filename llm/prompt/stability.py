@@ -1,6 +1,7 @@
 #! /usr/bin/env streamlit run --server.runOnSave true --server.headless true --browser.gatherUsageStats false
 
 import asyncio
+from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 
 import streamlit as st
@@ -22,7 +23,7 @@ def _get_model(name: str) -> LLM:
 
 models = [
     _get_model("gemma"),
-    _get_model("phi4"),
+    # _get_model("phi4"),
     # _get_model("gemma3:12b"),
     # _get_model("mixtral"),
 ]
@@ -35,14 +36,16 @@ def _msg(role: str, content: str) -> dict[str, str]:
     }
 
 
-async def get_response_from_model(
+async def get_streaming_response_from_model(
     prompt_template: ChatPromptTemplate,
     model: LLM,
     user_input: str,
-) -> str:
+) -> AsyncGenerator[str, None]:
     chain = prompt_template | model.model_instance
-    response = await asyncio.to_thread(chain.invoke, {"question": user_input})
-    return f"**{model.name}**:\n\n{response}"
+    yield f"**{model.name}**:\n\n"
+    response = await asyncio.to_thread(chain.astream, {"question": user_input})
+    async for token in response:
+        yield token
 
 
 def response_from_multiple_models() -> None:
@@ -60,8 +63,11 @@ def response_from_multiple_models() -> None:
             st.markdown(message["content"])
 
     if user_input := st.chat_input("prompt?"):
-        st.session_state.messages.append(
-            _msg("user", user_input),
+        st.session_state.messages.extend(
+            [
+                _msg("user", user_input),
+                _msg("ai", ""),
+            ],
         )
         with st.chat_message("user"):
             st.markdown(user_input)
@@ -69,17 +75,13 @@ def response_from_multiple_models() -> None:
         prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
 
         async def handle_responses() -> None:
-            tasks = [
-                get_response_from_model(prompt, model, user_input)
-                for model in models
-            ]
-
-            responses = await asyncio.gather(*tasks)
-
-            for response in responses:
-                with st.chat_message("assistant"):
-                    st.markdown(response)
-                st.session_state.messages.append(_msg("assistant", response))
+            container = st.empty()
+            model = models[0]
+            async for token in get_streaming_response_from_model(prompt, model, user_input):
+                msg = st.session_state["messages"][-1]
+                assert msg["role"] == "ai"
+                msg["content"] += token
+                container.write(msg["content"])
 
         asyncio.run(handle_responses())
 
