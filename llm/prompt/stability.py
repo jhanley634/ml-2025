@@ -5,6 +5,7 @@ from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 
 import streamlit as st
+from beartype import beartype
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import OllamaLLM
 
@@ -23,7 +24,7 @@ def _get_model(name: str) -> LLM:
 
 models = [
     _get_model("gemma"),
-    # _get_model("phi4"),
+    _get_model("phi4"),
     # _get_model("gemma3:12b"),
     # _get_model("mixtral"),
 ]
@@ -36,6 +37,7 @@ def _msg(role: str, content: str) -> dict[str, str]:
     }
 
 
+@beartype
 async def get_streaming_response_from_model(
     prompt_template: ChatPromptTemplate,
     model: LLM,
@@ -46,6 +48,19 @@ async def get_streaming_response_from_model(
     response = await asyncio.to_thread(chain.astream, {"question": user_input})
     async for token in response:
         yield token
+
+
+@beartype
+async def handle_model_responses(
+    prompt: ChatPromptTemplate,
+    model: LLM,
+    user_input: str,
+    container: st._DeltaGenerator,
+) -> None:
+    async for token in get_streaming_response_from_model(prompt, model, user_input):
+        msg = {"role": f"{model.name} ai", "content": token}
+        st.session_state.messages.append(msg)
+        container.write(f"**{model.name}**:\n\n{token}")
 
 
 def response_from_multiple_models() -> None:
@@ -66,7 +81,8 @@ def response_from_multiple_models() -> None:
         st.session_state.messages.extend(
             [
                 _msg("user", user_input),
-                _msg("ai", ""),
+                # Add placeholders for AI responses
+                *[_msg(f"{model.name} ai", "") for model in models],
             ],
         )
         with st.chat_message("user"):
@@ -74,16 +90,15 @@ def response_from_multiple_models() -> None:
 
         prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
 
-        async def handle_responses() -> None:
-            container = st.empty()
-            model = models[0]
-            async for token in get_streaming_response_from_model(prompt, model, user_input):
-                msg = st.session_state["messages"][-1]
-                assert msg["role"] == "ai"
-                msg["content"] += token
-                container.write(msg["content"])
+        container = st.empty()
 
-        asyncio.run(handle_responses())
+        async def handle_all_responses() -> None:
+            tasks = [
+                handle_model_responses(prompt, model, user_input, container) for model in models
+            ]
+            await asyncio.gather(*tasks)
+
+        asyncio.run(handle_all_responses())
 
 
 if __name__ == "__main__":
