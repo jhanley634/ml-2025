@@ -6,7 +6,9 @@ which maps from CATEGORY to four comma-separated WORDS or phrases within the cat
 Be sure to place a ", " COMMA SPACE between each of those four WORDS.
 Everything in both columns shall be in ALL CAPS.
 """
-example1 = """
+examples = [
+    (
+        """
 Create four groups of four!
 
 4 FoundCategories out of 4
@@ -19,10 +21,34 @@ Create four groups of four!
         FIRELIGHTNINGSUNVOLCANO
     CANCEL, AS A PROJECT
         AXECUTDROPSCRAP
-"""
-result1 = """
+""",
+        """
 | SEEN IN A POTTERY STUDIO          | CLAY, GLAZE, KILN, WHEEL                       |
 | THINGS THAT ARE SLIPPERY          | BANANA PEEL, EEL, GREASE, ICE                  |
 | NATURAL PRODUCERS OF HEAT         | FIRE, LIGHTNING, SUN, VOLCANO                  |
 | CANCEL, AS A PROJECT              | AXE, CUT, DROP, SCRAP                          |
-"""
+""",
+    ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    KINDS OF CARVINGS
+        BUSTRELIEFSTATUETORSO
+    PILLAR
+        BRACEPOSTPROPSUPPORT
+    BBQ OFFERING
+        DOGLINKRIBWING
+    ___NECK
+        BOTTLEBREAKGOOSETURTLE
+""",
+        """
+| KINDS OF CARVINGS                 | BUST, RELIEF, STATUE, TORSO                    |
+| PILLAR                            | BRACE, POST, PROPS, SUPPORT                    |
+| BBQ OFFERING                      | DOG, LINK, RIB, WING                           |
+| ___NECK                           | BOTTLE, BREAK, GOOSE, TURTLE                   |
+""",
+    ),
+]
