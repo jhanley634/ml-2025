@@ -4,15 +4,12 @@ from langchain_core.messages import AIMessage
 from langchain_ollama import ChatOllama
 
 
-def get_limerick() -> str:
+def get_llm_response(prompt: str, model: str = "phi4") -> str:
     ollama_url = "http://localhost:11434"
-    llm = ChatOllama(base_url=ollama_url, model="phi4")
-    result = llm.invoke("Tell me a limerick.")
+    llm = ChatOllama(base_url=ollama_url, model=model)
+    result = llm.invoke(prompt)
     assert isinstance(result, AIMessage)
     return f"{result.content}"
-
-
-print(get_limerick())
 
 
 prompt = """
@@ -89,3 +86,13 @@ Create four groups of four!
 """,
     ),
 ]
+
+
+def main() -> None:
+    for squished, result in examples:
+        assert result
+        print(get_llm_response(f"{prompt}\n\n{squished}"))
+
+
+if __name__ == "__main__":
+    main()
