@@ -51,4 +51,26 @@ Create four groups of four!
 | ___NECK                           | BOTTLE, BREAK, GOOSE, TURTLE                   |
 """,
     ),
+    (
+        """
+ Create four groups of four!
+
+4 FoundCategories out of 4
+
+    AWESOME
+        DOPEFIRELITSICK
+    URL ENDINGS PLUS A LETTER
+        COMPMILKNETIORGO
+    DEFEAT SOUNDLY
+        CREAMLICKPASTESMOKE
+    “WILL” CONTRACTIONS WITHOUT THE APOSTROPHE
+        HELLILLSHELLWELL
+ """,
+        """
+| AWESOME                           | DOPE, FIRE, LIT, SICK                          |
+| URL ENDINGS PLUS A LETTER         | COMP, MILK, NETI, ORGO                         |
+| DEFEAT SOUNDLY                    | CREAM, LICK, PASTE, SMOKE                      |
+| WILL CONTRACTION, SANS APOSTROPHE | HELL, ILL, SHELL, WELL                         |
+""",
+    ),
 ]
