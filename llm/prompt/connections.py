@@ -1,5 +1,20 @@
 #! /usr/bin/env python
 
+from langchain_core.messages import AIMessage
+from langchain_ollama import ChatOllama
+
+
+def get_limerick() -> str:
+    ollama_url = "http://localhost:11434"
+    llm = ChatOllama(base_url=ollama_url, model="phi4")
+    result = llm.invoke("Tell me a limerick.")
+    assert isinstance(result, AIMessage)
+    return f"{result.content}"
+
+
+print(get_limerick())
+
+
 prompt = """
 Produce a two-column four-row markdown table using |- + characters,
 which maps from CATEGORY to four comma-separated WORDS or phrases within the category.

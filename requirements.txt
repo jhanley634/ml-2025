@@ -9,6 +9,8 @@ ipywidgets
 iris-sample-data
 isort
 jupyterlab
+langchain
+langchain-ollama
 lightgbm
 line-profiler
 matplotlib
