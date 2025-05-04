@@ -89,6 +89,11 @@ Create four groups of four!
     PLANETS/DWARF PLANET WITH FIRST LETTER CHANGED
         BLUTOCARSDARTHGENUS
 """,
-        """.""",
+        """
+| PLAY SOME ELECTRIC GUITAR         | JAM, NOODLE, SHRED, SOLO                       |
+| QUALITIES OF OVERCOOKED MEAT      | CHEWY, DRY, STRINGY, TOUGH                     |
+| INGREDIENTS IN BUBBLE TEA         | BOBA, MILK, SUGAR, TEA                         |
+| PLANETS WITH FIRST LETTER CHANGED | BLUTO, CARS, DARTH, GENUS                      |
+""",
     ),
 ]

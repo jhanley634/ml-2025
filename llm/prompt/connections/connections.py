@@ -4,6 +4,7 @@ from langchain_core.messages import AIMessage
 from langchain_ollama import ChatOllama
 
 from llm.prompt.connections.example_instances import examples, prompt
+from llm.prompt.connections.util import as_df
 
 
 def get_llm_response(prompt: str, model: str = "phi4") -> str:
@@ -16,7 +17,8 @@ def get_llm_response(prompt: str, model: str = "phi4") -> str:
 
 def main() -> None:
     for squished, result in reversed(examples):
-        assert result
+        df = as_df(result)
+        print(df)
         print(get_llm_response(f"{prompt}\n\n{squished}"))
 
 
