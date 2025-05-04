@@ -85,11 +85,28 @@ Create four groups of four!
 | WILL CONTRACTION, SANS APOSTROPHE | HELL, ILL, SHELL, WELL                         |
 """,
     ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    PLAY SOME ELECTRIC GUITAR
+        JAMNOODLESHREDSOLO
+    QUALITIES OF OVERCOOKED MEAT
+        CHEWYDRYSTRINGYTOUGH
+    INGREDIENTS IN BUBBLE TEA
+        BOBAMILKSUGARTEA
+    PLANETS/DWARF PLANET WITH FIRST LETTER CHANGED
+        BLUTOCARSDARTHGENUS
+""",
+        """.""",
+    ),
 ]
 
 
 def main() -> None:
-    for squished, result in examples:
+    for squished, result in reversed(examples):
         assert result
         print(get_llm_response(f"{prompt}\n\n{squished}"))
 
