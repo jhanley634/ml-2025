@@ -23,7 +23,7 @@ def main() -> None:
         md_tbl = canonicalize(df.to_markdown(index=False, tablefmt="github"))
         print(md_tbl)
         response = get_llm_response(f"{prompt}\n\n{squished}")
-        response = "\n".join(line for line in response.split("\n") if "|" in line)
+        response = "\n".join(filter(lambda line: "|" in line, response.split("\n")))
         response = canonicalize(response)
         print(response)
 
