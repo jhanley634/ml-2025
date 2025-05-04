@@ -7,7 +7,7 @@ temp = Path("/tmp") / "connections_result.csv"
 
 
 def as_df(markdown_table: str) -> pd.DataFrame:
-    text = "category|words\n" + _strip_leading_and_trailing_pipes(markdown_table.lstrip())
+    text = "CATEGORY|WORDS\n" + _strip_leading_and_trailing_pipes(markdown_table.lstrip())
     temp.write_text(text)
     return pd.read_csv(temp, sep="|", engine="python")
 

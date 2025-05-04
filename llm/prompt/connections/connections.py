@@ -18,7 +18,7 @@ def get_llm_response(prompt: str, model: str = "phi4") -> str:
 def main() -> None:
     for squished, result in reversed(examples):
         df = as_df(result)
-        print(df)
+        print(df.to_markdown(index=False).replace(":", "-"))
         print(get_llm_response(f"{prompt}\n\n{squished}"))
 
 

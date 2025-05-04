@@ -4,6 +4,7 @@
 prompt = """
 Produce a two-column four-row markdown table using |- + characters,
 which maps from CATEGORY to four comma-separated WORDS or phrases within the category.
+The second column shall be named WORDS.
 Be sure to place a ", " COMMA SPACE between each of those four WORDS.
 Everything in both columns shall be in ALL CAPS.
 """

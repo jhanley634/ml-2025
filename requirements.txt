@@ -33,6 +33,7 @@ scipy
 scitools-iris
 seaborn
 setuptools
+tabulate
 tqdm
 types-pyyaml
 types-seaborn
