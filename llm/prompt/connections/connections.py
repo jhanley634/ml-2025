@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-import re
 from difflib import unified_diff
 
 from langchain_core.messages import AIMessage
@@ -23,8 +22,16 @@ def main() -> None:
         df = as_df(result)
         md_tbl = canonicalize(df.to_markdown(index=False, tablefmt="github"))
         print(md_tbl)
-        response = canonicalize(get_llm_response(f"{prompt}\n\n{squished}"))
+        response = get_llm_response(f"{prompt}\n\n{squished}")
+        response = "\n".join(line for line in response.split("\n") if "|" in line)
+        response = canonicalize(response)
         print(response)
+
+        delta = unified_diff(
+            md_tbl.split("\n"),
+            response.split("\n"),
+        )
+        print("\n".join(delta), "\n\n")
 
 
 if __name__ == "__main__":
