@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import re
+from difflib import unified_diff
 
 from langchain_core.messages import AIMessage
 from langchain_ollama import ChatOllama
@@ -20,10 +21,10 @@ def get_llm_response(prompt: str, model: str = "phi4") -> str:
 def main() -> None:
     for squished, result in reversed(examples):
         df = as_df(result)
-        md_tbl = df.to_markdown(index=False).replace(":", "-")
-        print(canonicalize(re.sub(r" +", " ", md_tbl)))
-        response = get_llm_response(f"{prompt}\n\n{squished}")
-        print(canonicalize(response))
+        md_tbl = canonicalize(df.to_markdown(index=False, tablefmt="github"))
+        print(md_tbl)
+        response = canonicalize(get_llm_response(f"{prompt}\n\n{squished}"))
+        print(response)
 
 
 if __name__ == "__main__":
