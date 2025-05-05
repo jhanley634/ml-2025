@@ -6,7 +6,7 @@ from langchain_core.messages import AIMessage
 from langchain_ollama import ChatOllama
 
 from llm.prompt.connections.example_instances import examples, prompt
-from llm.prompt.connections.util import as_df, canonicalize
+from llm.prompt.connections.util import as_df, canonicalize, validate
 
 
 def get_llm_response(prompt: str, model: str = "phi4") -> str:
@@ -25,13 +25,14 @@ def main() -> None:
         response = get_llm_response(f"{prompt}\n\n{squished}")
         response = "\n".join(filter(lambda line: "|" in line, response.split("\n")))
         response = canonicalize(response)
-        print(response)
 
         delta = unified_diff(
             md_tbl.split("\n"),
             response.split("\n"),
         )
         print("\n".join(delta), "\n\n")
+
+        validate(df)
 
 
 if __name__ == "__main__":
