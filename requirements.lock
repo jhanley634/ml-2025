@@ -154,7 +154,7 @@ ipython==9.2.0
     #   ipywidgets
 ipython-pygments-lexers==1.1.1
     # via ipython
-ipywidgets==8.1.6
+ipywidgets==8.1.7
     # via -r requirements.txt
 iris-sample-data==2.5.2
     # via -r requirements.txt
@@ -221,8 +221,10 @@ jupyterlab-pygments==0.3.0
     # via nbconvert
 jupyterlab-server==2.27.3
     # via jupyterlab
-jupyterlab-widgets==3.0.14
+jupyterlab-widgets==3.0.15
     # via ipywidgets
+kagglehub==0.3.12
+    # via -r requirements.txt
 kiwisolver==1.4.8
     # via matplotlib
 langchain==0.3.25
@@ -286,7 +288,7 @@ mypy-extensions==1.1.0
     # via
     #   black
     #   mypy
-narwhals==1.37.1
+narwhals==1.38.0
     # via bokeh
 nbclient==0.10.2
     # via nbconvert
@@ -360,6 +362,7 @@ packaging==24.2
     #   jupyter-server
     #   jupyterlab
     #   jupyterlab-server
+    #   kagglehub
     #   langchain-core
     #   langsmith
     #   matplotlib
@@ -490,6 +493,7 @@ pyyaml==6.0.2
     #   bokeh
     #   dask
     #   jupyter-events
+    #   kagglehub
     #   langchain
     #   langchain-core
     #   optuna
@@ -507,6 +511,7 @@ referencing==0.36.2
 requests==2.32.3
     # via
     #   jupyterlab-server
+    #   kagglehub
     #   langchain
     #   langsmith
     #   panel
@@ -542,7 +547,7 @@ seaborn==0.13.2
     # via -r requirements.txt
 send2trash==1.8.3
     # via jupyter-server
-setuptools==80.2.0
+setuptools==80.3.1
     # via
     #   -r requirements.txt
     #   jupyterlab
@@ -596,6 +601,7 @@ tornado==6.4.2
 tqdm==4.67.1
     # via
     #   -r requirements.txt
+    #   kagglehub
     #   optuna
     #   panel
 traitlets==5.14.3
@@ -649,7 +655,7 @@ urllib3==2.4.0
     # via requests
 uv==0.7.2
     # via -r requirements.txt
-virtualenv==20.30.0
+virtualenv==20.31.0
     # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit

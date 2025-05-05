@@ -9,6 +9,7 @@ ipywidgets
 iris-sample-data
 isort
 jupyterlab
+kagglehub
 langchain
 langchain-ollama
 lightgbm
