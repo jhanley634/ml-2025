@@ -123,7 +123,7 @@ def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
     assert n == len(df)
 
     df["dt"] = df.stamp.diff()
-    for col in "benzene co nmhc nox no2 o3 temp".split():
+    for col in ["benzene", "co", "nmhc", "nox", "no2", "o3", "temp"]:
         df[f"{col}_deriv"] = df[col].diff() / df.dt
     return df.dropna(subset=["benzene_deriv"])  # discard first row
 
