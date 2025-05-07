@@ -119,4 +119,26 @@ Create four groups of four!
 |STARTING WITH SYNONYMS FOR “TEASE”|KIDNEY, MOCKINGBIRD, RAZZMATAZZ, RIBBON|
 """,
     ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    TAROT MINOR ARCANA SUITS
+        CUPSPENTACLESSWORDSWANDS
+    NOT INCLUDING
+        BESIDESBUTEXCEPTSAVE
+    HOMOPHONES OF GEMSTONES
+        CHORALOPELPURLQUARTS
+    GET BETTER, AS A BROKEN BONE
+        HEALKNITMENDRECOVER
+""",
+        """
+| TAROT MINOR ARCANA SUITS          | CUPS, PENTACLES, SWORDS, WANDS                 |
+| NOT INCLUDING                     | BESIDES, BUT, EXCEPT, SAVE                     |
+| HOMOPHONES OF GEMSTONES           | CHORAL, OPEL, PURL, QUARTS                     |
+| GET BETTER, AS A BROKEN BONE      | HEAL, KNIT, MEND, RECOVER                      |
+""",
+    ),
 ]

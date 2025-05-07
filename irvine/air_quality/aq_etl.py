@@ -111,7 +111,8 @@ def _weekend(df: pd.DataFrame) -> pd.DataFrame:
     Weekdays OTOH are relatively indistinguishable.
     """
     sat, sun = 5, 6
-    weekend_map = {**{day: 0 for day in range(5)}, sat: 1, sun: 2}
+    weekend_map = dict.fromkeys(range(5), 0)
+    weekend_map.update({sat: 1, sun: 2})
     df["weekend"] = df.stamp.dt.day_of_week.map(weekend_map)
     return df
 
