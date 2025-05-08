@@ -141,4 +141,26 @@ Create four groups of four!
 | GET BETTER, AS A BROKEN BONE      | HEAL, KNIT, MEND, RECOVER                      |
 """,
     ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    COMMIT TO PAPER
+        AUTHORCOMPOSEPENWRITE
+    NEEDS FOR PLAYING YAHTZEE
+        CUPDICEPENCILSCORECARD
+    HEROES OF ACTION MOVIE FRANCHISES
+        BONDJONESOCEANWICK
+    ___STICK
+        CANDLECHOPJOYYARD
+""",
+        """
+| COMMIT TO PAPER                   | AUTHOR, COMPOSE, PEN, WRITE                    |
+| NEEDS FOR PLAYING YAHTZEE         | CUP, DICE, PENCIL, SCORECARD                   |
+| HEROES OF ACTION MOVIE FRANCHISES | BOND, JONES, OCEAN, WICK                       |
+| ___STICK                          | CANDLE, CHOP, JOY, YARD                        |
+""",
+    ),
 ]
