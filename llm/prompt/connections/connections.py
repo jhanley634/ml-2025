@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import re
 from difflib import unified_diff
 
 from langchain_core.messages import AIMessage
@@ -21,10 +22,10 @@ def main() -> None:
     for squished, result in reversed(examples):
         df = as_df(result)
         md_tbl = canonicalize(df.to_markdown(index=False, tablefmt="github"))
-        print(md_tbl)
         response = get_llm_response(f"{prompt}\n\n{squished}")
         response = "\n".join(filter(lambda line: "|" in line, response.split("\n")))
         response = canonicalize(response)
+        print(re.sub(r"^|$", "|", response, flags=re.MULTILINE))
 
         delta = unified_diff(
             md_tbl.split("\n"),

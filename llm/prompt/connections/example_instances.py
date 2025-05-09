@@ -163,4 +163,45 @@ Create four groups of four!
 | ___STICK                          | CANDLE, CHOP, JOY, YARD                        |
 """,
     ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    TV DISPLAY SETTINGS
+        BRIGHTNESSCOLORCONTRASTTINT
+    RESULTS OF SOME ARITHMETIC
+        DIFFERENCEPRODUCTQUOTIENTSUM
+    FUZZY, AS A MEMORY
+        DIMFAINTREMOTEVAGUE
+    WINDOW TREATMENTS IN THE SINGULAR
+        BLINDDRAPESHADESHUTTER
+""",
+        """
+| TV DISPLAY SETTINGS               | BRIGHTNESS, COLOR, CONTRAST, TINT              |
+| RESULTS OF SOME ARITHMETIC        | DIFFERENCE, PRODUCT, QUOTIENT, SUM             |
+| FUZZY, AS A MEMORY                | DIM, FAINT, REMOTE, VAGUE                      |
+| WINDOW TREATMENTS IN THE SINGULAR | BLIND, DRAPES, SHADE, SHUTTER                  |
+""",
+    ),
+("""
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    LETTER SIGN-OFFS
+        BESTCHEERSLOVESINCERELY
+    WITHOUT
+        ABSENTMINUSSANSWANTING
+    VIGOR
+        BEANSENERGYPEPZIP
+    ___ STRIP
+        BACONCOMICLANDINGSUNSET
+""","""
+| LETTER SIGN-OFFS                  | BEST, CHEERS, LOVE, SINCERELY                  |
+| WITHOUT                           | ABSENT, MINUS, SANS, WANTING                   |
+| VIGOR                             | BEANS, ENERGY, PEP, ZIP                        |
+| ___ STRIP                         | BACON, COMIC, LANDINGS, SUNSET                 |
+"""),
 ]
