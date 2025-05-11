@@ -185,7 +185,8 @@ Create four groups of four!
 | WINDOW TREATMENTS IN THE SINGULAR | BLIND, DRAPES, SHADE, SHUTTER                  |
 """,
     ),
-("""
+    (
+        """
 Create four groups of four!
 
 4 FoundCategories out of 4
@@ -198,10 +199,34 @@ Create four groups of four!
         BEANSENERGYPEPZIP
     ___ STRIP
         BACONCOMICLANDINGSUNSET
-""","""
+""",
+        """
 | LETTER SIGN-OFFS                  | BEST, CHEERS, LOVE, SINCERELY                  |
 | WITHOUT                           | ABSENT, MINUS, SANS, WANTING                   |
 | VIGOR                             | BEANS, ENERGY, PEP, ZIP                        |
 | ___ STRIP                         | BACON, COMIC, LANDINGS, SUNSET                 |
-"""),
+""",
+    ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    MAKE HAPPY
+        DELIGHTPLEASESUITTICKLE
+    EVADE
+        DODGEDUCKSHAKESKIRT
+    COMMON VIDEO GAME FEATURES
+        BOSSHEALTHLEVELPOWER-UP
+    MOTHER ___
+        EARTHGOOSEMAY ISUPERIOR
+""",
+        """
+| MAKE HAPPY                        | DELIGHT, PLEASE, SUIT, TICKLE                  |
+| EVADE                             | DODGE, DUCK, SHAKE SKIRT,                      |
+| COMMON VIDEO GAME FEATURES        | BOSS, HEALTH, LEVEL, POWER-UP                  |
+| MOTHER ___                        | EARTH, GOOSE, MAY I, SUPERIOR                  |
+""",
+    ),
 ]
