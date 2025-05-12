@@ -229,4 +229,26 @@ Create four groups of four!
 | MOTHER ___                        | EARTH, GOOSE, MAY I, SUPERIOR                  |
 """,
     ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    THINGS TRACKED BY WEB ANALYTICS
+        CLICKHITPAGE VIEWVISIT
+    THINGS YOU CAN DO WITH YOUR LIPS
+        CURLPUCKERPURSESMACK
+    PLACES TO FIND PAPER MONEY
+        ATMCASH REGISTERTIP JARWALLET
+    REBOUND
+        BANKBOUNCECAROMRICOCHET
+""",
+        """
+| THINGS TRACKED BY WEB ANALYTICS   | CLICK, HIT, PAGE VIEW, VISIT                   |
+| THINGS YOU CAN DO WITH YOUR LIPS  | CURL, PUCKER, PURSE, SMACK                     |
+| PLACES TO FIND PAPER MONEY        | ATM, CASH REGISTER, TIP JAR, WALLET            |
+| REBOUND                           | BANK, BOUNCE, CAROM, RICOCHET                  |
+""",
+    ),
 ]
