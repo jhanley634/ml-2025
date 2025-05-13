@@ -251,4 +251,27 @@ Create four groups of four!
 | REBOUND                           | BANK, BOUNCE, CAROM, RICOCHET                  |
 """,
     ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    ENDING WITH COLORS
+        EVERGREENINFRAREDMARIGOLDQUICKSILVER
+    PLACES TO SHOP
+        BAZAARFAIRMARKETOUTLET
+    KINDS OF PIZZA
+        HAWAIIANPLAINSUPREMEVEGGIE
+    ___ CLEANER
+        BATHROOMDRYPIPEVACUUM
+
+""",
+        """
+| ENDING WITH COLORS                | EVERGREEN, INFRARED, MARIGOLD, QUICKSILVER     |
+| PLACES TO SHOP                    | BAZAAR, FAIR, MARKET, OUTLET                   |
+| KINDS OF PIZZA                    | HAWAIIAN, PLAIN, SUPREME, VEGGIE               |
+| ___ CLEANER                       | BATHROOM, DRY, PIPE, VACUUM                    |
+""",
+    ),
 ]
