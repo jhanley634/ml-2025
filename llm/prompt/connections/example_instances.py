@@ -274,4 +274,26 @@ Create four groups of four!
 | ___ CLEANER                       | BATHROOM, DRY, PIPE, VACUUM                    |
 """,
     ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    ABSORB USING CAPILLARY ACTION
+        DRAWPULLSUCKWICK
+    STARTING WITH SILENT LETTERS
+        GNOMEKNEEMNEMONICPSYCHE
+    GREEK PREFIXES
+        HYPERKILOMETANEO
+    TITULAR ANIMALS OF FILM
+        BABEBOLTDUMBOTED
+""",
+        """
+| ABSORB USING CAPILLARY ACTION     | DRAW, PULL, SUCK, WICK                         |
+| STARTING WITH SILENT LETTERS      | GNOME, KNEE, MNEMONIC, PSYCHE                  |
+| GREEK PREFIXES                    | HYPER, KILO, META, NEO                         |
+| TITULAR ANIMALS OF FILM           | BABE, BOLT, DUMBO, TED                         |
+""",
+    ),
 ]
