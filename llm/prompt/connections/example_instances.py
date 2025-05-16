@@ -320,6 +320,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    KINDS OF PLANTS
+        HERBSHRUBTREEVINE
+    DISCONTINUE
+        DISSOLVEENDSCRAPSUNSET
+    ENDING WITH BUILDING MATERIALS
+        HOLLYWOODHOURGLASSKUBRICKNEUROPLASTIC
+    ASSOCIATED WITH BULLS
+        MICHAEL JORDANRODEOTAURUSWALL STREET
+""",
+        """
+| KINDS OF PLANTS                   | HERB, SHRUB, TREE, VINE                        |
+| DISCONTINUE                       | DISSOLVE, END, SCRAP, SUNSET                   |
+| ENDING WITH BUILDING MATERIALS    | HOLLYWOOD, HOURGLASS, KUBRICK, NEUROPLASTIC    |
+| ASSOCIATED WITH BULLS             | MICHAEL JORDAN, RODEO, TAURUS, WALL STREET     |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
