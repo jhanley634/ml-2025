@@ -296,4 +296,10 @@ Create four groups of four!
 | TITULAR ANIMALS OF FILM           | BABE, BOLT, DUMBO, TED                         |
 """,
     ),
+    (
+        """
+""",
+        """
+""",
+    ),
 ]

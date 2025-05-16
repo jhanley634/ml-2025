@@ -20,6 +20,8 @@ def get_llm_response(prompt: str, model: str = "phi4") -> str:
 
 def main() -> None:
     for squished, result in reversed(examples):
+        if not squished.strip():
+            continue
         df = as_df(result)
         md_tbl = canonicalize(df.to_markdown(index=False, tablefmt="github"))
         response = get_llm_response(f"{prompt}\n\n{squished}")
