@@ -298,6 +298,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    TYPES OF SNOW
+        CRUSTICEPOWDERSLUSH
+    RATIONALE
+        BASISFOUNDATIONGROUNDSREASON
+    LAST WORDS OF FAMOUS OPERA TITLES
+        BESSBUTTERFLYFLUTESEVILLE
+    REAL ___
+        DEALESTATEMADRIDWORLD
+""",
+        """
+| TYPES OF SNOW                     | CRUST, ICE, POWDER, SLUSH                      |
+| RATIONALE                         | BASIS, FOUNDATION, GROUNDS, REASON             |
+| LAST WORDS OF FAMOUS OPERA TITLES | BESS, BUTTERFLY, FLUTE, SEVILLE                |
+| REAL ___                          | DEAL, ESTATE, MADRID, WORLD                    |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
