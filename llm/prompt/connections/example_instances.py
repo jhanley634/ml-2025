@@ -342,6 +342,27 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    MEMBER OF A KINGDOM IN TAXONOMY
+        ANIMALBACTERIAFUNGUSPLANT
+    GRADUATED INSTRUMENTS
+        BEAKERPROTRACTORRULERSYRINGE
+    KINDS OF PENGUINS
+        CHINSTRAPEMPERORKINGMACARONI
+    “E” THINGS
+        COMMERCEMAILSCOOTERSIGNATURE""",
+        """
+| MEMBER OF A KINGDOM IN TAXONOMY   | ANIMAL, BACTERIA, FUNGUS, PLANT                |
+| GRADUATED INSTRUMENTS             | BEAKER, PROTRACTOR, RULER, SYRINGE             |
+| KINDS OF PENGUINS                 | CHINSTRAP, EMPEROR, KINGDOM, MACARONI          |
+| “E” THINGS                        | COMMERCE, EMAIL, SCOOTER, SIGNATURE            |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
