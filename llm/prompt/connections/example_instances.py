@@ -363,6 +363,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    TASKS FOR A STUDENT
+        ASSIGNMENTDRILLEXERCISELESSON
+    ENCOURAGING RESPONSES IN A GUESSING GAME
+        ALMOSTCLOSENOT QUITEWARM
+    UP FOR ANYTHING
+        EASYFLEXIBLEGAMEOPEN
+    WHAT “A” MIGHT MEAN
+        AREAATHLETICEXCELLENTONE
+""",
+        """
+| TASKS FOR A STUDENT               | ASSIGNMENT, DRILL, EXERCISE, LESSON            |
+| GUESS GAME ENCOURAGING RESPONSES  | ALMOST, CLOSE, NOT QUITE, WARM                 |
+| UP FOR ANYTHING                   | EASY, FLEXIBLE, GAME, OPEN                     |
+| WHAT “A” MIGHT MEAN               | AREA, ATHLETIC, EXCELLENT, ONE                 |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
