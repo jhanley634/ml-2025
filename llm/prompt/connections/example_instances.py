@@ -385,6 +385,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    FUNDRAISING EVENT
+        BALLBENEFITFUNCTIONGALA
+    HOMOPHONES OF PARTS OF THE FOOT
+        BAWLHEALSOULTOW
+    FEATURES OF A TOOTHED WHALE
+        BLUBBERFLIPPERFLUKEMELON
+    SPACES ON A MONOPOLY BOARD
+        AVENUECHANCERAILROADUTILITY
+""",
+        """
+| FUNDRAISING EVENT                 | BALL, BENEFIT, FUNCTION, GALA                  |
+| HOMOPHONES OF PARTS OF THE FOOT   | BAWL, HEAL, SOUL, TOW                          |
+| FEATURES OF A TOOTHED WHALE       | BLUBBER, FLIPPER, FLUKE, MELON                 |
+| SPACES ON A MONOPOLY BOARD        | AVENUE, CHANCE, RAILROAD, UTILITY              |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
