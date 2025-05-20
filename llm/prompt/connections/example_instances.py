@@ -407,6 +407,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    SEEN IN A BARN
+        BALEHORSEPITCHFORKTROUGH
+    WORDS BEFORE “BED”
+        CANOPYDAYMURPHYWATER
+    ACCOUNT BOOK
+        LEDGERLOGRECORDREGISTER
+    DETECTIVES OF KID-LIT
+        BROWNDREWHARDYHOLMES
+""",
+        """
+| SEEN IN A BARN                    | BALE, HORSE, PITCHFORK, TROUGH                 |
+| WORDS BEFORE “BED”                | CANOPY, DAY, MURPHY, WATER                     |
+| ACCOUNT BOOK                      | LEDGER, LOG, RECORD, REGISTER                  |
+| DETECTIVES OF KID-LIT             | BROWN, DREWE, HARDY, HOLMES                    |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
