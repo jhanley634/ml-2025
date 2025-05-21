@@ -429,6 +429,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    PROHIBIT, AS ENTRY
+        BARBLOCKDENYREFUSE
+    FOLDERS ON A MAC
+        DESKTOPMUSICPICTURESTRASH
+    MEDICINE FORMATS
+        CREAMPATCHSPRAYTABLET
+    THINGS THAT OPEN LIKE A CLAM
+        CLAMCOMPACTLAPTOPWAFFLE IRON
+""",
+        """
+| PROHIBIT, AS ENTRY                | BAR, BLOCK, DENY, REFUSE                       |
+| FOLDERS ON A MAC                  | DESKTOP, MUSIC, PICTURES, TRASH                |
+| MEDICINE FORMATS                  | CREAM, PATCH, SPRAY, TABLET                    |
+| THINGS THAT OPEN LIKE A CLAM      | CLAMP, COMPACT, LAPTOP, WAFFLE IRON            |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
