@@ -451,6 +451,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    CHARACTERS WITH GREEN SKIN
+        ELPHABAGRINCHHULKSHREK
+    FAMOUS RIDDLE-GIVERS
+        BRIDGE TROLLMAD HATTERRIDDLERSPHINX
+    FEATURES OF THE NATIONAL MALL IN D.C.
+        CAPITOLMALLOBELISKPOOL
+    FINE PRINT
+        ASTERISKCATCHCONDITIONSTRINGS
+""",
+        """
+| CHARACTERS WITH GREEN SKIN        | ELPHABA, GRINCH, HULK, SHREK                   |
+| FAMOUS RIDDLE-GIVERS              | BRIDGE TROLL, MAD HATTER, RIDDLER, SPHINX      |
+| FEATURES OF D.C.'S NATIONAL MALL  | CAPITOL, MALL, OBELISK, POOL                   |
+| FINE PRINT                        | ASTERISK, CATCH, CONDITIONAL, STRINGS          |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
