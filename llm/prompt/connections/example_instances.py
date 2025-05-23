@@ -473,6 +473,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    QUITE THE PARTY
+        BASHBLASTBLOWOUTRAVE
+    ONE’S CONSTITUTION
+        CHARACTERFIBERMAKEUPNATURE
+    BRITISH IMPERIAL UNITS OF WEIGHT
+        DRAMOUNCEPOUNDSTONE
+    WHAT “CAT’S EYE” CAN BE USED TO DESCRIBE
+        EYELINERGLASSESMARBLENEBULA
+""",
+        """
+| QUITE THE PARTY                   | BASH, BLAST, BLOWOUT, RAVE                     |
+| ONE’S CONSTITUTION                | CHARACTER, FIBER, MAKEUP, NATURE               |
+| BRITISH IMPERIAL UNITS OF WEIGHT  | DRAM, OUNCE, POUND, STONE                      |
+| WHAT “CAT’S EYE” MIGHT DESCRIBE   | EYELINER, GLASSES, MARBLE, NEBULA              |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
