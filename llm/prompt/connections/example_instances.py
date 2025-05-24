@@ -495,6 +495,24 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    NEW YORK SPORTS TEAM MEMBERS
+        JETMETNETRANGER
+    BABY GEAR
+        BIBBOTTLEMONITORSTROLLER
+    KINDS OF PANTS MINUS "S"
+        CAPRIJEANJOGGERSLACK
+    BLACK WOMEN AUTHORS
+        BUTLERGAYHOOKSWALKER
+""",
+        """
+""",
+    ),
+    (
+        """
 """,
         """
 """,
