@@ -509,6 +509,32 @@ Create four groups of four!
         BUTLERGAYHOOKSWALKER
 """,
         """
+| NEW YORK SPORTS TEAM MEMBERS      | JET, MET, NET, RANGER                          |
+| BABY GEAR                         | BIB, BOTTLE, MONITOR, STROLLER                 |
+| KINDS OF PANTS MINUS "S"          | CAPRI, JEAN, JOGGER, SLACK                     |
+| BLACK WOMEN AUTHORS               | BUTLER, GAY, HOOKS, WALKER                     |
+""",
+    ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    DOPPELGÄNGER
+        CLONEDOUBLERINGERTWIN
+    PLAYING CARDS
+        ACEJACKKINGQUEEN
+    ___ MAIL
+        CHAINELECTRONICJUNKSNAIL
+    EAR PIERCING SITES
+        CONCHHELIXLOBEROOK
+""",
+        """
+| DOPPELGÄNGER                      | CLONE, DOUBLE, RINGER, TWIN                    |
+| PLAYING CARDS                     | ACE, JACK, KING, QUEEN                         |
+| ___ MAIL                          | CHAIN, ELECTRONIC, JUNK, SNAIL                 |
+| EAR PIERCING SITES                | CONCH, HELIX, LOBE, ROOK                       |
 """,
     ),
     (
