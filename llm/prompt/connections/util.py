@@ -9,7 +9,9 @@ temp = Path("/tmp") / "connections_result.csv"
 def as_df(markdown_table: str) -> pd.DataFrame:
     text = "CATEGORY|WORDS\n" + canonicalize(markdown_table.lstrip())
     temp.write_text(text)
-    return pd.read_csv(temp, sep="|", engine="python")
+    df = pd.read_csv(temp, sep="|", engine="python")
+    df.to_csv(temp, index=False)
+    return df
 
 
 def canonicalize(markdown_table: str) -> str:
