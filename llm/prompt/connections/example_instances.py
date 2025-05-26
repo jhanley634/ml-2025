@@ -539,6 +539,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    ITEMS IN A LINEN CLOSET
+        PILLOWCASESHEETTOWELWASHCLOTH
+    LINGERIE
+        GARTERHOSESLIPTEDDY
+    DIAMETRIC
+        COUNTEROPPOSITEPOLARREVERSE
+    CARD GAMES WITH FIRST LETTER CHANGED
+        DINFRIDGEGUMMYJOKER
+""",
+        """
+| ITEMS IN A LINEN CLOSET           | PILLOWCASE, SHEET, TOWEL, WASHCLOTH            |
+| LINGERIE                          | GARTER, HOSE, SLIP, TEDDY                      |
+| DIAMETRIC                         | COUNTER, OPPOSITE, POLAR, REVERSE              |
+| CARD GAME WITH 1ST LETTER CHANGED | DIN, FRIDGE, GUMMY, JOKER                      |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
