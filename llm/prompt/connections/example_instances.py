@@ -561,6 +561,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    GUITAR PLAYING TECHNIQUES
+        BENDPICKSLIDESTRUM
+    WHAT CHARACTERS WERE TRANSFORMED INTO IN “BEAUTY AND THE BEAST”
+        BEASTCANDELABRACLOCKTEACUP
+    ROUND FLAT THINGS
+        COASTERFRISBEEPANCAKERECORD
+    AIRPORT FEATURES
+        CAROUSELFOOD COURTGATELOUNGE
+""",
+        """
+| GUITAR PLAYING TECHNIQUES         | BEND, PICK, SLIDE, STRUM                       |
+| WHAT CHARACTERS BECAME IN BEAUTY  | BEAST, CANDELABRA, CLOCK, TEACUP               |
+| ROUND FLAT THINGS                 | COASTER, FRISBEE, PANCAKE, RECORD              |
+| AIRPORT FEATURES                  | CAROUSEL, FOOD COURT, GATE, LOUNGE             |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
