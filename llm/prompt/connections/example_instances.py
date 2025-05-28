@@ -583,6 +583,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    CONNECT
+        BRIDGEJOINLINKUNITE
+    PARTS OF A BIKE
+        CHAINPEDALSADDLEWHEEL
+    BEST PICTURE WINNERS SINCE 2000
+        CHICAGOCRASHGLADIATORMOONLIGHT
+    MUSIC GENRES PLUS A LETTER
+        BLUESTPOPEROCKYSKAT
+""",
+        """
+| CONNECT                           | BRIDGE, JOIN, LINK, UNITE                      |
+| PARTS OF A BIKE                   | CHAIN, PEDALS, SADDLE, WHEEL                   |
+| BEST PICTURE WINNERS SINCE 2000   | CHICAGO, CRASH, GLADIATOR, MOONLIGHT           |
+| MUSIC GENRES PLUS A LETTER        | BLUES, POP, ROCKY, SKAT                        |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
