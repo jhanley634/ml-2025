@@ -605,6 +605,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    RODS
+        BATCLUBSTAFFSTICK
+    THEY'RE ON A ROLL!
+        FOILRIBBONTAPETOILET PAPER
+    WORDS BEFORE “SHACK”
+        CADDYLOVERADIOSHAKE
+    COMMON SWAG ITEMS
+        HATTEETOTEWATER BOTTLE
+""",
+        """
+| RODS                              | BAT, CLUB, STAFF, STICK                        |
+| THEY'RE ON A ROLL!                | FOIL, RIBBON, TAPE, TOILET PAPER               |
+| WORDS BEFORE “SHACK”              | CADDY, LOVE, RADIO, SHAKE                      |
+| COMMON SWAG ITEMS                 | HAT, TEE, TOTE, WATER BOTTLE                   |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
