@@ -627,6 +627,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    ALCOVE
+        CAVITYHOLLOWNOOKRECESS
+    VERBS IN BREADMAKING
+        FERMENTPROOFRESTRISE
+    WAYS TO RECOGNIZE ACHIEVEMENT
+        CERTIFICATEMEDALPLAQUETROPHY
+    THINGS YOU CAN BLOW
+        BUBBLEFUSEKISSRASPBERRY
+""",
+        """
+| ALCOVE                            | CAVITY, HOLLOW, NOOK, RECESS                   |
+| VERBS IN BREADMAKING              | FERMENT, PROOF, REST, RISE                     |
+| WAYS TO RECOGNIZE ACHIEVEMENT     | CERTIFICATE, MEDAL, PLAQUE, TROPHY             |
+| THINGS YOU CAN BLOW               | BUBBLE, FUSE, KISS, RASPBERRY                  |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
