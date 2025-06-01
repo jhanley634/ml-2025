@@ -649,6 +649,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    ___ FUND
+        HEDGEMUTUALSLUSHTRUST
+    LOCAL WATERING HOLE
+        DIVEESTABLISHMENTHAUNTJOINT
+    COMPETE IN A MODERN PENTATHLON
+        FENCERIDESHOOTSWIM
+    ENSURE, AS A VICTORY
+        CINCHGUARANTEEICELOCK
+""",
+        """
+| ___ FUND                          | HEDGE, MUTUAL, SLUSH, TRUST                    |
+| LOCAL WATERING HOLE               | DIVE, ESTABLISHMENT, HAUNT, JOINT              |
+| COMPETE IN A MODERN PENTATHON     | FENCE, RIDE, SHOOT, SWIM                       |
+| ENSURE, AS A VICTORY              | CINCH, GUARANTEE, ICE, LOCK                    |
+""",
+    ),
+    (
+        """
 """,
         """
 """,

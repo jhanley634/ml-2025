@@ -36,6 +36,7 @@ seaborn
 setuptools
 tabulate
 tqdm
+typer
 types-pyyaml
 types-seaborn
 ucimlrepo
