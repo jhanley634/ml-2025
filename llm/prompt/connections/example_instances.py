@@ -671,6 +671,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    EXPEDITION
+        JOURNEYODYSSEYQUESTVOYAGE
+    HOLD DEAR
+        ESTEEMPRIZETREASUREVALUE
+    WORDS WHOSE ONLY VOWEL IS “Y”
+        MYRRHNYMPHRHYTHMSPHYNX
+    NAMES ENDING IN “K” PLUS WORD
+        FRANKINCENSEJACKPOTMARKDOWNNICKNAME
+""",
+        """
+| EXPEDITION                        | JOURNEY, ODYSSEY, QUEST, VOYAGE                |
+| HOLD DEAR                         | ESTEEM, PRIZE, TREASURE, VALUE                 |
+| WORDS WHOSE ONLY VOWEL IS “Y”     | MYRRH, NYMPH, RHYTHM, SPHINX                   |
+| NAMES ENDING IN “K” PLUS WORD     | FRANKINCENSE, JACKPOT, MARKDOWN, NICKNAME      |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
