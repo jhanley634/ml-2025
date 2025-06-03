@@ -693,6 +693,24 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    BE OSTENTATIOUS
+        GRANDSTANDPOSTURESHOWBOATSWAGGER
+    COPACETIC
+        FINEHUNKY-DORYOKSWELL
+    KINDS OF BRACELETS
+        CHARMFRIENDSHIPIDTENNIS
+    THINGS YOU CAN PRACTICE
+        LAWMEDICINESELF-CAREWITCHCRAFT
+""",
+        """
+""",
+    ),
+    (
+        """
 """,
         """
 """,
