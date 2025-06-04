@@ -707,6 +707,32 @@ Create four groups of four!
         LAWMEDICINESELF-CAREWITCHCRAFT
 """,
         """
+| BE OSTENTATIOUS                   | GRANDSTAND, POSTURE, SHOWBOAT, SWAGGER         |
+| COPACETIC                         | FINE, HUNKY-DORY, OK, SWELL                    |
+| KINDS OF BRACELETS                | CHARM, FRIENDSHIP, ID, TENNIS                  |
+| THINGS YOU CAN PRACTICE           | LAW, MEDICINE, SELF-CARE, WITCHCRAFT           |
+""",
+    ),
+    (
+        """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    PARTS OF A SONG
+        BRIDGECHORUSHOOKREFRAIN
+    IMAGERY IN MAGRITTE PAINTINGS
+        APPLEBOWLERCLOUDPIPE
+    THINGS IN AN ENTRYWAY
+        BENCHCOAT RACKCONSOLERUNNER
+    SUPPORT AUDIBLY
+        CHEERCLAPROOTWHISTLE
+""",
+        """
+| PARTS OF A SONG                   | BRIDGE, CHORUS, HOOK, REFRAIN                  |
+| IMAGERY IN MAGRITTE PAINTINGS     | APPLE, BOWLER, CLOUD, PIPE                     |
+| THINGS IN AN ENTRYWAY             | BENCH, COAT RACK, CONSOL, RUNNER               |
+| SUPPORT AUDIBLY                   | CHEER, CLAP, ROAR, WHISTLE                     |
 """,
     ),
     (
