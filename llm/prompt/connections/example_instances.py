@@ -737,6 +737,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    WAYS TO MODIFY A CAR'S EXTERIOR
+        BUMPERGRILLERIMSPOILER
+    PLUMBING EQUIPMENT
+        PIPEPLUNGERSNAKEWRENCH
+    PRECIPICE
+        BRINKCUSPEVEVERGE
+    BEST FEMALE ROCK PERFORMANCE GRAMMY WINNERS
+        APPLECROWSUMMERTURNER
+""",
+        """
+| WAYS TO MODIFY A CAR'S EXTERIOR   | BUMPER, GRILL, RIM, SPOILER                    |
+| PLUMBING EQUIPMENT                | PIPE, PLUNGER, SNAKE, WRENCH                   |
+| PRECIPICE                         | BRINK, CUSP, EVE, VERGE                        |
+| BEST FEMALE ROCKER GRAMMY WINNERS | APPLE, CROW, SUMMER, TURNER                    |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
