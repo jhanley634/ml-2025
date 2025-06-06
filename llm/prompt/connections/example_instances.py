@@ -759,6 +759,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    NEWSPAPER JOBS
+        COLUMNISTEDITORPHOTOGRAPHERREPORTER
+    EVERYDAY
+        COMMONREGULARROUTINESTANDARD
+    ENDING WITH KINDS OF DOGS
+        NEWSHOUNDSHADOWBOXERSNICKERDOODLETRENDSETTER
+    WHAT “CON” MIGHT MEAN
+        CONVENTIONCRIMINALDRAWBACKSWINDLE
+""",
+        """
+| NEWSPAPER JOBS               | COLUMNIST, EDITOR, PHOTOGRAPHER, REPORTER          |
+| EVERYDAY                     | COMMON, REGULAR, ROUTINE, STANDARD                 |
+| ENDING WITH KINDS OF DOGS    | NEWSHOUND, SHADOWBOXER, SNICKERDOODLE, TRENDSETTER |
+| WHAT “CON” MIGHT MEAN        | CONVENTION, CRIMINAL, DRAWBACK, SWINDLE            |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
