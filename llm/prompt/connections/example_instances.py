@@ -781,6 +781,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    DITTY
+        AIRNUMBERSONGSTRAIN
+    TIPS FOR WORKING OUT SAFELY
+        BREATHEHYDRATERESTSTRETCH
+    ESTABLISH
+        FOUNDINSTITUTELAUNCHSTART
+    SPRING ___
+        CHICKENEQUINOXFLINGONION
+""",
+        """
+| DITTY                             | AIR, NUMBER, SONG, STRAIN                      |
+| TIPS FOR WORKING OUT SAFELY       | BREATHE, HYDRATE, REST, STRETCH                |
+| ESTABLISH                         | FOUND, INSTITUTE, LAUNCH, START                |
+| SPRING ___                        | CHICKEN, EQUINOX, FLING, ONION                 |
+""",
+    ),
+    (
+        """
 """,
         """
 """,
