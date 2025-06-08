@@ -803,6 +803,29 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    PERSIST
+        HOLDLASTSTANDSTAY
+    SIDEBAR INFO ON A PERSON’S WIKIPEDIA PAGE
+        BORNEDUCATIONOCCUPATIONSPOUSE
+    ANIMAL METAPHORS IN ECONOMICS
+        BEARBULLDOVEHAWK
+    HOMOPHONES OF SLANG FOR MONEY
+        BREDCACHEDOELUTE
+""",
+        """
+| PERSIST                           | HOLD, LAST, STAND, STAY                        |
+| WIKIPEDIA BIOGRAPHY SIDEBAR INFO  | BORN, EDUCATION, OCCUPATION, SPOUSE            |
+| ANIMAL METAPHORS IN ECONOMICS     | BEAR, BULL, DOVE, HAWK                         |
+| HOMOPHONES OF SLANG FOR MONEY     | BREED, CACHE, DOE, LUTE                        |
+""",
+    ),
+    (
+        """
+
 """,
         """
 """,
