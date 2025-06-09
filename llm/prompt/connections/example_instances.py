@@ -825,6 +825,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    KEYBOARD SHORTCUT COMMANDS
+        PASTEPRINTQUITSAVE
+    SECURE IN ADVANCE
+        BOOKORDERREQUESTRESERVE
+    SPELLING BEE RANKS MINUS A LETTER
+        GENUSGOOMAZINGSLID
+    CRIME ORGANIZATION
+        CREWFAMILYRINGSYNDICATE
+""",
+        """
+| KEYBOARD SHORTCUT COMMANDS        | PASTE, PRINT, QUIT, SAVE                       |
+| SECURE IN ADVANCE                 | BOOK, ORDER, REQUEST, RESERVE                  |
+| SPELLING BEE RANKS MINUS A LETTER | GENUS, GOO, MAZING, SLID                       |
+| CRIME ORGANIZATION                | CREW, FAMILY, RING, SYNDICATE                  |
+""",
+    ),
+    (
+        """
 
 """,
         """
