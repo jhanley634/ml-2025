@@ -847,6 +847,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    THINGS YOU CAN INSERT IN A DOCUMENT
+        CHARTIMAGETABLETEXT BOX
+    '80S SLANG
+        CHILLPSYCHRADICALWORD
+    ARBITRATE
+        CHAIRJUDGEMEDIATEMODERATE
+    ___ DUTY
+        CIVICCUSTOMSHEAVYJURY
+""",
+        """
+| THINGS TO INSERT IN A DOCUMENT    | CHART, IMAGE, TABLE, TEXT BOX                  |
+| '80S SLANG                        | CHILL, PSYCH, RADICAL, WORD                    |
+| ARBITRATE                         | CHAIR, JUDGE, MEDIATE, MODERATE                |
+| ___ DUTY                          | CIVIC, CUSTOMS, HEAVY, JURY                    |
+""",
+    ),
+    (
+        """
 
 """,
         """
