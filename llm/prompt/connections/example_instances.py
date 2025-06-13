@@ -869,6 +869,28 @@ Create four groups of four!
     ),
     (
         """
+Create four groups of four!
+
+4 FoundCategories out of 4
+
+    BOAST
+        BLUSTERCROWSHOW OFFSTRUT
+    WAYS TO DENOTE A CITATION
+        ASTERISKDAGGERNUMBERPARENS
+    CEREAL MASCOTS
+        COUNTELVESLEPRECHAUNROOSTER
+    ARC-SHAPED THINGS
+        BANANAEYEBROWFLIGHT PATHRAINBOW
+""",
+        """
+| BOAST                             | BLUSTER, CROW, SHOW OFF, STRUT                 |
+| WAYS TO DENOTE A CITATION         | ASTERISK, DAGGER, NUMBER, PARENS               |
+| CEREAL MASCOTS                    | COUNT, ELVES, LEPRECHAUN, ROOSTER              |
+| ARC-SHAPED THINGS                 | BANANA, EYEBROW, FLIGHT PATH, RAINBOW          |
+""",
+    ),
+    (
+        """
 
 """,
         """
