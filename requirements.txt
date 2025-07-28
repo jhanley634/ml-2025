@@ -1,3 +1,4 @@
+-i https://pkgs.safetycli.com/repository/self-ac894/project/ml-2025/pypi/simple/
 beartype
 black[jupyter]
 bokeh-sampledata
@@ -14,6 +15,7 @@ langchain
 langchain-ollama
 lightgbm
 line-profiler
+lmstudio
 matplotlib
 memory-profiler
 mypy
@@ -30,6 +32,7 @@ pyright >= 1.1.397
 python-magic
 pyyaml
 ruff
+safety
 scikit-learn
 scipy
 scitools-iris
