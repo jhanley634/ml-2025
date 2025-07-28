@@ -20,9 +20,9 @@ matplotlib
 memory-profiler
 mypy
 nbstripout
-numpy < 2
+numpy
 optuna
-pandas > 2.2
+pandas
 pandas-stubs
 panel
 pip

@@ -175,6 +175,8 @@ ModelType = TypeVar(
     SVR,
 )
 
+ModelType = TypeVar("ModelType")
+
 
 @beartype
 def train_evaluate_lstm_model(  # noqa: PLR0913
