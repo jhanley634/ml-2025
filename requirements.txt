@@ -1,17 +1,18 @@
 -i https://pkgs.safetycli.com/repository/self-ac894/project/ml-2025/pypi/simple/
+arrow >= 1.3.0
 beartype
-black[jupyter]
+black[jupyter] >= 25.1.0
 bokeh-sampledata
 geodatasets
-geopandas
+geopandas >= 1.1.1
 geoviews
 hvplot
-ipywidgets
+ipywidgets >= 8.1.7
 iris-sample-data
 isort
-jupyterlab
+jupyterlab >= 4.4.5
 kagglehub
-langchain
+langchain >= 0.3.27
 langchain-ollama
 lightgbm
 line-profiler
@@ -20,29 +21,29 @@ matplotlib
 memory-profiler
 mypy
 nbstripout
-numpy
+numpy >= 2.3.2
 optuna
-pandas
+pandas >= 2.3.1
 pandas-stubs
-panel
-pip
+panel >= 1.7.5
+pip >= 25.1.1
 pipdeptree
-pre-commit
-pyright >= 1.1.397
+pre-commit >= 4.2.0
+pyright >= 1.1.403
 python-magic
-pyyaml
+pyyaml >= 6.0.2
 ruff
-safety
-scikit-learn
-scipy
+safety >= 3.6.0
+scikit-learn >= 1.7.1
+scipy >= 1.16.1
 scitools-iris
 seaborn
-setuptools
+setuptools >= 80.9.0
 tabulate
-tqdm
+tqdm >= 4.67.1
 typer
 types-pyyaml
 types-seaborn
 ucimlrepo
-uv
+uv >= 0.8.3
 xarray
