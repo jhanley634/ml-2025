@@ -192,6 +192,7 @@ jedi==0.19.2
     # via ipython
 jinja2==3.1.6
     # via
+    #   -r requirements.txt
     #   bokeh
     #   cf-units
     #   jupyter-server
@@ -326,7 +327,7 @@ mypy-extensions==1.1.0
     # via
     #   black
     #   mypy
-narwhals==1.48.1
+narwhals==2.0.0
     # via bokeh
 nbclient==0.10.2
     # via nbconvert
@@ -492,6 +493,8 @@ ptyprocess==0.7.0
     #   terminado
 pure-eval==0.2.3
     # via stack-data
+pyarrow==21.0.0
+    # via -r requirements.txt
 pycparser==2.22
     # via cffi
 pydantic==2.9.2
@@ -510,6 +513,8 @@ pygments==2.19.2
     #   ipython-pygments-lexers
     #   nbconvert
     #   rich
+pymysql==1.1.1
+    # via -r requirements.txt
 pyogrio==0.11.0
     # via geopandas
 pyparsing==3.2.3
@@ -707,7 +712,7 @@ types-pytz==2025.2.0.20250516
     # via pandas-stubs
 types-pyyaml==6.0.12.20250516
     # via -r requirements.txt
-types-seaborn==0.13.2.20250727
+types-seaborn==0.13.2.20250728
     # via -r requirements.txt
 typing-extensions==4.14.1
     # via
