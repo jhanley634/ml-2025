@@ -26,9 +26,9 @@ Create four groups of four!
 """,
         """
 | SEEN IN A POTTERY STUDIO          | CLAY, GLAZE, KILN, WHEEL                       |
-| THINGS THAT ARE SLIPPERY          | BANANA PEEL, EEL, GREASE, ICE                  |
 | NATURAL PRODUCERS OF HEAT         | FIRE, LIGHTNING, SUN, VOLCANO                  |
 | CANCEL, AS A PROJECT              | AXE, CUT, DROP, SCRAP                          |
+| THINGS THAT ARE SLIPPERY          | BANANA PEEL, EEL, GREASE, ICE                  |
 """,
     ),
     (
@@ -113,10 +113,10 @@ Create four groups of four!
         KIDNEYMOCKINGBIRDRAZZMATAZZRIBBON
 """,
         """
-|SILENCE|CALM, HUSH, PEACE, STILL|
-|COMPARATIVELY SMALL|BABY, COMPACT, MINUTE, TOY|
-|TENNIS COMPETITION UNITS|GAME, MATCH, SET, TOURNAMENT|
-|STARTING WITH SYNONYMS FOR “TEASE”|KIDNEY, MOCKINGBIRD, RAZZMATAZZ, RIBBON|
+| SILENCE                           | CALM, HUSH, PEACE, STILL                       |
+| COMPARATIVELY SMALL               | BABY, COMPACT, MINUTE, TOY                     |
+| TENNIS COMPETITION UNITS          | GAME, MATCH, SET, TOURNAMENT                   |
+| STARTING WITH “TEASE” SYNONYMS    | KIDNEY, MOCKINGBIRD, RAZZMATAZZ, RIBBON        |
 """,
     ),
     (
@@ -224,7 +224,7 @@ Create four groups of four!
 """,
         """
 | MAKE HAPPY                        | DELIGHT, PLEASE, SUIT, TICKLE                  |
-| EVADE                             | DODGE, DUCK, SHAKE SKIRT,                      |
+| EVADE                             | DODGE, DUCK, SHAKE, SKIRT                      |
 | COMMON VIDEO GAME FEATURES        | BOSS, HEALTH, LEVEL, POWER-UP                  |
 | MOTHER ___                        | EARTH, GOOSE, MAY I, SUPERIOR                  |
 """,
@@ -490,7 +490,7 @@ Create four groups of four!
 | QUITE THE PARTY                   | BASH, BLAST, BLOWOUT, RAVE                     |
 | ONE'S CONSTITUTION                | CHARACTER, FIBER, MAKEUP, NATURE               |
 | BRITISH IMPERIAL UNITS OF WEIGHT  | DRAM, OUNCE, POUND, STONE                      |
-| WHAT “CAT'S EYE” MIGHT DESCRIBE   | EYELINER, GLASSES, MARBLE, NEBULA              |
+| WHAT "CAT'S EYE" MIGHT DESCRIBE   | EYELINER, GLASSES, MARBLE, NEBULA              |
 """,
     ),
     (
@@ -773,10 +773,10 @@ Create four groups of four!
         CONVENTIONCRIMINALDRAWBACKSWINDLE
 """,
         """
-| NEWSPAPER JOBS               | COLUMNIST, EDITOR, PHOTOGRAPHER, REPORTER          |
-| EVERYDAY                     | COMMON, REGULAR, ROUTINE, STANDARD                 |
-| ENDING WITH KINDS OF DOGS    | NEWSHOUND, SHADOWBOXER, SNICKERDOODLE, TRENDSETTER |
-| WHAT “CON” MIGHT MEAN        | CONVENTION, CRIMINAL, DRAWBACK, SWINDLE            |
+| NEWSPAPER JOBS                    | COLUMNIST, EDITOR, PHOTOGRAPHER, REPORTER      |
+| EVERYDAY                          | COMMON, REGULAR, ROUTINE, STANDARD             |
+| ENDING WITH KINDS OF DOGS         | NEWSHOUND, SHADOWBOXER, SNKDOODLE, TRENDSETTER |
+| WHAT “CON” MIGHT MEAN             | CONVENTION, CRIMINAL, DRAWBACK, SWINDLE        |
 """,
     ),
     (
