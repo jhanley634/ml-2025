@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from beartype import beartype
-from numpy._typing import NDArray
+from numpy.typing import NDArray
 from sklearn.model_selection import train_test_split
 from ucimlrepo import fetch_ucirepo
 

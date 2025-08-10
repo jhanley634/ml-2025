@@ -4,7 +4,7 @@ from typing import TypeVar
 import numpy as np
 import torch
 from beartype import beartype
-from numpy._typing import NDArray
+from numpy.typing import NDArray
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import ElasticNet, LinearRegression
