@@ -113,7 +113,7 @@ def _weekend(df: pd.DataFrame) -> pd.DataFrame:
     sat, sun = 5, 6
     weekend_map = dict.fromkeys(range(5), 0)
     weekend_map.update({sat: 1, sun: 2})
-    df["weekend"] = df.stamp.dt.day_of_week.map(weekend_map)
+    df["weekend"] = pd.to_datetime(df.stamp, unit="s").dt.day_of_week.map(weekend_map)
     return df
 
 
