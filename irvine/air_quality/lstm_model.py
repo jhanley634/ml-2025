@@ -179,7 +179,7 @@ ModelType = TypeVar("ModelType")
 
 
 @beartype
-def train_evaluate_lstm_model(  # noqa: PLR0913
+def train_evaluate_lstm_model[ModelType](  # noqa: PLR0913
     model: ModelType,
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
