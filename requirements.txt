@@ -17,6 +17,7 @@ langchain-ollama
 lightgbm
 line-profiler
 lmstudio
+lxml
 matplotlib
 memory-profiler
 mypy

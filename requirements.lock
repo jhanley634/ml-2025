@@ -301,6 +301,8 @@ lmstudio==1.5.0
     # via -r requirements.txt
 locket==1.0.0
     # via partd
+lxml==6.0.2
+    # via -r requirements.txt
 mako==1.3.10
     # via alembic
 markdown==3.9
