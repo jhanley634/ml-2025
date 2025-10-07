@@ -130,6 +130,11 @@ def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @beartype
+def arr(x: pd.DataFrame | pd.Series) -> NDArray[np.float64]:
+    return np.array(x.to_numpy(), dtype=np.float64)
+
+
+@beartype
 def aq_train_test_split(
     x: pd.DataFrame,
     y: NDArray[np.float64],
@@ -145,8 +150,8 @@ def aq_train_test_split(
     assert isinstance(x_test, pd.DataFrame)
 
     return (
-        x_train.to_numpy(),
-        x_test.to_numpy(),
-        pd.Series(y_train).to_numpy(),
-        pd.Series(y_test).to_numpy(),
+        arr(x_train),
+        arr(x_test),
+        arr(pd.Series(y_train)),
+        arr(pd.Series(y_test)),
     )
