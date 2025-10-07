@@ -5,6 +5,7 @@ bokeh-sampledata
 geodatasets
 geopandas >= 1.1.1
 geoviews
+html5lib
 hvplot
 ipywidgets >= 8.1.7
 iris-sample-data
