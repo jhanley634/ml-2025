@@ -8,6 +8,7 @@ import streamlit as st
 from beartype import beartype
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import OllamaLLM
+from streamlit.delta_generator import DeltaGenerator
 
 from llm.prompt.config import CHAT_PROMPT_TEMPLATE
 
@@ -55,7 +56,7 @@ async def handle_model_responses(
     prompt: ChatPromptTemplate,
     model: LLM,
     user_input: str,
-    container: st._DeltaGenerator,
+    container: DeltaGenerator,
 ) -> None:
     async for token in get_streaming_response_from_model(prompt, model, user_input):
         msg = {"role": f"{model.name} ai", "content": token}
