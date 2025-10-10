@@ -24,9 +24,8 @@ def _get_model(name: str) -> LLM:
 
 
 models = [
-    _get_model("gemma"),
     _get_model("phi4"),
-    # _get_model("gemma3:12b"),
+    _get_model("gemma3:12b"),
     # _get_model("mixtral"),
 ]
 
