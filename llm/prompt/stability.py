@@ -60,7 +60,8 @@ async def handle_model_responses(
     async for token in get_streaming_response_from_model(prompt, model, user_input):
         msg = {"role": f"{model.name} ai", "content": token}
         st.session_state.messages.append(msg)
-        container.write(f"**{model.name}**:\n\n{token}")
+        text = "".join(elt["content"] for elt in st.session_state.messages)
+        container.write(f"**{model.name}**:\n\n{text}")
 
 
 def response_from_multiple_models() -> None:
@@ -90,12 +91,10 @@ def response_from_multiple_models() -> None:
 
         prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
 
-        container = st.empty()
-
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         try:
-            loop.run_until_complete(handle_all_responses(prompt, user_input, container))
+            loop.run_until_complete(handle_all_responses(prompt, user_input))
         finally:
             loop.close()
 
@@ -103,9 +102,12 @@ def response_from_multiple_models() -> None:
 async def handle_all_responses(
     prompt: ChatPromptTemplate,
     user_input: str,
-    container: DeltaGenerator,
 ) -> None:
-    tasks = [handle_model_responses(prompt, model, user_input, container) for model in models]
+    tasks = []
+    for model in models:
+        container = st.empty()
+        task = handle_model_responses(prompt, model, user_input, container)
+        tasks.append(task)
     await asyncio.gather(*tasks)
 
 
