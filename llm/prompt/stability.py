@@ -1,4 +1,4 @@
-#! /usr/bin/env streamlit run --server.runOnSave true --server.headless true --browser.gatherUsageStats false
+#! /usr/bin/env uv run streamlit run --server.runOnSave true --server.headless true --browser.gatherUsageStats false
 
 import asyncio
 from collections.abc import AsyncGenerator
@@ -42,7 +42,7 @@ async def get_streaming_response_from_model(
     prompt_template: ChatPromptTemplate,
     model: LLM,
     user_input: str,
-) -> AsyncGenerator[str, None]:
+) -> AsyncGenerator[str]:
     chain = prompt_template | model.model_instance
     yield f"**{model.name}**:\n\n"
     response = await asyncio.to_thread(chain.astream, {"question": user_input})
