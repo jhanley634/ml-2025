@@ -2,7 +2,7 @@
 [project]
 name = "ml-2025"
 version = "0.0.1"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 
 [tool.black]
 line-length = 100
@@ -35,7 +35,7 @@ exclude = [
 ]
 
 [tool.ruff]
-line-length = 109
+line-length = 100
 
 [tool.ruff.lint]
 select = [
@@ -45,7 +45,5 @@ select = [
     "SIM", "SLF", "SLOT", "TCH", "TID", "TRY", "UP", "W", "YTT",
 ]
 ignore = [
-    "EXE003",
-    "PD901",
     "PLR2004",
 ]

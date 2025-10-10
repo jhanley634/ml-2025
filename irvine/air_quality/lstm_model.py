@@ -4,7 +4,7 @@ from typing import TypeVar
 import numpy as np
 import torch
 from beartype import beartype
-from numpy._typing import NDArray
+from numpy.typing import NDArray
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor
 from sklearn.linear_model import ElasticNet, LinearRegression
@@ -175,9 +175,11 @@ ModelType = TypeVar(
     SVR,
 )
 
+ModelType = TypeVar("ModelType")
+
 
 @beartype
-def train_evaluate_lstm_model(  # noqa: PLR0913
+def train_evaluate_lstm_model[ModelType](  # noqa: PLR0913
     model: ModelType,
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],

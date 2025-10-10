@@ -1,7 +1,7 @@
 auto-sklearn
 beartype
-numpy < 2
+numpy >= 2.3.2
 ruff
-scikit-learn
+scikit-learn >= 1.7.1
 seaborn
 ucimlrepo

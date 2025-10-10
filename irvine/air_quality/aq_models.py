@@ -30,13 +30,15 @@ from irvine.air_quality.tuning_sklearn import (
 
 
 def train_evaluate_sklearn_model(
-    model: ModelType,
+    model: ModelType,  # type: ignore
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
     x_test: NDArray[np.float64],
     y_test: NDArray[np.float64],
 ) -> dict[str, float]:
 
+    print(type(model))
+    assert isinstance(model, RandomForestRegressor)
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
 
@@ -47,10 +49,12 @@ def train_evaluate_sklearn_model(
 
 
 def _score(
-    model: ModelType,
+    model: ModelType,  # type: ignore
     x_test: NDArray[np.float64],
     y_test: NDArray[np.float64],
 ) -> float:
+    print(type(model))
+    assert isinstance(model, RandomForestRegressor)
     score = model.score(x_test, y_test)
     assert isinstance(score, float)
     return score

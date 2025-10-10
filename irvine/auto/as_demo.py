@@ -23,7 +23,7 @@ def auto_learn_demo1() -> None:
     df = get_air_quality_dataset().dropna(subset=["benzene"])
     y = df["benzene"]
     x = df.drop(columns=["benzene"])
-    x_train, x_test, y_train, y_test = aq_train_test_split(x, y.to_numpy())
+    x_train, x_test, y_train, _y_test = aq_train_test_split(x, y.to_numpy())
 
     reg = autosklearn.regression.AutoSklearnRegressor()
     reg.fit(x_train, y_train)
@@ -34,7 +34,7 @@ def auto_learn_demo1() -> None:
 def auto_learn_demo() -> None:
     x, y = sklearn.datasets.load_diabetes(return_X_y=True)
 
-    x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(
+    x_train, _x_test, y_train, _y_test = sklearn.model_selection.train_test_split(
         x,
         y,
         random_state=1,

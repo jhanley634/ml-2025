@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from beartype import beartype
-from numpy._typing import NDArray
+from numpy.typing import NDArray
 from sklearn.model_selection import train_test_split
 from ucimlrepo import fetch_ucirepo
 
@@ -111,8 +111,9 @@ def _weekend(df: pd.DataFrame) -> pd.DataFrame:
     Weekdays OTOH are relatively indistinguishable.
     """
     sat, sun = 5, 6
-    weekend_map = {**dict.fromkeys(range(5), 0), sat: 1, sun: 2}
-    df["weekend"] = df.stamp.dt.day_of_week.map(weekend_map)
+    weekend_map = dict.fromkeys(range(5), 0)
+    weekend_map.update({sat: 1, sun: 2})
+    df["weekend"] = pd.to_datetime(df.stamp, unit="s").dt.day_of_week.map(weekend_map)
     return df
 
 
@@ -126,6 +127,11 @@ def _find_derivatives(df: pd.DataFrame) -> pd.DataFrame:
     for col in ["benzene", "co", "nmhc", "nox", "no2", "o3", "temp"]:
         df[f"{col}_deriv"] = df[col].diff() / df.dt
     return df.dropna(subset=["benzene_deriv"])  # discard first row
+
+
+@beartype
+def arr(x: pd.DataFrame | pd.Series) -> NDArray[np.float64]:
+    return np.array(x.to_numpy(), dtype=np.float64)
 
 
 @beartype
@@ -144,8 +150,8 @@ def aq_train_test_split(
     assert isinstance(x_test, pd.DataFrame)
 
     return (
-        x_train.to_numpy(),
-        x_test.to_numpy(),
-        pd.Series(y_train).to_numpy(),
-        pd.Series(y_test).to_numpy(),
+        arr(x_train),
+        arr(x_test),
+        arr(pd.Series(y_train)),
+        arr(pd.Series(y_test)),
     )
