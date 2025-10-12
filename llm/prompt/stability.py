@@ -91,10 +91,12 @@ def response_from_multiple_models() -> None:
 
         prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
 
+        container = st.empty()
+
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         try:
-            loop.run_until_complete(handle_all_responses(prompt, user_input))
+            loop.run_until_complete(handle_all_responses(prompt, user_input, container))
         finally:
             loop.close()
 
@@ -102,12 +104,9 @@ def response_from_multiple_models() -> None:
 async def handle_all_responses(
     prompt: ChatPromptTemplate,
     user_input: str,
+    container: DeltaGenerator,
 ) -> None:
-    tasks = []
-    for model in models:
-        container = st.empty()
-        task = handle_model_responses(prompt, model, user_input, container)
-        tasks.append(task)
+    tasks = [handle_model_responses(prompt, model, user_input, container) for model in models]
     await asyncio.gather(*tasks)
 
 
