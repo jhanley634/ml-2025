@@ -57,11 +57,30 @@ async def handle_model_responses(
     user_input: str,
     container: DeltaGenerator,
 ) -> None:
+    if f"{model.name}_messages" not in st.session_state:
+        st.session_state[f"{model.name}_messages"] = []
+
     async for token in get_streaming_response_from_model(prompt, model, user_input):
         msg = {"role": f"{model.name} ai", "content": token}
-        st.session_state.messages.append(msg)
-        text = "".join(elt["content"] for elt in st.session_state.messages)
+
+        st.session_state[f"{model.name}_messages"].append(msg)
+
+        text = "".join(elt["content"] for elt in st.session_state[f"{model.name}_messages"])
         container.write(f"**{model.name}**:\n\n{text}")
+
+
+async def handle_all_responses(
+    prompt: ChatPromptTemplate,
+    user_input: str,
+) -> None:
+    containers = {model.name: st.empty() for model in models}
+
+    tasks = [
+        handle_model_responses(prompt, model, user_input, containers[model.name])
+        for model in models
+    ]
+
+    await asyncio.gather(*tasks)
 
 
 def response_from_multiple_models() -> None:
@@ -70,44 +89,35 @@ def response_from_multiple_models() -> None:
         unsafe_allow_html=True,
     )
 
-    if "messages" not in st.session_state:
-        empty: list[dict[str, str]] = []
-        st.session_state.messages = empty
+    user_input = st.chat_input("prompt?")
 
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+    if user_input:
+        for model in models:
+            if f"{model.name}_messages" not in st.session_state:
+                st.session_state[f"{model.name}_messages"] = []
 
-    if user_input := st.chat_input("prompt?"):
-        st.session_state.messages.extend(
-            [
-                _msg("user", user_input),
-                # Add placeholders for AI responses
-                *[_msg(f"{model.name} ai", "") for model in models],
-            ],
-        )
-        with st.chat_message("user"):
-            st.markdown(user_input)
+            st.session_state[f"{model.name}_messages"].append(_msg("user", user_input))
 
         prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
-
-        container = st.empty()
 
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         try:
-            loop.run_until_complete(handle_all_responses(prompt, user_input, container))
+            loop.run_until_complete(handle_all_responses(prompt, user_input))
         finally:
             loop.close()
 
-
-async def handle_all_responses(
-    prompt: ChatPromptTemplate,
-    user_input: str,
-    container: DeltaGenerator,
-) -> None:
-    tasks = [handle_model_responses(prompt, model, user_input, container) for model in models]
-    await asyncio.gather(*tasks)
+    for model in models:
+        if f"{model.name}_messages" in st.session_state:
+            with st.container():
+                st.markdown(
+                    f"<h3 style='text-align: center; font-family: Arial;'>{model.name}</h3>",
+                    unsafe_allow_html=True,
+                )
+                for message in st.session_state[f"{model.name}_messages"]:
+                    role = "User" if message["role"] == f"{model.name} ai" else model.name
+                    with st.chat_message(role):
+                        st.markdown(message["content"])
 
 
 if __name__ == "__main__":
