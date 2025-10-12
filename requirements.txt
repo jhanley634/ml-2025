@@ -52,5 +52,6 @@ types-pyyaml
 types-seaborn
 ucimlrepo
 uv >= 0.8.3
+watchdog
 xarray
 ydata-profiling >= 4.17.0
