@@ -43,7 +43,6 @@ async def get_streaming_response_from_model(
     user_input: str,
 ) -> AsyncGenerator[str]:
     chain = prompt_template | model.model_instance
-    yield f"**{model.name}**:\n\n"
     response = await asyncio.to_thread(chain.astream, {"question": user_input})
     async for token in response:
         yield token
@@ -56,8 +55,6 @@ async def handle_model_responses(
     user_input: str,
     container: DeltaGenerator,
 ) -> None:
-    if f"{model.name}_messages" not in st.session_state:
-        st.session_state[f"{model.name}_messages"] = []
 
     async for token in get_streaming_response_from_model(prompt, model, user_input):
         msg = _msg(model.name, token)
@@ -72,7 +69,14 @@ async def handle_all_responses(
     prompt: ChatPromptTemplate,
     user_input: str,
 ) -> None:
-    containers = {model.name: st.empty() for model in models}
+    containers = {"prompt": st.empty()}
+    containers.update({model.name: st.empty() for model in models})
+    containers["prompt"].markdown(user_input)
+    for model in models:
+        st.session_state[f"{model.name}_messages"] = [
+            _msg("name", f"**{model.name}**\n\n"),
+        ]
+
     tasks = [
         handle_model_responses(prompt, model, user_input, containers[model.name])
         for model in models
@@ -94,7 +98,7 @@ def response_from_multiple_models() -> None:
                 st.session_state[f"{model.name}_messages"] = []
 
         prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
-        prompt.append(f"{user_input} \n\n")
+        prompt.append(user_input)
 
         asyncio.run(handle_all_responses(prompt, user_input))
 
