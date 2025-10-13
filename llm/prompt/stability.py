@@ -26,7 +26,6 @@ def _get_model(name: str) -> LLM:
 models = [
     _get_model("phi4"),
     _get_model("gemma3:12b"),
-    # _get_model("mixtral"),
 ]
 
 
@@ -61,12 +60,12 @@ async def handle_model_responses(
         st.session_state[f"{model.name}_messages"] = []
 
     async for token in get_streaming_response_from_model(prompt, model, user_input):
-        msg = {"role": f"{model.name} ai", "content": token}
+        msg = _msg(model.name, token)
 
         st.session_state[f"{model.name}_messages"].append(msg)
 
         text = "".join(elt["content"] for elt in st.session_state[f"{model.name}_messages"])
-        container.write(f"**{model.name}**:\n\n{text}")
+        container.markdown(text)
 
 
 async def handle_all_responses(
@@ -74,12 +73,10 @@ async def handle_all_responses(
     user_input: str,
 ) -> None:
     containers = {model.name: st.empty() for model in models}
-
     tasks = [
         handle_model_responses(prompt, model, user_input, containers[model.name])
         for model in models
     ]
-
     await asyncio.gather(*tasks)
 
 
@@ -96,28 +93,10 @@ def response_from_multiple_models() -> None:
             if f"{model.name}_messages" not in st.session_state:
                 st.session_state[f"{model.name}_messages"] = []
 
-            st.session_state[f"{model.name}_messages"].append(_msg("user", user_input))
-
         prompt = ChatPromptTemplate.from_template(CHAT_PROMPT_TEMPLATE)
+        prompt.append(f"{user_input} \n\n")
 
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            loop.run_until_complete(handle_all_responses(prompt, user_input))
-        finally:
-            loop.close()
-
-    for model in models:
-        if f"{model.name}_messages" in st.session_state:
-            with st.container():
-                st.markdown(
-                    f"<h3 style='text-align: center; font-family: Arial;'>{model.name}</h3>",
-                    unsafe_allow_html=True,
-                )
-                for message in st.session_state[f"{model.name}_messages"]:
-                    role = "User" if message["role"] == f"{model.name} ai" else model.name
-                    with st.chat_message(role):
-                        st.markdown(message["content"])
+        asyncio.run(handle_all_responses(prompt, user_input))
 
 
 if __name__ == "__main__":
