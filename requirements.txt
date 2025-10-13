@@ -43,6 +43,7 @@ scipy >= 1.15.3
 scitools-iris
 seaborn
 setuptools >= 80.9.0
+streamlit
 tabulate
 torch >= 2.8.0
 tqdm >= 4.67.1
@@ -51,5 +52,6 @@ types-pyyaml
 types-seaborn
 ucimlrepo
 uv >= 0.8.3
+watchdog
 xarray
 ydata-profiling >= 4.17.0
