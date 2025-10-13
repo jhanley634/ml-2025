@@ -1,6 +1,7 @@
 #! /usr/bin/env uv run streamlit run --server.runOnSave true --server.headless true --browser.gatherUsageStats false
 
 import asyncio
+import re
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 
@@ -69,12 +70,14 @@ async def handle_all_responses(
     prompt: ChatPromptTemplate,
     user_input: str,
 ) -> None:
+    model_suffix = re.compile(r":\d+b$")  # e.g. ":12b"
     containers = {"prompt": st.empty()}
     containers.update({model.name: st.empty() for model in models})
     containers["prompt"].markdown(user_input)
     for model in models:
+        name = model_suffix.sub("", model.name)
         st.session_state[f"{model.name}_messages"] = [
-            _msg("name", f"**{model.name}**\n\n"),
+            _msg("name", f"**{name}**\n\n"),
         ]
 
     tasks = [
