@@ -137,7 +137,7 @@ def arr(x: pd.DataFrame | pd.Series) -> NDArray[np.float64]:
 @beartype
 def aq_train_test_split(
     x: pd.DataFrame,
-    y: NDArray[np.float64],
+    y: NDArray[np.float64] | NDArray[np.datetime64],
     test_size: float = 0.2,
     seed: int = 42,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
