@@ -26,7 +26,7 @@ def main() -> None:
     for frame in soup.find_all("iframe"):
         if "title" in frame.attrs:
             print(f"\n\n\n{frame['title']}")
-            print(unquote(frame["src"]))
+            print(unquote(str(frame["src"])))
 
     # pd.read_html(get(url))
 
