@@ -1,5 +1,4 @@
 import random
-from typing import TypeVar
 
 import numpy as np
 import torch
@@ -164,8 +163,7 @@ def randomly_sample_lstm_hyperparams(
     return best_model.model
 
 
-ModelType = TypeVar(
-    "ModelType",
+ModelType = {
     ElasticNet,
     HistGradientBoostingRegressor,
     KNeighborsRegressor,
@@ -173,14 +171,21 @@ ModelType = TypeVar(
     LinearRegression,
     RandomForestRegressor,
     SVR,
-)
-
-ModelType = TypeVar("ModelType")
+}
+assert ModelType
 
 
 @beartype
-def train_evaluate_lstm_model[ModelType](  # noqa: PLR0913
-    model: ModelType,
+def train_evaluate_lstm_model(  # noqa: PLR0913
+    model: (
+        ElasticNet
+        | HistGradientBoostingRegressor
+        | KNeighborsRegressor
+        | LinearRegression
+        | LSTM
+        | RandomForestRegressor
+        | SVR
+    ),
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
     x_test: NDArray[np.float64],

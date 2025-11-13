@@ -19,7 +19,6 @@ from irvine.air_quality.aq_etl import (
 )
 from irvine.air_quality.lstm_model import (
     LSTM,
-    ModelType,
     randomly_sample_lstm_hyperparams_old,
     train_evaluate_lstm_model,
 )
@@ -30,7 +29,15 @@ from irvine.air_quality.tuning_sklearn import (
 
 
 def train_evaluate_sklearn_model(
-    model: ModelType,  # type: ignore
+    model: (
+        ElasticNet
+        | HistGradientBoostingRegressor
+        | KNeighborsRegressor
+        | LinearRegression
+        | LSTM
+        | RandomForestRegressor
+        | SVR
+    ),
     x_train: NDArray[np.float64],
     y_train: NDArray[np.float64],
     x_test: NDArray[np.float64],
@@ -49,7 +56,15 @@ def train_evaluate_sklearn_model(
 
 
 def _score(
-    model: ModelType,  # type: ignore
+    model: (
+        ElasticNet
+        | HistGradientBoostingRegressor
+        | KNeighborsRegressor
+        | LinearRegression
+        | LSTM
+        | RandomForestRegressor
+        | SVR
+    ),
     x_test: NDArray[np.float64],
     y_test: NDArray[np.float64],
 ) -> float:
@@ -92,7 +107,19 @@ def main() -> None:
 
 
 ModelTrainer = Callable[
-    [ModelType, NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]],
+    [
+        ElasticNet
+        | HistGradientBoostingRegressor
+        | KNeighborsRegressor
+        | LinearRegression
+        | LSTM
+        | RandomForestRegressor
+        | SVR,
+        NDArray[np.float64],
+        NDArray[np.float64],
+        NDArray[np.float64],
+        NDArray[np.float64],
+    ],
     dict[str, float],
 ]
 
