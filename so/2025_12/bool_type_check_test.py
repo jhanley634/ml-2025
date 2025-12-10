@@ -28,5 +28,4 @@ class BoolTypeCheckTest(unittest.TestCase):
         print(df.b.any())
         print(df.b.all())
 
-        if df.b:
-            print("foo")
+        # if df.b:  print("foo")
