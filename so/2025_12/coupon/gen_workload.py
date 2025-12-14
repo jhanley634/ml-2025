@@ -3,6 +3,7 @@
 # from https://softwareengineering.stackexchange.com/questions/460573/coupon-redemption-system
 
 import os
+from uuid import UUID as GUID
 from uuid import uuid4
 
 import numpy as np
@@ -18,18 +19,30 @@ TOTAL_CARDS = 2 * TOTAL_OFFERS
 TOTAL_DEVICES = 4 * TOTAL_OFFERS
 
 
-def gen_device_ids(n: int = TOTAL_DEVICES) -> list[str]:
-    return list(map(str, [uuid4() for _ in range(n)]))
-
-
 def get_zipfian(n: int, alpha: float = 1.1) -> list[int]:
     rng = np.random.default_rng()
-    samples = rng.zipf(alpha, size=int(TOTAL_XACTS * 3)) - 1
+    samples = rng.zipf(alpha, size=int(TOTAL_XACTS * 4)) - 1
     s = np.array(list(filter(lambda x: x < n, samples))[:TOTAL_XACTS])
     assert len(s) == TOTAL_XACTS
     return list(map(int, s))
 
 
+def gen_guids(n: int) -> list[GUID]:
+    return [uuid4() for _ in range(n)]
+
+
+def gen_population(n: int) -> list[GUID]:
+    entities = gen_guids(n)
+    return [entities[i] for i in get_zipfian(n)]
+
+
+def main() -> None:
+    offers = gen_population(TOTAL_OFFERS)
+    cards = gen_population(TOTAL_CARDS)
+    devices = gen_population(TOTAL_DEVICES)
+    for triple in zip(offers, cards, devices, strict=True):
+        print(" ".join(guid.hex for guid in triple))
+
+
 if __name__ == "__main__":
-    devices = gen_device_ids()
-    print(max(get_zipfian(len(devices))))
+    main()
