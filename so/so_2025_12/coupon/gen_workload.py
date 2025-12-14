@@ -7,6 +7,7 @@ from uuid import UUID as GUID
 from uuid import uuid3
 
 import numpy as np
+from sqlalchemy import text
 
 from so.so_2025_12.coupon.model import Base, Card, DbMgr, Device, Offer, get_session
 
@@ -57,6 +58,10 @@ def main(*, verbose: bool = False) -> None:
     devices = gen_population(TOTAL_DEVICES)
 
     with get_session() as session:
+        session.execute(text("DELETE FROM offer"))
+        session.execute(text("DELETE FROM card"))
+        session.execute(text("DELETE FROM device"))
+
         for offer in sorted(set(offers)):
             session.add(Offer(guid=offer))
         for card in sorted(set(cards)):
