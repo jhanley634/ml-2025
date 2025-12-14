@@ -4,13 +4,12 @@
 
 import os
 from uuid import UUID as GUID
-from uuid import uuid4
+from uuid import uuid3
 
 import numpy as np
 
 COUPON_ENVIRONMENT = os.environ.get("COUPON_ENVIRONMENT", "Test")
 assert COUPON_ENVIRONMENT in {"Prod", "Test"}
-
 IN_PRODUCTION = COUPON_ENVIRONMENT == "Prod"
 
 TOTAL_XACTS = 1_000_000 if IN_PRODUCTION else 10_000
@@ -18,17 +17,28 @@ TOTAL_OFFERS = TOTAL_XACTS // 1_000
 TOTAL_CARDS = 2 * TOTAL_OFFERS
 TOTAL_DEVICES = 4 * TOTAL_OFFERS
 
+rng = np.random.default_rng(seed=0)
+namespace = GUID(int=0)
+guid_counter = [0]
+
+
+def uuid() -> GUID:
+    """Calls will return a sequence of things that look like guids,
+    but which will be consistently reproducible across runs.
+    """
+    guid_counter[0] += 1
+    return uuid3(namespace, f"{guid_counter[0]}")
+
 
 def get_zipfian(n: int, alpha: float = 1.1) -> list[int]:
-    rng = np.random.default_rng()
-    samples = rng.zipf(alpha, size=int(TOTAL_XACTS * 4)) - 1
+    samples = rng.zipf(alpha, size=int(TOTAL_XACTS * 11)) - 1
     s = np.array(list(filter(lambda x: x < n, samples))[:TOTAL_XACTS])
     assert len(s) == TOTAL_XACTS
     return list(map(int, s))
 
 
 def gen_guids(n: int) -> list[GUID]:
-    return [uuid4() for _ in range(n)]
+    return [uuid() for _ in range(n)]
 
 
 def gen_population(n: int) -> list[GUID]:
