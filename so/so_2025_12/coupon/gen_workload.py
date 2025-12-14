@@ -8,7 +8,7 @@ from uuid import uuid3
 
 import numpy as np
 
-from so.so_2025_12.coupon.model import Base, DbMgr, Offer, get_session
+from so.so_2025_12.coupon.model import Base, Card, DbMgr, Device, Offer, get_session
 
 COUPON_ENVIRONMENT = os.environ.get("COUPON_ENVIRONMENT", "Test")
 assert COUPON_ENVIRONMENT in {"Prod", "Test"}
@@ -59,6 +59,10 @@ def main(*, verbose: bool = False) -> None:
     with get_session() as session:
         for offer in sorted(set(offers)):
             session.add(Offer(guid=offer))
+        for card in sorted(set(cards)):
+            session.add(Card(guid=card))
+        for device in sorted(set(devices)):
+            session.add(Device(guid=device))
 
     for triple in zip(offers, cards, devices, strict=True):
         if verbose:

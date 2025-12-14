@@ -29,11 +29,22 @@ def get_session() -> Generator[Session]:
             sess.commit()
 
 
-Base = declarative_base()
-assert isinstance(Base, DeclarativeMeta)
+Base: DeclarativeMeta = declarative_base()
 
 
-class Offer(Base):  # type: ignore
+class Offer(Base):
     __tablename__ = "offer"
+
+    guid = Column(UUID, primary_key=True)
+
+
+class Card(Base):
+    __tablename__ = "card"
+
+    guid = Column(UUID, primary_key=True)
+
+
+class Device(Base):
+    __tablename__ = "device"
 
     guid = Column(UUID, primary_key=True)
