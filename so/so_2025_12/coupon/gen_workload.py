@@ -58,16 +58,16 @@ def main(*, verbose: bool = False) -> None:
     devices = gen_population(TOTAL_DEVICES)
 
     with get_session() as session:
-        session.execute(text("DELETE FROM offer"))
-        session.execute(text("DELETE FROM card"))
-        session.execute(text("DELETE FROM device"))
+        for tbl_name in ["offer", "card", "device"]:
+            session.execute(text(f"DELETE FROM {tbl_name}"))
 
-        for offer in sorted(set(offers)):
-            session.add(Offer(guid=offer))
-        for card in sorted(set(cards)):
-            session.add(Card(guid=card))
-        for device in sorted(set(devices)):
-            session.add(Device(guid=device))
+        for entity_cls, guids in [
+            (Offer, offers),
+            (Card, cards),
+            (Device, devices),
+        ]:
+            for guid in sorted(set(guids)):
+                session.add(entity_cls(guid=guid))
 
     for triple in zip(offers, cards, devices, strict=True):
         if verbose:
