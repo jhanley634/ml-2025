@@ -8,7 +8,7 @@ from uuid import uuid3
 
 import numpy as np
 
-from so.so_2025_12.coupon.model import Base, DbMgr
+from so.so_2025_12.coupon.model import Base, DbMgr, Offer, get_session
 
 COUPON_ENVIRONMENT = os.environ.get("COUPON_ENVIRONMENT", "Test")
 assert COUPON_ENVIRONMENT in {"Prod", "Test"}
@@ -48,15 +48,22 @@ def gen_population(n: int) -> list[GUID]:
     return [entities[i] for i in get_zipfian(n)]
 
 
-def main() -> None:
+def main(*, verbose: bool = False) -> None:
+    engine = DbMgr.get_engine()
+    Base.metadata.create_all(engine)
+
     offers = gen_population(TOTAL_OFFERS)
     cards = gen_population(TOTAL_CARDS)
     devices = gen_population(TOTAL_DEVICES)
+
+    with get_session() as session:
+        for offer in sorted(set(offers)):
+            session.add(Offer(guid=offer))
+
     for triple in zip(offers, cards, devices, strict=True):
-        print(" ".join(guid.hex for guid in triple))
+        if verbose:
+            print(" ".join(guid.hex for guid in triple))
 
 
 if __name__ == "__main__":
     main()
-    engine = DbMgr.get_engine()
-    Base.metadata.create_all(engine)
