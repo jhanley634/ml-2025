@@ -8,6 +8,8 @@ from uuid import uuid3
 
 import numpy as np
 
+from so.so_2025_12.coupon.model import Base, DbMgr
+
 COUPON_ENVIRONMENT = os.environ.get("COUPON_ENVIRONMENT", "Test")
 assert COUPON_ENVIRONMENT in {"Prod", "Test"}
 IN_PRODUCTION = COUPON_ENVIRONMENT == "Prod"
@@ -56,3 +58,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    engine = DbMgr.get_engine()
+    Base.metadata.create_all(engine)

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from sqlalchemy import UUID, Column, Engine, String, create_engine
+from sqlalchemy import UUID, Column, Engine, create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm.decl_api import DeclarativeMeta
 
