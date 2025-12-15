@@ -7,6 +7,7 @@ from uuid import UUID as GUID
 from uuid import uuid3
 
 import numpy as np
+from sqlalchemy import text
 
 from so.so_2025_12.coupon.model import Base, Card, DbMgr, Device, Offer, get_session
 
@@ -48,9 +49,14 @@ def gen_population(n: int) -> list[GUID]:
     return [entities[i] for i in get_zipfian(n)]
 
 
+def _create_tables() -> None:
+    with get_session() as sess:
+        sess.execute(text("CREATE SCHEMA  IF NOT EXISTS  coupon"))
+    Base.metadata.create_all(DbMgr.get_engine())
+
+
 def main(*, verbose: bool = False) -> None:
-    engine = DbMgr.get_engine()
-    Base.metadata.create_all(engine)
+    _create_tables()
 
     offers = gen_population(TOTAL_OFFERS)
     cards = gen_population(TOTAL_CARDS)

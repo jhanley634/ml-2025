@@ -9,14 +9,16 @@ from sqlalchemy.orm.decl_api import DeclarativeMeta
 TEMP = Path("/tmp")
 COUPON_DB = TEMP / "coupon.db"
 
+_coupon_schema = {"schema": "coupon"}
+
 
 class DbMgr:
     _engine: Engine | None = None  # singleton
 
     @classmethod
-    def get_engine(cls, db_file: Path = COUPON_DB) -> Engine:
+    def get_engine(cls) -> Engine:
         if cls._engine is None:
-            cls._engine = create_engine(f"postgresql://localhost/postgres")
+            cls._engine = create_engine("postgresql://localhost/postgres")
         return cls._engine
 
 
@@ -34,17 +36,20 @@ Base: DeclarativeMeta = declarative_base()
 
 class Offer(Base):
     __tablename__ = "offer"
+    __table_args__ = _coupon_schema
 
     guid = Column(UUID, primary_key=True)
 
 
 class Card(Base):
     __tablename__ = "card"
+    __table_args__ = _coupon_schema
 
     guid = Column(UUID, primary_key=True)
 
 
 class Device(Base):
     __tablename__ = "device"
+    __table_args__ = _coupon_schema
 
     guid = Column(UUID, primary_key=True)
