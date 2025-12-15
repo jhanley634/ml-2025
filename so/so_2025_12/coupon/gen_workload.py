@@ -7,7 +7,6 @@ from uuid import UUID as GUID
 from uuid import uuid3
 
 import numpy as np
-from sqlalchemy import text
 
 from so.so_2025_12.coupon.model import Base, Card, DbMgr, Device, Offer, get_session
 
@@ -64,7 +63,7 @@ def main(*, verbose: bool = False) -> None:
             (Card, cards),
             (Device, devices),
         ]:
-            sess.execute(text(f"DELETE FROM {entity_cls.__tablename__}"))
+            sess.query(entity_cls).delete()
 
             for guid in sorted(set(guids)):
                 sess.add(entity_cls(guid=guid))
