@@ -31,6 +31,7 @@ panel >= 1.7.5
 pip >= 25.1.1
 pipdeptree
 pre-commit >= 4.2.0
+psycopg2 >= 2.9.11
 pyarrow >= 21.0.0
 pymysql >= 1.1.1
 pyright >= 1.1.407

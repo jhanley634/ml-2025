@@ -16,7 +16,7 @@ class DbMgr:
     @classmethod
     def get_engine(cls, db_file: Path = COUPON_DB) -> Engine:
         if cls._engine is None:
-            cls._engine = create_engine(f"sqlite:///{db_file}")
+            cls._engine = create_engine(f"postgresql://localhost/postgres")
         return cls._engine
 
 
