@@ -55,7 +55,8 @@ def _create_tables() -> None:
     Base.metadata.create_all(DbMgr.get_engine())
 
 
-def main(balance: float = 1.0, *, verbose: bool = False) -> None:
+def _create_entities(balance: float = 1.0) -> tuple[list[GUID], ...]:
+
     _create_tables()
 
     offers = gen_population(TOTAL_OFFERS)
@@ -73,6 +74,13 @@ def main(balance: float = 1.0, *, verbose: bool = False) -> None:
 
             for guid in sorted(set(guids)):
                 sess.add(entity_cls(guid=guid, balance=balance))
+
+    return offers, cards, devices
+
+
+def main(*, verbose: bool = False) -> None:
+
+    offers, cards, devices = _create_entities()
 
     for triple in zip(offers, cards, devices, strict=True):
         if verbose:
