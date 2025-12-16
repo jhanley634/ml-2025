@@ -2,7 +2,7 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 
-from sqlalchemy import UUID, Column, Engine, create_engine
+from sqlalchemy import DECIMAL, UUID, Column, Engine, create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 from sqlalchemy.orm.decl_api import DeclarativeMeta
 
@@ -39,6 +39,7 @@ class Offer(Base):
     __table_args__ = _coupon_schema
 
     guid = Column(UUID, primary_key=True)
+    balance = Column(DECIMAL(10, 2), nullable=False)
 
 
 class Card(Base):
@@ -46,6 +47,7 @@ class Card(Base):
     __table_args__ = _coupon_schema
 
     guid = Column(UUID, primary_key=True)
+    balance = Column(DECIMAL(10, 2), nullable=False)
 
 
 class Device(Base):
@@ -53,3 +55,4 @@ class Device(Base):
     __table_args__ = _coupon_schema
 
     guid = Column(UUID, primary_key=True)
+    balance = Column(DECIMAL(10, 2), nullable=False)
