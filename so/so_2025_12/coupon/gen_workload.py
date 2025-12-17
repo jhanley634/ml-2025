@@ -3,7 +3,6 @@
 # from https://softwareengineering.stackexchange.com/questions/460573/coupon-redemption-system
 
 import os
-from decimal import Decimal
 from uuid import UUID as GUID
 from uuid import uuid3
 
@@ -77,7 +76,7 @@ class World:
                 sess.query(entity_cls).delete()
 
                 for guid in sorted(set(guids)):
-                    balance = int(0.95 * amount * len(guids))
+                    balance = int(0.3698 * amount * len(guids))
                     sess.add(entity_cls(guid=guid, balance=balance))
 
     def redeem_coupons(self) -> None:
@@ -89,18 +88,30 @@ class World:
                 assert offer
                 assert card
                 assert device
+                o_bal = float(f"{offer.balance}")
+                c_bal = float(f"{card.balance}")
+                d_bal = float(f"{device.balance}")
 
-                if (
-                    float(f"{offer.balance}") > AMOUNT
-                    and float(f"{card.balance}") > AMOUNT
-                    and float(f"{device.balance}") > AMOUNT
-                ):
-                    dec_amount = Decimal(AMOUNT)
-                    offer.balance -= dec_amount
-                    card.balance -= dec_amount
-                    device.balance -= dec_amount
-
+                if o_bal > AMOUNT and c_bal > AMOUNT and d_bal > AMOUNT:
+                    sess.execute(
+                        Offer.__table__.update()
+                        .where(Offer.guid == o_id)
+                        .values(balance=Offer.balance - AMOUNT),
+                    )
+                    sess.execute(
+                        Card.__table__.update()
+                        .where(Card.guid == c_id)
+                        .values(balance=Card.balance - AMOUNT),
+                    )
+                    sess.execute(
+                        Device.__table__.update()
+                        .where(Device.guid == d_id)
+                        .values(balance=Device.balance - AMOUNT),
+                    )
+                else:
                     print(offer.guid.hex, card.guid.hex, device.guid.hex)
+
+        sess.commit()
 
 
 def main(*, verbose: bool = True) -> None:
