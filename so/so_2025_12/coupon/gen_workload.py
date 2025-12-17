@@ -7,7 +7,10 @@ from uuid import UUID as GUID
 from uuid import uuid3
 
 import numpy as np
+from beartype import beartype
 from sqlalchemy import text
+from sqlalchemy.orm import Session
+from tqdm import tqdm
 
 from so.so_2025_12.coupon.model import Base, Card, DbMgr, Device, Offer, get_session
 
@@ -58,6 +61,7 @@ def _create_tables() -> None:
     Base.metadata.create_all(DbMgr.get_engine())
 
 
+@beartype
 class World:
     def __init__(self, amount: float = AMOUNT) -> None:
 
@@ -79,9 +83,20 @@ class World:
                     balance = int(0.3698 * amount * len(guids))
                     sess.add(entity_cls(guid=guid, balance=balance))
 
+    def _decrement(
+        self,
+        sess: Session,
+        tbl: type[Offer] | type[Card] | type[Device],
+        guid: GUID,
+    ) -> None:
+        sess.execute(
+            tbl.__table__.update().where(tbl.guid == guid).values(balance=tbl.balance - AMOUNT),
+        )
+
     def redeem_coupons(self) -> None:
         with get_session() as sess:
-            for o_id, c_id, d_id in zip(self.offers, self.cards, self.devices, strict=True):
+            gen = zip(self.offers, self.cards, self.devices, strict=True)
+            for o_id, c_id, d_id in tqdm(gen, total=len(self.offers)):
                 offer = sess.query(Offer).filter_by(guid=o_id).first()
                 card = sess.query(Card).filter_by(guid=c_id).first()
                 device = sess.query(Device).filter_by(guid=d_id).first()
@@ -93,21 +108,9 @@ class World:
                 d_bal = float(f"{device.balance}")
 
                 if o_bal > AMOUNT and c_bal > AMOUNT and d_bal > AMOUNT:
-                    sess.execute(
-                        Offer.__table__.update()
-                        .where(Offer.guid == o_id)
-                        .values(balance=Offer.balance - AMOUNT),
-                    )
-                    sess.execute(
-                        Card.__table__.update()
-                        .where(Card.guid == c_id)
-                        .values(balance=Card.balance - AMOUNT),
-                    )
-                    sess.execute(
-                        Device.__table__.update()
-                        .where(Device.guid == d_id)
-                        .values(balance=Device.balance - AMOUNT),
-                    )
+                    self._decrement(sess, Offer, o_id)
+                    self._decrement(sess, Card, c_id)
+                    self._decrement(sess, Device, d_id)
                 else:
                     print(offer.guid.hex, card.guid.hex, device.guid.hex)
 
