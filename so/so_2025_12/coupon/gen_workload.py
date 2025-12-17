@@ -3,6 +3,7 @@
 # from https://softwareengineering.stackexchange.com/questions/460573/coupon-redemption-system
 
 import os
+from decimal import Decimal
 from uuid import UUID as GUID
 from uuid import uuid3
 
@@ -20,7 +21,8 @@ TOTAL_OFFERS = TOTAL_XACTS // 1_000
 TOTAL_CARDS = 2 * TOTAL_OFFERS
 TOTAL_DEVICES = 4 * TOTAL_OFFERS
 
-AMOUNT = 1.0#dollar amount that each coupon redemption is worth
+AMOUNT = 1.0  # dollar amount that each coupon redemption is worth
+
 
 rng = np.random.default_rng(seed=0)
 namespace = GUID(int=0)
@@ -78,16 +80,33 @@ class World:
                     balance = int(0.95 * amount * len(guids))
                     sess.add(entity_cls(guid=guid, balance=balance))
 
-            self.offer = sess.query(Offer).all()
-            self.card = sess.query(Card).all()
-            self.device = sess.query(Device).all()
+    def redeem_coupons(self) -> None:
+        with get_session() as sess:
+            for o_id, c_id, d_id in zip(self.offers, self.cards, self.devices, strict=True):
+                offer = sess.query(Offer).filter_by(guid=o_id).first()
+                card = sess.query(Card).filter_by(guid=c_id).first()
+                device = sess.query(Device).filter_by(guid=d_id).first()
+                assert offer
+                assert card
+                assert device
+
+                if (
+                    float(f"{offer.balance}") > AMOUNT
+                    and float(f"{card.balance}") > AMOUNT
+                    and float(f"{device.balance}") > AMOUNT
+                ):
+                    dec_amount = Decimal(AMOUNT)
+                    offer.balance -= dec_amount
+                    card.balance -= dec_amount
+                    device.balance -= dec_amount
+
+                    print(offer.guid.hex, card.guid.hex, device.guid.hex)
 
 
 def main(*, verbose: bool = True) -> None:
     w = World()
     if verbose:
-        for offer, card, device in zip(w.offers, w.cards, w.devices, strict=True):
-            print(offer, card, device)
+        w.redeem_coupons()
 
 
 if __name__ == "__main__":
