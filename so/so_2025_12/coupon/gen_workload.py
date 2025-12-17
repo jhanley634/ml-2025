@@ -20,6 +20,8 @@ TOTAL_OFFERS = TOTAL_XACTS // 1_000
 TOTAL_CARDS = 2 * TOTAL_OFFERS
 TOTAL_DEVICES = 4 * TOTAL_OFFERS
 
+AMOUNT = 1.0#dollar amount that each coupon redemption is worth
+
 rng = np.random.default_rng(seed=0)
 namespace = GUID(int=0)
 guid_counter = [0]
@@ -55,36 +57,37 @@ def _create_tables() -> None:
     Base.metadata.create_all(DbMgr.get_engine())
 
 
-def _create_entities(balance: float = 1.0) -> tuple[list[GUID], ...]:
+class World:
+    def __init__(self, amount: float = AMOUNT) -> None:
 
-    _create_tables()
+        self.offers = gen_population(TOTAL_OFFERS)
+        self.cards = gen_population(TOTAL_CARDS)
+        self.devices = gen_population(TOTAL_DEVICES)
 
-    offers = gen_population(TOTAL_OFFERS)
-    cards = gen_population(TOTAL_CARDS)
-    devices = gen_population(TOTAL_DEVICES)
+        _create_tables()
+        with get_session() as sess:
 
-    with get_session() as sess:
+            for entity_cls, guids in [
+                (Offer, self.offers),
+                (Card, self.cards),
+                (Device, self.devices),
+            ]:
+                sess.query(entity_cls).delete()
 
-        for entity_cls, guids in [
-            (Offer, offers),
-            (Card, cards),
-            (Device, devices),
-        ]:
-            sess.query(entity_cls).delete()
+                for guid in sorted(set(guids)):
+                    balance = int(0.95 * amount * len(guids))
+                    sess.add(entity_cls(guid=guid, balance=balance))
 
-            for guid in sorted(set(guids)):
-                sess.add(entity_cls(guid=guid, balance=balance))
-
-    return offers, cards, devices
+            self.offer = sess.query(Offer).all()
+            self.card = sess.query(Card).all()
+            self.device = sess.query(Device).all()
 
 
-def main(*, verbose: bool = False) -> None:
-
-    offers, cards, devices = _create_entities()
-
-    for triple in zip(offers, cards, devices, strict=True):
-        if verbose:
-            print(" ".join(guid.hex for guid in triple))
+def main(*, verbose: bool = True) -> None:
+    w = World()
+    if verbose:
+        for offer, card, device in zip(w.offers, w.cards, w.devices, strict=True):
+            print(offer, card, device)
 
 
 if __name__ == "__main__":
