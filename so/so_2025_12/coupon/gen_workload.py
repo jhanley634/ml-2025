@@ -3,6 +3,7 @@
 # from https://softwareengineering.stackexchange.com/questions/460573/coupon-redemption-system
 
 import os
+from decimal import Decimal
 from uuid import UUID as GUID
 from uuid import uuid3
 
@@ -100,29 +101,32 @@ class World:
         )
 
     def redeem_coupons(self) -> None:
+        def fetch_balance(
+            tbl: type[Offer] | type[Card] | type[Device],
+            id_: GUID,
+        ) -> tuple[Decimal, str]:
+            row = sess.query(tbl).filter_by(guid=id_).first()
+            assert row
+            return Decimal(f"{row.balance}"), f"{row.guid.hex}"
+
         with (
             get_session() as sess,
             Valkey() as client,
         ):
             gen = zip(self.offers, self.cards, self.devices, strict=True)
             for o_id, c_id, d_id in tqdm(gen, total=len(self.offers)):
-                offer = sess.query(Offer).filter_by(guid=o_id).first()
-                card = sess.query(Card).filter_by(guid=c_id).first()
-                device = sess.query(Device).filter_by(guid=d_id).first()
-                assert offer
-                assert card
-                assert device
-                o_bal = float(f"{offer.balance}")
-                c_bal = float(f"{card.balance}")
-                d_bal = float(f"{device.balance}")
+                offer_b, offer_h = fetch_balance(Offer, o_id)
+                card_b, card_h = fetch_balance(Card, c_id)
+                device_b, device_h = fetch_balance(Device, d_id)
+                amt = Decimal(f"{self.amount}")
 
-                if o_bal > self.amount and c_bal > self.amount and d_bal > self.amount:
+                if offer_b > amt and card_b > amt and device_b > amt:
                     self._decrement(sess, Offer, o_id)
                     self._decrement(sess, Card, c_id)
                     self._decrement(sess, Device, d_id)
                     client.incr("coupon_num_redemptions")
                 else:
-                    print(offer.guid.hex, card.guid.hex, device.guid.hex)
+                    print(offer_h, card_h, device_h)
 
             sess.commit()
 
