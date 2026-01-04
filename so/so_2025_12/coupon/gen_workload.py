@@ -39,20 +39,20 @@ def uuid() -> GUID:
     return uuid3(namespace, f"{next(guid_counter)}")
 
 
-def get_zipfian(n: int, alpha: float = 1.1) -> list[int]:
-    samples = rng.zipf(alpha, size=int(TOTAL_XACTS * 11)) - 1
-    s = np.array(list(filter(lambda x: x < n, samples))[:TOTAL_XACTS])
-    assert len(s) == TOTAL_XACTS
-    return list(map(int, s))
-
-
 def gen_guids(n: int) -> list[GUID]:
     return [uuid() for _ in range(n)]
 
 
-def gen_population(n: int) -> list[GUID]:
+def get_zipfian(n: int, count: int, alpha: float = 1.1) -> list[int]:
+    samples = rng.zipf(alpha, size=int(count * 11)) - 1
+    s = np.array(list(filter(lambda x: x < n, samples))[:count])
+    assert len(s) == count
+    return list(map(int, s))
+
+
+def gen_population(n: int, *, count: int = TOTAL_XACTS) -> list[GUID]:
     entities = gen_guids(n)
-    return [entities[i] for i in get_zipfian(n)]
+    return [entities[i] for i in get_zipfian(n, count)]
 
 
 def _create_tables() -> None:
