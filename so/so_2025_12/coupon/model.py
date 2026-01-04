@@ -25,10 +25,8 @@ class DbMgr:
 @contextmanager
 def get_session() -> Generator[Session]:
     with sessionmaker(bind=DbMgr.get_engine())() as sess:
-        try:
-            yield sess
-        finally:
-            sess.commit()
+        yield sess
+        sess.commit()
 
 
 Base: DeclarativeMeta = declarative_base()
