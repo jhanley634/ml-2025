@@ -3,7 +3,6 @@
 # from https://softwareengineering.stackexchange.com/questions/460573/coupon-redemption-system
 
 import os
-from time import sleep
 from uuid import UUID as GUID
 from uuid import uuid3
 

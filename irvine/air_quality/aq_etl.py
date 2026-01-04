@@ -35,7 +35,7 @@ def get_air_quality_dataset(*, verbose: bool = False) -> pd.DataFrame:
     assert air_quality.data.targets is None
 
     x["stamp"] = pd.to_datetime(
-        pd.concat([x.Date, x.Time], axis=1).apply(lambda row: f"{row[0]} {row[1]}", axis=1),
+        x.Date.astype(str) + " " + x.Time.astype(str),
         format="%m/%d/%Y %H:%M:%S",
     )
     x["Time"] = pd.to_timedelta(x.Time.values).to_numpy().astype("timedelta64[s]")
