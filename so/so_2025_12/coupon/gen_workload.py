@@ -24,8 +24,6 @@ TOTAL_OFFERS = TOTAL_XACTS // 1_000
 TOTAL_CARDS = 2 * TOTAL_OFFERS
 TOTAL_DEVICES = 4 * TOTAL_OFFERS
 
-AMOUNT = 1.0  # dollar amount that each coupon redemption is worth
-
 
 rng = np.random.default_rng(seed=0)
 namespace = GUID(int=0)
@@ -64,6 +62,9 @@ def _create_tables() -> None:
 
 @beartype
 class World:
+
+    AMOUNT = 1.0  # dollar amount that each coupon redemption is worth
+
     def __init__(self, amount: float = AMOUNT) -> None:
 
         self.offers = gen_population(TOTAL_OFFERS)
@@ -84,6 +85,8 @@ class World:
                     balance = int(0.3698 * amount * len(guids))
                     sess.add(entity_cls(guid=guid, balance=balance))
 
+        self.amount = amount
+
     def _decrement(
         self,
         sess: Session,
@@ -91,7 +94,9 @@ class World:
         guid: GUID,
     ) -> None:
         sess.execute(
-            tbl.__table__.update().where(tbl.guid == guid).values(balance=tbl.balance - AMOUNT),
+            tbl.__table__.update()
+            .where(tbl.guid == guid)
+            .values(balance=tbl.balance - self.amount),
         )
 
     def redeem_coupons(self) -> None:
@@ -111,7 +116,7 @@ class World:
                 c_bal = float(f"{card.balance}")
                 d_bal = float(f"{device.balance}")
 
-                if o_bal > AMOUNT and c_bal > AMOUNT and d_bal > AMOUNT:
+                if o_bal > self.amount and c_bal > self.amount and d_bal > self.amount:
                     self._decrement(sess, Offer, o_id)
                     self._decrement(sess, Card, c_id)
                     self._decrement(sess, Device, d_id)
