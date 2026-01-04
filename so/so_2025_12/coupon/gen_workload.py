@@ -4,6 +4,7 @@
 
 import os
 from decimal import Decimal
+from itertools import count
 from uuid import UUID as GUID
 from uuid import uuid3
 
@@ -28,15 +29,14 @@ TOTAL_DEVICES = 4 * TOTAL_OFFERS
 
 rng = np.random.default_rng(seed=0)
 namespace = GUID(int=0)
-guid_counter = [0]
+guid_counter = count(0)
 
 
 def uuid() -> GUID:
     """Calls will return a sequence of things that look like guids,
     but which will be consistently reproducible across runs.
     """
-    guid_counter[0] += 1
-    return uuid3(namespace, f"{guid_counter[0]}")
+    return uuid3(namespace, f"{next(guid_counter)}")
 
 
 def get_zipfian(n: int, alpha: float = 1.1) -> list[int]:
