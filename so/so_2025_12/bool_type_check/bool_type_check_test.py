@@ -4,12 +4,12 @@ import numpy as np
 import pandas as pd
 from pandas import Series
 
-# from https://stackoverflow.com/questions/79842390/conditionnal-if-use-not-working-with-pd-notna
+# from https://stackoverflow.com/questions/79842390/if-not-working-with-pd-notna
 
 
 class BoolTypeCheckTest(unittest.TestCase):
 
-    def test_foo(self) -> None:
+    def test_foo(self, *, verbose: bool = False) -> None:
         df = pd.DataFrame(
             [
                 {"a": 1, "b": True},
@@ -19,13 +19,12 @@ class BoolTypeCheckTest(unittest.TestCase):
         )
         assert type(df.b) is Series
         assert type(df.b[0]) is np.bool
-        print(df.dtypes)
 
-        for row in df.itertuples():
-            if row.b:
-                print(row.a)
+        if verbose:
+            print(df.dtypes)
+            for row in df.itertuples():
+                if row.b:
+                    print(row.a)
 
-        print(df.b.any())
-        print(df.b.all())
-
-        # if df.b:  print("foo")
+            print(df.b.any())
+            print(df.b.all())
