@@ -19,9 +19,10 @@ install: .venv
 	$(ACTIVATE) && pre-commit install
 
 STRICT = --strict --warn-unreachable --ignore-missing-imports --no-namespace-packages
+BLACK := black --target-version py313
 
 ruff-check:
-	$(ACTIVATE) && black . && ruff check --fix
+	$(ACTIVATE) && $(BLACK) . && ruff check --fix
 lint: ruff-check
 	$(ACTIVATE) && pyright .
 	$(ACTIVATE) && mypy $(STRICT) .
